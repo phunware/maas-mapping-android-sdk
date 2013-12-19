@@ -19,7 +19,7 @@ Requirements
 Documentation 
 --------------
 
-MaaSMapping documentation is included in the Documents folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
+MaaS Mapping documentation is included in the Documents folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
 
 
 
@@ -180,13 +180,13 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
 });
 ```
 
-Routes are comprised of segments. In the Mapping SDK, a segment is a path between two points that are marked as an exit or a portal. Use the methods `nextRouteSegment()` and `previousRouteSegment()` on a `PwRouteLayer` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists, or the previous segment if one exists.
+Routes are comprised of segments. In the Mapping SDK, a segment is a path between two points that are marked as an exit or as a portal. Use the methods `nextRouteSegment()` and `previousRouteSegment()` on a `PwRouteLayer` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists, or to the previous segment if one exists.
 
 
 
 Attribution
 -----------
-MaaSMapping uses the following 3rd party components. 
+MaaS Mapping uses the following third-party components. 
 
 | Component     | Description   | License  |
 | ------------- |:-------------:| -----:|
