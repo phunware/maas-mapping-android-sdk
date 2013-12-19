@@ -1,18 +1,31 @@
-#MaaS Mapping
+MaaSMapping Android SDK
+================
 
-[Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
+Version 1.2.3
 
-**v 1.2.0**
-________________
+MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigation services provided by Phunware. Visit http://maas.phunware.com/ for more details and to sign up.
 
-##Overview
-MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot, and Navigation services provided by Phunware. 
-###Build requirements
+
+
+Requirements
+------------
+
 * Latest MaaS Core
 * OkHttp 1.2.1
 * AndroidSVG 2.1.1
 
-##Prerequisites
+
+
+Documentation 
+--------------
+
+MaaSMapping documentation is included in the Documents folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
+
+
+
+Prerequisites
+-------------
+
 Install the module in the `Application` `onCreate` method before registering keys. For example:
 ``` Java
 @Override
@@ -24,10 +37,14 @@ public void onCreate() {
 }
 ```
 
-##Mapping
-Mapping starts with the `PwMapView` class. It is a custom view that can be defined in an XML layout or in code. The view will not draw anything by default however it will respect the bounds given to it.
 
-####Life cycle
+
+Mapping
+----------
+
+Mapping starts with the `PwMapView` class. It is a custom view that can be defined in an XML layout or in code. The view will not draw anything by default. However, it will respect the bounds it's given.
+
+### Life cycle
 Users of this class must forward some life cycle methods from the activity or fragment containing this view to the corresponding methods in this class. In particular the following methods must be forwarded:
 
 * `onCreate(android.app.Activity, android.os.Bundle)`
@@ -35,7 +52,7 @@ Users of this class must forward some life cycle methods from the activity or fr
 * `onDestroy(android.app.Activity)`
 * `onLowMemory()`
 
-####Building Data
+### Building Data
 Get building data for the map with `PwMappingModule.getBuildingDataByIdInBackground(context, long, PwOnBuildingDataListener)`. Building data contains all of the meta data for a `PwBuilding`, it's `PwFloor`s, and each LOD (level of detail) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and otherwise to function.
 
 Once building data is obtained, use the map view's method `setMapData(pwBuilding)` to pass the data to the map. It will begin loading assets and resources immediately. 
@@ -56,7 +73,7 @@ PwMappingModule.getInstance().getBuildingDataByIdInBackground(this, BUILDING_ID,
 });
 ```
 
-####Point of Interest Data
+### Point of Interest Data
 Get a list Points of Interest (POI) with `getPOIDataInBackground(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView` it can draw points on the map when relevant. This means that if a building has multiple floors then the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
 
 Once POI data is obtained, use the map view's method `setPOIList(pois)` to pass the data to the map.
@@ -75,17 +92,17 @@ PwMappingModule.getInstance().getPOIDataInBackground(this, BUILDING_ID, new PwOn
 });
 ```
 
-####Event Callbacks
+### Event Callbacks
 This view provides the option to set callbacks for certain events:
 
 * `setOnMapViewStateChangedListener(PwOnMapViewStateChangedListener)` signals when the view has changed floors or zoom levels.
 * `setOnPOIClickListener(PwOnPOIClickListener)` is called any time a point of interest is clicked.
 * `setOnMapLoadCompleteListener(PwOnMapLoadCompleteListener)` is called once the first image has loaded and is drawn.
 
-####Layers
+### Layers
 Layers can be added to the map through `addLayer(PwMapViewLayer)` and removed with `removeLayer(PwMapViewLayer)`. Predefined layers include `PwRouteLayer` and `PwBlueDotLayer`. Custom layers can be added by using extending `PwMapViewLayer`. Some lifecycle events are forwarded to layers however currently the only way to restore state is by making sure layers are added again after calling `onCreate(activity, bundle)`. In `onDestroy(activity)` layers are asked to save state and are then removed from the view.
 
-#####PwMarkerLayer
+#### PwMarkerLayer
 `PwMarkerLayer` is a special layers that allows developers to add markers anywhere on the map. `PwMarker` objects can be added to or removed from this layer with `PwMarkerLayer#addMarker(pwMarker)` and `PwMarkerLayer#removeMarker(pwMarker)` respectively.
 An example of creating a `PwMarker`:
 
@@ -105,7 +122,11 @@ mPwMarkerLayer.addMarker(marker);
 
 It is suggested to calculate a X and Y offset for a marker, in pixels. By default the offsets are 0. Because any image can be set it is up to the developer to set the appropriate offset. With no offset the top left corner of the image will be drawn at the specified X and Y.
 
-##Blue Dot
+
+
+Blue Dot
+----------------
+
 A user's location in a venue can be retrieved with `PwBlueDotLayer`. This is a layer that should be added to a `PwMapView`. Once added the layer manages polling for a location. A Blue Dot will be displayed on the map automatically, if available, representing the end-user's location.
 
 An example of using `PwBlueDotLayer`:
@@ -132,7 +153,10 @@ pwBlueDotLayer.setBlueDotListener(new PwBlueDotLayer.PwBlueDotListener() {
 });
 ```
 
-##Navigation
+
+
+Navigation
+------------
 The `PwMapView` can display routes by using a `PwRouteLayer`. Routes can be a path between any two points that are defined in the MaaS Portal. A route can go from a Point of Interest (POI) to a Point of Interest, or from any way-point to a POI.
 
 Get data for a route (if available) with `PwMappingModule#getRoute(context, long, long)` or one of it's overloaded methods. There are also methods to help get route data in the background.
@@ -156,13 +180,9 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
 });
 ```
 
-Routes are comprised of segmen
+Routes are comprised of segments. In the Mapping SDK, a segment is a path between two points that are marked as an exit or a portal. Use the methods `nextRouteSegment()` and `previousRouteSegment()` on a `PwRouteLayer` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists, or the previous segment if one exists.
 
 
-----------
-
-
-ts. In the Mapping SDK, a segment is a path between two points that are marked as an exit or a portal. Use the methods `nextRouteSegment()` and `previousRouteSegment()` on a `PwRouteLayer` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists, or the previous segment if one exists.
 
 Attribution
 -----------
