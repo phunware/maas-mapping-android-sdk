@@ -1,9 +1,9 @@
-MaaSMapping Android SDK
+MaaS Mapping SDK for Android
 ================
 
 Version 1.2.0
 
-MaaSMapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigation services provided by Phunware. Visit http://maas.phunware.com/ for more details and to sign up.
+MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigation services provided by Phunware. Visit http://maas.phunware.com/ for more details and to sign up.
 
 
 
@@ -19,7 +19,7 @@ Requirements
 Documentation 
 --------------
 
-MaaSMapping documentation is included in the Documents folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
+MaaS Mapping documentation is included in the Documents folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
 
 
 
@@ -113,7 +113,7 @@ final PwMarker marker = new PwMarker(
         poi.getFloorId(),
         poi.x,
         poi.y);
-// Calculate and set X and Y position offset for the marker.
+// Calculate and set an X and Y position offset for the marker.
 final BitmapDrawable drawable = (BitmapDrawable) getResources().getDrawable(marker.getDrawableResId());
 marker.xOffset = -drawable.getBitmap().getWidth() / 2f;
 marker.yOffset = -drawable.getBitmap().getHeight() / 2f;
@@ -186,7 +186,7 @@ Routes are comprised of segments. In the Mapping SDK, a segment is a path betwee
 
 Attribution
 -----------
-MaaSMapping uses the following third-party components. 
+MaaS Mapping uses the following third-party components. 
 
 | Component     | Description   | License  |
 | ------------- |:-------------:| -----:|
