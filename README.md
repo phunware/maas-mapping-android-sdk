@@ -1,7 +1,7 @@
 MaaS Mapping SDK for Android
 ================
 
-Version 1.2.0
+Version 1.2.1
 
 MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigation services provided by Phunware. Visit http://maas.phunware.com/ for more details and to sign up.
 
@@ -13,7 +13,7 @@ Requirements
 * Latest MaaS Core
 * OkHttp 1.2.1
 * AndroidSVG 2.1.1
-
+* Picasso 2.1.1
 
 
 Documentation 

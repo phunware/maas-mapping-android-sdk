@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Mapping Demo</string>
+
+    <string name="app_id">98</string>
+    <string name="app_access_key">386a54d2be73d160601b7cfe759387ba702e3623</string>
+    <string name="app_signature_key">b434ae3a0fa7a41d516e8b34d3021bce33f66cf1</string>
+    <string name="app_encryption_key">1234567890qwertyuiopasdfghjklzxcvbnm</string>
+
+</resources>

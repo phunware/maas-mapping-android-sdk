@@ -1,5 +1,11 @@
 Change Log
 ==========
+
+Version 1.2.1 *(2013-12-27)*
+----------------------------
+ * Fixing bug around resetting the current floor. The entire view is reset now, not just the map.
+ * Fixing bug where map wouldn't respond if onMapTouchListener was not set.
+
 Version 1.2.0 *(2013-12-18)*
 ----------------------------
  * Updating API to get allow getting routes from a location.
