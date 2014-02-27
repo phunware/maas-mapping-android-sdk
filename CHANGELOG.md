@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 1.2.3 *(2014-02-26)*
+----------------------------
+ * Fixed builds to produce Java 6 compatible binaries using 'sourceCompatibility' and 'targetCompatibility' equal to '1.6'.
+ * Requires MaaSCore v1.3.5
+
 Version 1.2.1 *(2013-12-27)*
 ----------------------------
  * Fixing bug around resetting the current floor. The entire view is reset now, not just the map.
