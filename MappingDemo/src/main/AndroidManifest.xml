@@ -1,38 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.phunware.mapping.demo" >
+    package="com.phunware.mapping.sample">
 
-    <!-- Necessary for MaaS Core to communicate with MaaS server -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
-    <!-- Optional: If used this will check result in making network calls more efficiently. -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Optional: Set this permission in order to get more detailed analytics. -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-
-    <!-- Optional: Set these following permissions to to get location data in analytics reports -->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!--We are only using this permission in release because we need to test mock locations in the release environment.
+    This is okay because this application will never be released for production. Do not use this permission in a real release build.-->
+    <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
 
     <application
+        android:name=".MappingSampleApplication"
         android:allowBackup="true"
+        android:hardwareAccelerated="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".MyApplication">
+        android:theme="@style/TranslucentTheme">
 
-        <!-- Necessary for MaaS Core to communicate with MaaS server -->
+        <!-- Necessary for core to communicate with MaaS server -->
         <service android:name="com.phunware.core.internal.CoreService" />
-
         <!-- Necessary to generate a UDID -->
-        <service android:name="com.OpenUDID.OpenUDID_service">
+        <service android:name="com.openudid.OpenUDID_service">
             <intent-filter>
                 <action android:name="com.openudid.GETUDID" />
             </intent-filter>
         </service>
 
-        <!-- Used by MaaS Core for efficient analytic caching and flushing. -->
+        <!-- Used by Core for efficient Analytic Caching -->
         <receiver android:name="com.phunware.core.internal.CoreReceiver">
             <intent-filter>
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -40,11 +33,10 @@
         </receiver>
 
         <activity
-            android:name="com.phunware.mapping.demo.MainActivity"
-            android:label="@string/app_name" >
+            android:name=".ui.MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

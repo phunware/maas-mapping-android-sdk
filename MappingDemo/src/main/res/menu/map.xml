@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_goto_building"
+        android:title="Go To Building"
+        android:orderInCategory="1"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_map_types"
+        android:title="Map Type"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_provider"
+        android:title="@string/mapping_provider_menuitem"
+        android:orderInCategory="3"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_building"
+        android:title="@string/mapping_building_menuitem"
+        android:orderInCategory="4"
+        app:showAsAction="never"/>
+    <group
+        android:id="@+id/group_mock"
+        android:orderInCategory="5">
+        <item
+            android:id="@+id/menu_mock_file"
+            android:title="@string/mapping_file_menuitem"
+            android:orderInCategory="5"
+            app:showAsAction="never"/>
+        <item
+            android:id="@+id/menu_repeat"
+            android:title="@string/mapping_repeat"
+            android:checkable="true"
+            android:orderInCategory="5"
+            app:showAsAction="never"/>
+    </group>
+    <item
+        android:id="@+id/menu_clear_cache"
+        android:title="Clear Cache"
+        android:orderInCategory="6"
+        app:showAsAction="never"/>
+</menu>
