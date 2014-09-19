@@ -22,17 +22,6 @@ MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigatio
 The sample will show a building and it's points of interest in the main activity. 
 Config resource files are in different directories, for example: use src/main for dev environment, use src/stage for stage.
 
-To show these replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
-```xml
-    <integer-array name="building_id">
-        <item>BUILDING_ID</item>
-    </integer-array>
-
-    <integer-array name="initial_floor">
-        <item>INITIAL_FLOOR</item>
-    </integer-array>
-```
-
 In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml, those values can be found in MaaS portal. 
 ```xml
     <string name="app_id">APP_ID</string>
@@ -86,9 +75,16 @@ public class MainActivity extends ActionBarActivity {
 }
 ```
 Update you res/values/integers.xml,
-```XML
-    <integer name="building_id"><!-- PwBuilding ID from MAAS --></integer>
-    <integer name="initial_floor"><!-- PwFloor ID from MAAS --></integer>
+
+To show these replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
+```xml
+    <integer-array name="building_id">
+        <item>BUILDING_ID</item>
+    </integer-array>
+
+    <integer-array name="initial_floor">
+        <item>INITIAL_FLOOR</item>
+    </integer-array>
 
     <integer name="minimum_floor_zoom_level"><!-- Minimum floor zoom level --></integer>
     <integer name="minimum_marker_zoom_level"><!-- Minimum marker zoom level --></integer>
