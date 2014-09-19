@@ -1,6 +1,17 @@
 Change Log
 ==========
 
+Version 2.0.5 *(2014-09-31)*
+----------------------------
+ * Migrating to use Google Maps v2 API from Google Play Services (4.x).
+ * Added MaaS MappingLibrary module that is an Android library for wrapping support for Google Play Services (Google Maps) and MaaS Mapping SDK..
+ * Added Location SDK as a dependency for MappingLibrary.
+ * Add "Clear Cache" into Mapping Sample
+ * Updated "minSdkVersion" to "10" since Google Play Services (4.x) only support API level 10 and above.
+ * Updated version of Picasso to '2.3.4'
+ * Updated MaaSCore to v1.3.7
+ * Performance improvement, Refactor & Bug fixes
+
 Version 1.2.3 *(2014-02-26)*
 ----------------------------
  * Fixed builds to produce Java 6 compatible binaries using 'sourceCompatibility' and 'targetCompatibility' equal to '1.6'.
