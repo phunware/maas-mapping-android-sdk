@@ -31,8 +31,7 @@ public final class MseLocationProviderFactory {
     public PwLocationProvider createLocationProvider(PwBuilding building) {
         if (locationProvider == null) {
             PwLocationProviderConnectivityDetector connectivityDetector = new PwLocationProviderConnectivityDetector();
-            PwFloorIdMapLocationInterceptor floorIdMapLocationInterceptor = new PwFloorIdMapLocationInterceptor(null);
-            locationProvider = pwLocationProviderFactory.getPwMseLocationProvider(mContext, connectivityDetector, floorIdMapLocationInterceptor, building.getVenueGuid());
+            locationProvider = pwLocationProviderFactory.getPwMseLocationProvider(mContext, connectivityDetector, building.getVenueGuid());
         }
         return locationProvider;
     }

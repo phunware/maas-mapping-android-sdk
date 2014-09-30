@@ -1,4 +1,6 @@
+com.phunware.mapping
 com.phunware.mapping.library.exceptions
 com.phunware.mapping.library.maps
 com.phunware.mapping.library.ui
 com.phunware.mapping.library.util
+com.phunware.mapping.model
