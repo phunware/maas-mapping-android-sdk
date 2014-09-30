@@ -1,7 +1,10 @@
 Change Log
 ==========
 
-Version 2.0.5 *(2014-09-31)*
+Version 2.0.6 *(2014-09-30)*
+* Updated MaaSLocation SDK to '0.9.1'
+
+Version 2.0.5 *(2014-09-22)*
 ----------------------------
  * Migrating to use Google Maps v2 API from Google Play Services (4.x).
  * Added MaaS MappingLibrary module that is an Android library for wrapping support for Google Play Services (Google Maps) and MaaS Mapping SDK..
