@@ -12,6 +12,7 @@ MaaS Mapping documentation is included in the Docs folder in the repository as b
 
 
 ###Build requirements
+* Android SDK 4.0+ (API level 14) or above
 * Latest MaaS Core
 * Latest MaaS Mapping (MaaSMapping.jar and MaaSMappingLibrary.aar)
 * OkHttp 1.6.0
