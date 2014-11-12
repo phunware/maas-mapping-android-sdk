@@ -1,6 +1,7 @@
 package com.phunware.mapping.sample.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,12 +19,22 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
-import com.phunware.core.OkHttpClientCached;
+import com.phunware.core.PwLog;
+import com.phunware.location.provider.PwLocationProvider;
 import com.phunware.location.provider.PwMockLocationProvider;
+import com.phunware.mapping.PwMappingModule;
+import com.phunware.mapping.PwOnPOITypesDownloadListener;
+import com.phunware.mapping.PwRouteCallback;
 import com.phunware.mapping.library.maps.PwBuildingMapManager;
+import com.phunware.mapping.library.ui.PwBuildingMarker;
 import com.phunware.mapping.library.maps.PwMapOverlayManagerBuilder;
+import com.phunware.mapping.library.maps.PwOnBuildingPOIDataLoadedCallback;
+import com.phunware.mapping.library.maps.PwOnSnapToRouteCallback;
 import com.phunware.mapping.library.ui.PwMappingFragment;
 import com.phunware.mapping.model.PwBuilding;
+import com.phunware.mapping.model.PwPoint;
+import com.phunware.mapping.model.PwPointType;
+import com.phunware.mapping.model.PwRoute;
 import com.phunware.mapping.sample.R;
 import com.phunware.mapping.sample.providers.FusedLocationProviderFactory;
 import com.phunware.mapping.sample.providers.LocationProvider;
@@ -33,11 +45,12 @@ import com.phunware.mapping.sample.providers.SenionLocationProviderFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Shows a map of the venue.
  */
-public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener {
+public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener, PwOnSnapToRouteCallback, PwOnBuildingPOIDataLoadedCallback {
     private static final String TAG = MappingSampleFragment.class.getSimpleName();
 
     private static final String KEY_MAP_TYPE = "map_type";
@@ -48,6 +61,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     // Assumes order of Google map types array is same as order of R.array.mapping_types
     private static final int[] MAP_TYPES = new int[]{GoogleMap.MAP_TYPE_NORMAL, GoogleMap.MAP_TYPE_HYBRID, GoogleMap.MAP_TYPE_SATELLITE, GoogleMap.MAP_TYPE_NONE};
     private static final String KEY_MAP_TYPE_NAMES = "map_type_names";
+    private static final String KEY_BUILDING_ID_LIST = "building_id_list";
     private static final String MOCK_LOCATION_DIRECTORY = "mocklocation";
     private static final float MINIMUM_MARKER_ZOOM_LEVEL = 17f;
     private static final float MINIMUM_FLOOR_ZOOM_LEVEL = 13f;
@@ -59,47 +73,24 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     private int[] mBuildingList;
 
     private int mCurrentMapType;
-    private LocationProvider mCurrentProvider = LocationProvider.values()[0];
+    private LocationProvider mCurrentProvider = LocationProvider.SENION;
     private int mCurrentBuilding;
     private String mCurrentMockFileName;
     private boolean mRepeat;
 
-    private DialogInterface.OnClickListener mMapTypeSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            updateMapType(which);
-            dialog.dismiss();
-        }
-    };
+    private DialogInterface.OnClickListener mMapTypeSelectionOnClickListener;
 
-    private DialogInterface.OnClickListener mProviderSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            mCurrentProvider = LocationProvider.values()[which];
-            requestLocationUpdates(mPwBuildingMapManager.getBuilding());
-            setupMyLocationButton();
-            dialog.dismiss();
-        }
-    };
+    private DialogInterface.OnClickListener mProviderSelectionOnClickListener;
 
-    private DialogInterface.OnClickListener mBuildingSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            mCurrentBuilding = mBuildingList[which];
-            getMap().clear();
-            createPwMapOverlayManagerBuilder(null);
-            dialog.dismiss();
-        }
-    };
+    private DialogInterface.OnClickListener mBuildingSelectionOnClickListener;
 
-    private DialogInterface.OnClickListener mFileNameSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            mCurrentMockFileName = mFileList[which];
-            requestLocationUpdates(mPwBuildingMapManager.getBuilding());
-            dialog.dismiss();
-        }
-    };
+    private DialogInterface.OnClickListener mFileNameSelectionOnClickListener;
+
+    private DialogInterface.OnClickListener mPOITypeSelectionOnClickListener;
+
+    private Menu mMenu;
+    private List<PwPoint> mPwPoints;
+    private List<PwBuildingMarker> mBuildingMarkers = new ArrayList<PwBuildingMarker>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -117,11 +108,76 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         } else {
             mCurrentMapType = savedInstanceState.getInt(KEY_MAP_TYPE, GoogleMap.MAP_TYPE_NORMAL);
             mMapTypeNames = savedInstanceState.getStringArray(KEY_MAP_TYPE_NAMES);
+            mBuildingList = savedInstanceState.getIntArray(KEY_BUILDING_ID_LIST);
             mCurrentProvider = LocationProvider.values()[savedInstanceState.getInt(KEY_PROVIDER)];
             mCurrentBuilding = savedInstanceState.getInt(KEY_BUILDING);
             mCurrentMockFileName = savedInstanceState.getString(KEY_FILE_NAME);
             mRepeat = savedInstanceState.getBoolean(KEY_REPEAT);
         }
+
+
+        mMapTypeSelectionOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    updateMapType(which);
+                    dialog.dismiss();
+                } catch (Exception ex) {
+                    PwLog.e(TAG, "Error occurs in mMapTypeSelectionOnClickListener: " + ex.getMessage(), ex);
+                }
+            }
+        };
+
+        mProviderSelectionOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                    mCurrentProvider = LocationProvider.values()[which];
+                    requestLocationUpdates(mPwBuildingMapManager.getBuilding());
+                    setupMyLocationButton();
+
+                    // Update menu items if necessary
+                    if (mMenu != null) updateMenuItems(mMenu);
+                } catch (Exception ex) {
+                    PwLog.e(TAG, "Error occurs in mProviderSelectionOnClickListener: " + ex.getMessage(), ex);
+                }
+            }
+        };
+
+        mBuildingSelectionOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                    mCurrentBuilding = mBuildingList[which];
+                    getMap().clear();
+                    createPwMapOverlayManagerBuilder(null);
+                } catch (Exception ex) {
+                    PwLog.e(TAG, "Error occurs in mBuildingSelectionOnClickListener: " + ex.getMessage(), ex);
+                }
+            }
+        };
+
+        mFileNameSelectionOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                try {
+                    dialog.dismiss();
+                    mCurrentMockFileName = mFileList[which];
+                    requestLocationUpdates(mPwBuildingMapManager.getBuilding());
+                } catch (Exception ex) {
+                    PwLog.e(TAG, "Error occurs in mFileNameSelectionOnClickListener: " + ex.getMessage(), ex);
+                }
+            }
+        };
+
+        mPOITypeSelectionOnClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        };
     }
 
     @Override
@@ -164,14 +220,14 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             itemArray.add(provider.getDisplayName());
         }
         final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findProviderIndex
-                (mCurrentProvider), itemArray.toArray(new CharSequence[itemArray.size()]), R.string.mapping_provider_choose);
+            (mCurrentProvider), itemArray.toArray(new CharSequence[itemArray.size()]), R.string.mapping_provider_choose);
         menuItemSelectionDialogFragment.setOnClickListener(mProviderSelectionOnClickListener);
         return menuItemSelectionDialogFragment;
     }
 
     private DialogFragment createBuildingSelectionDialogFragment() {
         final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findBuildingIndex
-                (mCurrentBuilding), R.array.building_names, R.string.mapping_building_choose);
+            (mCurrentBuilding), R.array.building_names, R.string.mapping_building_choose);
         menuItemSelectionDialogFragment.setOnClickListener(mBuildingSelectionOnClickListener);
         return menuItemSelectionDialogFragment;
     }
@@ -181,7 +237,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             mFileList = getFileList();
         }
         final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findFileIndex
-                (mCurrentMockFileName), mFileList, R.string.mapping_file_choose);
+            (mCurrentMockFileName), mFileList, R.string.mapping_file_choose);
         menuItemSelectionDialogFragment.setOnClickListener(mFileNameSelectionOnClickListener);
         return menuItemSelectionDialogFragment;
     }
@@ -191,6 +247,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         super.onSaveInstanceState(outState);
         outState.putInt(KEY_MAP_TYPE, mCurrentMapType);
         outState.putStringArray(KEY_MAP_TYPE_NAMES, mMapTypeNames);
+        outState.putIntArray(KEY_BUILDING_ID_LIST, mBuildingList);
         outState.putInt(KEY_PROVIDER, mCurrentProvider.ordinal());
         outState.putInt(KEY_BUILDING, mCurrentBuilding);
         outState.putString(KEY_FILE_NAME, mCurrentMockFileName);
@@ -205,17 +262,33 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             mPwBuildingMapManager.removeLocationUpdates();
         }
 
-        mPwBuildingMapManager = new PwMapOverlayManagerBuilder(getActivity().getApplicationContext(), map)
-                .buildingId(mCurrentBuilding)
-                .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
-                .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
-                .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
-                .routeCallback(getPwRouteCallback())
-                .showMyLocation(true)
-                .floorChangedCallback(this)
-                .pwOnBuildingDataLoadedCallback(this)
-                .mapLoadedCallback(this)
-                .build();
+        final PwRouteCallback mRouteCallback = getPwRouteCallback();
+        PwRouteCallback routeCallbackWithToast = new PwRouteCallback() {
+            @Override
+            public void onSuccess(List<PwRoute> routes) {
+                mRouteCallback.onSuccess(routes);
+            }
+
+            @Override
+            public void onFail(int errorCode, String errorMessage) {
+                Toast.makeText(getActivity().getApplicationContext(), "No route available", Toast.LENGTH_SHORT).show();
+                mRouteCallback.onFail(errorCode, errorMessage);
+            }
+        };
+
+        mPwBuildingMapManager = new PwMapOverlayManagerBuilder(getActivity().getApplicationContext(), getPwMap())
+            .buildingId(mCurrentBuilding)
+            .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
+            .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
+            .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
+            .routeCallback(routeCallbackWithToast)
+            .showMyLocation(true)
+            .floorChangedCallback(this)
+            .pwOnBuildingDataLoadedCallback(this)
+            .pwOnBuildingPOIDataLoadedCallback(this)
+            .mapLoadedCallback(this)
+            .pwSnapToRouteCallback(this)
+            .build();
 
         // Modify Google Map after PwBuildingMapManager has applied its defaults
         map.setMapType(mCurrentMapType);
@@ -230,6 +303,8 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
 
     @Override
     public void onPrepareOptionsMenu(Menu menu) {
+        mMenu = menu;
+
         super.onPrepareOptionsMenu(menu);
         updateMenuItems(menu);
     }
@@ -320,11 +395,97 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 requestLocationUpdates(mPwBuildingMapManager.getBuilding());
             }
         } else if (item.getItemId() == R.id.menu_clear_cache) {
-            OkHttpClientCached.flushCache(getActivity().getApplicationContext());
+            mPwBuildingMapManager.clearCache(getActivity().getApplicationContext());
             Toast.makeText(getActivity().getApplicationContext(), R.string.text_clear_cache, Toast.LENGTH_SHORT).show();
+        } else if (item.getItemId() == R.id.menu_poi_types) {
+            showPOITypeDialogFragment();
+        } else if (item.getItemId() == R.id.menu_remove_pois) {
+            removePOIs();
+        } else if (item.getItemId() == R.id.menu_add_pois) {
+            addPOIs();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void removePOIs() {
+        if (mPwPoints == null) {
+            Toast.makeText(getActivity().getApplicationContext(), "No PwPoint, nothing to remove.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (mBuildingMarkers != null && mBuildingMarkers.size() > 0) {
+            Toast.makeText(getActivity().getApplicationContext(), "Already removed.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mBuildingMarkers = new ArrayList<PwBuildingMarker>();
+
+        int size = mPwPoints.size();
+        PwPoint point;
+        for (int i = 0; i <size; i++) {
+            point = mPwPoints.get(i);
+            if (point.getPoiType() == 5000) { // Business Facility
+                PwBuildingMarker marker = mPwBuildingMapManager.getBuildingMarkerFromPoint(point.getId());
+                mBuildingMarkers.add(marker);
+                marker.remove();
+            }
+        }
+
+        // Force redraw the map
+        getPwMap().invalidate();
+    }
+
+    private void addPOIs() {
+        if (mBuildingMarkers == null || mBuildingMarkers.isEmpty()) {
+            Toast.makeText(getActivity().getApplicationContext(), "No POI removed, nothing to add.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        int size = mBuildingMarkers.size();
+        for (int i = 0; i < size; i++) {
+            final PwBuildingMarker buildingMarker = mBuildingMarkers.get(i);
+            getPwMap().addMarker(buildingMarker.getMarkerOptions());
+        }
+
+        mBuildingMarkers.clear();
+        mBuildingMarkers = null;
+
+        // Force redraw the map
+        getPwMap().invalidate();
+    }
+
+    private void showPOITypeDialogFragment() {
+        PwMappingModule.getInstance().getPOITypes(getActivity().getApplicationContext(), new PwOnPOITypesDownloadListener() {
+            @Override
+            public void onSuccess(SparseArray<PwPointType> poiTypes) {
+                int size = poiTypes.size();
+                if (size > 0) {
+                    CharSequence[] list = new CharSequence[size];
+
+                    StringBuilder sb = new StringBuilder();
+                    PwPointType type;
+                    for (int i = 0; i < size; i++) {
+                        sb.setLength(0);
+                        type = poiTypes.valueAt(i);
+                        sb.append(type.getId()).append(": ").append(type.getDescription());
+                        list[i] = sb.toString();
+                    }
+
+                    final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(
+                        0,
+                        list,
+                        R.string.menu_poi_types);
+                    menuItemSelectionDialogFragment.setOnClickListener(mPOITypeSelectionOnClickListener);
+                    menuItemSelectionDialogFragment.show(getFragmentManager(), TAG);
+                }
+            }
+
+            @Override
+            public void onFailed() {
+                Toast.makeText(getActivity().getApplicationContext(), R.string.text_retrieve_poi_types_failed, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void updateMapType(final int position) {
@@ -360,32 +521,35 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     }
 
     private void requestLocationUpdates(PwBuilding pwBuilding) {
-        mPwBuildingMapManager.removeLocationUpdates();
-        switch (mCurrentProvider) {
-            case FUSED:
-                mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), FusedLocationProviderFactory.getInstance(getActivity()
-                        .getApplicationContext()).createLocationProvider(pwBuilding));
-                break;
-            case MOCK:
-                if (TextUtils.isEmpty(mCurrentMockFileName)) {
-                    Toast.makeText(getActivity().getApplicationContext(), R.string.mapping_no_mock_file, Toast.LENGTH_LONG).show();
-                } else {
-                    mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), MockLocationProviderFactory.getInstance(getActivity()
-                        .getApplicationContext()).createLocationProvider(MOCK_LOCATION_DIRECTORY + '/' + mCurrentMockFileName, this, mRepeat));
-                }
-                break;
-            case MSE:
-                mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), MseLocationProviderFactory.getInstance(getActivity()
-                        .getApplicationContext()).createLocationProvider(pwBuilding));
-                break;
-            case QUALCOMM:
-                mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), QualcommLocationProviderFactory.getInstance(getActivity()
-                        .getApplicationContext()).createLocationProvider(pwBuilding));
-                break;
-            case SENION:
-                mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), SenionLocationProviderFactory.getInstance(getActivity()
-                        .getApplicationContext()).createLocationProvider(pwBuilding));
-                break;
+        try {
+            mPwBuildingMapManager.removeLocationUpdates();
+            final Context applicationContext = getActivity().getApplicationContext();
+            PwLocationProvider locationProvider = null;
+            switch (mCurrentProvider) {
+                case FUSED:
+                    locationProvider = FusedLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
+                    break;
+                case MOCK:
+                    locationProvider = MockLocationProviderFactory.getInstance(applicationContext).createLocationProvider(MOCK_LOCATION_DIRECTORY + '/' + mCurrentMockFileName, this, mRepeat);
+                    break;
+                case MSE:
+                    locationProvider = MseLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
+                    break;
+                case QUALCOMM:
+                    locationProvider = QualcommLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
+                    break;
+                case SENION:
+                    locationProvider = SenionLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
+                    break;
+            }
+
+            if (locationProvider == null) {
+                PwLog.e(TAG, "locationProvider is null, this should never happen, go check the code");
+            } else {
+                mPwBuildingMapManager.requestLocationUpdates(applicationContext, locationProvider);
+            }
+        } catch (Exception ex) {
+            PwLog.e(TAG, "Error occurs in requestLocationUpdates", ex);
         }
     }
 
@@ -403,6 +567,31 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             }
         });
         builder.show();
+    }
+
+    @Override
+    public void snapToRouteStarted() {
+        Toast.makeText(getActivity().getApplicationContext(), "Snap to route started", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void snapToRouteStopped() {
+        Toast.makeText(getActivity().getApplicationContext(), "Snap to route stopped", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBuildingPOILoaded(final List<PwPoint> points) {
+        try {
+            Toast.makeText(getActivity().getApplicationContext(), points.size() + " POI loaded", Toast.LENGTH_SHORT).show();
+            this.mPwPoints = points;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBuildingPOIFailed(String errorMessage) {
+        Toast.makeText(getActivity().getApplicationContext(), "POI load failed: " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 }
 

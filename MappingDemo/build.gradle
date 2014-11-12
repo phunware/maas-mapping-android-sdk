@@ -1,19 +1,18 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion project.ext['compileSdkVersion']
-    buildToolsVersion project.ext['buildToolsVersion']
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_6
         targetCompatibility = JavaVersion.VERSION_1_6
     }
 
     defaultConfig {
-        minSdkVersion project.ext['minSdkVersion']
-        targetSdkVersion project.ext['targetSdkVersion']
-        versionCode 1
-        versionName '1.0'
+        minSdkVersion 14
+        compileSdkVersion 20
+        targetSdkVersion 20
+        buildToolsVersion '19.1.0'
+        versionCode 210
+        versionName '2.1.0'
         applicationId 'com.phunware.mapping.demo'
     }
 
