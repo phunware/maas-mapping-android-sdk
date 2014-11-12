@@ -42,4 +42,19 @@
         android:title="Clear Cache"
         android:orderInCategory="6"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_poi_types"
+        android:title="@string/menu_poi_types"
+        android:orderInCategory="7"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_remove_pois"
+        android:title="@string/menu_remove_pois"
+        android:orderInCategory="8"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_add_pois"
+        android:title="@string/menu_add_pois"
+        android:orderInCategory="9"
+        app:showAsAction="never"/>
 </menu>
