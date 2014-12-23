@@ -7,6 +7,7 @@ Version 2.1.0 *(Coming Soon)*
 * Added "Snap to route" 
 * Aligned Follow me & Follow me w/ heading modeswith Google Maps
 * Changed routing to Offline routing
+* Moved UI code out of mapping SDK
 * Smoothed the blude dot animation
 * Performance improvements
 * Bug fixes
