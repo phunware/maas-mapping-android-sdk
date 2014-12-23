@@ -1,7 +1,18 @@
 Change Log
 ==========
 
+Version 2.1.0 *(Coming Soon)*
+----------------------------
+* Added ability to add/remove marker from map
+* Added "Snap to route" 
+* Aligned Follow me & Follow me w/ heading modeswith Google Maps
+* Changed routing to Offline routing
+* Smoothed the blude dot animation
+* Performance improvements
+* Bug fixes
+
 Version 2.0.6 *(2014-09-30)*
+----------------------------
 * Updated MaaSLocation SDK to '0.9.1'
 
 Version 2.0.5 *(2014-09-22)*
