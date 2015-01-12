@@ -1,41 +1,19 @@
-#MaaS Mapping SDK for Android
+#MaaS Mapping
 
-Version 2.0.6
+[Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
+
+**v 2.1.0**
+________________
 
 ##Overview
-MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot and Navigation services provided by Phunware. Visit http://maas.phunware.com/ for more details and to sign up.
-
-
-###Documentation
-
-MaaS Mapping documentation is included in the Docs folder in the repository as both HTML and as a .jar. You can also find the latest documentation here: http://phunware.github.io/maas-mapping-android-sdk/
-
-
+MaaS Mapping is an all-inclusive Android SDK for Mapping, Blue Dot, and Navigation services provided by Phunware. 
 ###Build requirements
-* Android SDK 4.0+ (API level 14) or above
 * Latest MaaS Core
-* Latest MaaS Mapping (MaaSMapping.jar and MaaSMappingLibrary.aar)
-* OkHttp 1.6.0
-* OkHttp-urlconnection 1.6.0
+* Latest MaaS Location
 * AndroidSVG 1.2.1
-* Picasso 2.3.4
-* Android-maps-utils 0.3
-* Androidsvg 1.2.1
-* Retrofit 1.6.0
-
+* Picasso 2.3.2
 
 ##Prerequisites
-The sample will show a building and it's points of interest in the main activity. 
-Config resource files are in different directories, for example: use src/main for dev environment, use src/stage for stage.
-
-In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml, those values can be found in MaaS portal. 
-```xml
-    <string name="app_id">APP_ID</string>
-    <string name="app_access_key">APP_ACCESS_KEY</string>
-    <string name="app_signature_key">APP_SIGNATURE_KEY</string>
-    <string name="app_encryption_key">APP_ENCRYPTION_KEY</string>
-```
-
 Install the module in the `Application` `onCreate` method before registering keys. For example:
 ``` Java
 @Override
@@ -81,16 +59,9 @@ public class MainActivity extends ActionBarActivity {
 }
 ```
 Update you res/values/integers.xml,
-
-To show these replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
-```xml
-    <integer-array name="building_id">
-        <item>BUILDING_ID</item>
-    </integer-array>
-
-    <integer-array name="initial_floor">
-        <item>INITIAL_FLOOR</item>
-    </integer-array>
+```XML
+    <integer name="building_id"><!-- PwBuilding ID from MAAS --></integer>
+    <integer name="initial_floor"><!-- PwFloor ID from MAAS --></integer>
 
     <integer name="minimum_floor_zoom_level"><!-- Minimum floor zoom level --></integer>
     <integer name="minimum_marker_zoom_level"><!-- Minimum marker zoom level --></integer>
@@ -98,13 +69,13 @@ To show these replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/val
 
 
 ####Building Data
-Get building data for the map with `PwMappingModule.getBuildingDataByIdInBackground(context, long, PwOnBuildingDataListener)`. Building data contains all of the meta data for a `PwBuilding`, it's `PwFloor`s, and each LOD (level of detail) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and otherwise to function.
+Get building data for the map with `PwMappingModule.getBuildingData(context, long, PwOnBuildingDataListener)`. Building data contains all of the meta data for a `PwBuilding`, it's `PwFloor`s, and each LOD (level of detail) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and otherwise to function.
 
 Once building data is obtained, use the map view's method `setMapData(pwBuilding)` to pass the data to the map. It will begin loading assets and resources immediately. 
 
 An example of retrieving and using building data:
 ```Java
-PwMappingModule.getInstance().getBuildingDataByIdInBackground(this, BUILDING_ID, new PwOnBuildingDataListener() {
+PwMappingModule.getInstance().getBuildingData(this, BUILDING_ID, new PwOnBuildingDataListener() {
     @Override
     public void onSuccess(PwBuilding pwBuilding) {
         if (pwBuilding != null) {
@@ -120,13 +91,13 @@ PwMappingModule.getInstance().getBuildingDataByIdInBackground(this, BUILDING_ID,
 Or you can use callbacks to get building data. `PwOnBuildingDataLoadedCallback` provides callback functions, that calls when `PwBuilding` load success or fail.    
 
 ####Point of Interest Data
-Get a list Points of Interest (POI) with `getPOIDataInBackground(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView` it can draw points on the map when relevant. This means that if a building has multiple floors then the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
+Get a list Points of Interest (POI) with `getPOIs(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView` it can draw points on the map when relevant. This means that if a building has multiple floors then the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
 
 Once POI data is obtained, use the map view's method `setPOIList(pois)` to pass the data to the map.
 
 An example of retrieving and using POI data:
 ```Java
-PwMappingModule.getInstance().getPOIDataInBackground(this, BUILDING_ID, new PwOnPOIDataListener() {
+PwMappingModule.getInstance().getPOIs(this, BUILDING_ID, new PwOnPOIDataListener() {
     @Override
     public void onSuccess(List<PwPoint> pois) {
         if (pois != null) {
@@ -139,13 +110,33 @@ PwMappingModule.getInstance().getPOIDataInBackground(this, BUILDING_ID, new PwOn
 ```
 After you call `setupMapData`, you can get all points for current building by `getBuildingPoints`.
 
+####Point of Interest Type
+Get all type of Points of Interest (POI) with `getPOITypes(context, PwOnPOITypesDownloadListener)`. Once the list of Points of Interest (POI) type is downloaded, it will call `onSuccess(SparseArray<PwPointType>)` method in PwOnPointOfInterestTypesDownloadListener, otherwise it will call onFailed instead.
+
+An example of retrieving and using POI type data:
+```Java
+PwMappingModule.getInstance().retrievePointsOfInterestTypes(getActivity().getApplicationContext(), new PwOnPointOfInterestTypesDownloadListener() {
+    @Override
+    public void onSuccess(SparseArray<PwPointType> poiTypes) {
+        Toast.makeText(context, "POI types: " + poiTypes, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onFailed() {
+        Toast.makeText(context, R.string.text_retrieve_poi_types_failed, Toast.LENGTH_SHORT).show();
+    }
+});
+```
+
 ####Event Callbacks
 This view provides the option to set callbacks for certain events:
 
 * `PwMapOverlayManagerBuilder.pwOnFloorChangedCallback(PwOnFloorChangedCallback)` registers a callback that be called once the map has completed the floor change.
 * `PwMapOverlayManagerBuilder.pwOnMapDataLoadedCallback(PwOnMapDataLoadedCallback)` registers a callback that be called once the map data loaded.
 * `PwMapOverlayManagerBuilder.pwOnBuildingDataLoadedCallback(PwOnBuildingDataLoadedCallback)` registers a callback that be called once the building data loaded.
+* `PwMapOverlayManagerBuilder.pwOnBuildingPOIDataLoadedCallback(PwOnBuildingPOIDataLoadedCallback)` registers a callback that be called once the building POI data loaded.
 * `PwMapOverlayManagerBuilder.pwSvgDownloadCallback(PwSvgDownloadCallback)` registers a callback that be called once the SVG url are download.
+* `PwMapOverlayManagerBuilder.pwSnapToRouteCallback(PwSnapToRouteCallback)` registers a callback that be called once "Snap to route" started or stopped.
 
 ##Blue Dot
 A user's location in a venue can be retrieved with `MyLocationLayer`. To use this layer should set showMyLocation to true, and pass the PwLocationProvider into onBuildingRetrievedSuccessful callback. A Blue Dot will be displayed on the map automatically, if available, representing the end-user's location.
@@ -171,6 +162,22 @@ Receive a callback once building data retrieved successfully, pass the location 
     public void onBuildingRetrievedSuccessful(PwBuilding pwBuilding) {
         mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), LocationProviderFactory.getInstance(getActivity().getApplicationContext()).createLocationProvider(pwBuilding));
     }
+```
+
+###Enable/Disable Blue Dot smoothing
+
+Blue Dot is no longer as simple as moving an marker to a different coordinate when a location provider sends in a location update.  In order to provide a more enjoyable experience for users, we manipulate the user location marker in such a manner as to smoothly animate it as the user moves.  
+
+The Blue Dot smoothing is enabled by default, but you can change it on the fly.
+
+An example to disable Blue Dot smoothing:
+```java
+    mPwBuildingMapManager.setBlueDotSmoothingEnabled(false);
+```
+
+An example to enablue Blue Dot smoothing:
+```java
+    mPwBuildingMapManager.setBlueDotSmoothingEnabled(true);
 ```
 
 ##Routing
@@ -217,6 +224,83 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
 
 Routes are comprised of segments.
 
+###
+When in routing mode, the user's location can be forced to a route line as long as the reported, averaged or interpolated user location is within range of the route line based on some multiple of the horizontal accuracy.  The tolerance factor that is multiplied to the horizontal accuracy is configurable, but restricted to values of `PwRouteSnappingTolerance.Off`(0), `PwRouteSnappingTolerance.Normal(1.0)`, `PwRouteSnappingTolerance.Medium(1.5)` and `PwRouteSnappingTolerance.Large(2.0)`.
+
+An example to turn it off:
+```java
+    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Off);
+```
+
+An example to tune the tolerance, you can also change it to `Medium` or `Large`:
+```java
+    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Normal);
+```
+
+
+####Marker
+Get a list of `PwBuildingMarker` there are two ways:
+* In subclass of `PwMappingFragment`, `getPwMap()` will returning the `PwMap` object, use `getBuildingMarkers(floorId)` will returning a list of `PwBuildingMarker` on the given floor.
+* Implement `PwOnBuildingPOIDataLoadedCallback` interface, when the building POI are loaded, the callback function `onBuildingPOILoaded(List<PwPoint>)` will be called. You can use `getBuildingMarkerByPointId` in `PwMap` with the id of `PwPoint`.
+
+For add and remove marker from map, it's the same way Google map does.
+To remove the marker from map with `remove()` in `PwBuildingMarker`.
+
+To add the marker back to map with `getPwMap().addMarker(PwMarkerOptions)`, you can get the `PwMarkerOptions` with `getMarkerOptions` in `PwBuildingMarker`.
+
+After add or remove marker from map, you should force refresh the map with `getPwMap().invalidate();`
+
+```java
+// Implement `PwOnBuildingPOIDataLoadedCallback` interface
+public class MappingSampleFragment extends PwMappingFragment implements PwOnBuildingPOIDataLoadedCallback {
+
+	// Holds all PwPoints instances
+	private List<PwPoint> mPwPoints;
+	
+	// Store points into mPwPoints
+    @Override
+    public void onBuildingPOILoaded(final List<PwPoint> points) {
+        try {
+            Toast.makeText(getActivity().getApplicationContext(), points.size() + " POI loaded", Toast.LENGTH_SHORT).show();
+            this.mPwPoints = points;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+	// Remove building marker from map
+    private void removePOIs() {
+        
+        int size = mPwPoints.size();
+        PwPoint point;
+        for (int i = 0; i <size; i++) {
+            point = mPwPoints.get(i);
+            if (point.getPoiType() == 5000) { // Business Facility
+                PwBuildingMarker marker = mPwBuildingMapManager.getBuildingMarkerFromPoint(point.getId());
+                mBuildingMarkers.add(marker);
+                marker.remove();
+            }
+        }
+
+        // Force redraw the map
+        getPwMap().invalidate();
+    }
+    
+    // Add building marker to map
+    private void addPOIs() {
+        int size = mBuildingMarkers.size();
+        for (int i = 0; i < size; i++) {
+            final PwBuildingMarker buildingMarker = mBuildingMarkers.get(i);
+            getPwMap().addMarker(buildingMarker.getMarkerOptions());
+        }
+
+        // Force redraw the map
+        getPwMap().invalidate();
+    }
+}
+```
+
+
 
 ----------
 
@@ -231,4 +315,3 @@ MaaS Mapping uses the following 3rd party components.
 | ------------- |:-------------:| -----:|
 | [Picasso](https://github.com/square/picasso)      | A powerful image downloading and caching library for Android      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
 | [AndroidSVG](https://code.google.com/p/androidsvg/)      | A SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
-

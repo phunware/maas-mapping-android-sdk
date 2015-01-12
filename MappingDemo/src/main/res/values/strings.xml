@@ -36,6 +36,9 @@
     <string name="text_retrieve_poi_types_failed">Retrieve POI types data failed</string>
     <string name="menu_remove_pois">Remove POIs</string>
     <string name="menu_add_pois">Add POIs</string>
+    <string name="menu_bluedot_smoothing">Bluedot Smoothing</string>
+    <string name="menu_route_snapping">Route Snapping: %1$s</string>
+    <string name="menu_route_snapping_tolerance">Route Snapper Tolerance</string>
 
     <string-array name="mapping_types">
         <item>Normal</item>
