@@ -25,10 +25,10 @@ MaaS Mapping documentation is included in the Docs folder in the repository as b
 
 
 ##Prerequisites
-The sample will show a building and it's points of interest in the main activity. 
-Config resource files are in different directories, for example: use src/main for dev environment, use src/stage for stage.
+The sample will show a building and its points of interest in the main activity. 
+Config resource files are in different directories; for example, use src/main for dev environment and use src/stage for stage.
 
-In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml, those values can be found in MaaS portal. 
+In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml. Those values can be found in the MaaS portal. 
 ```xml
     <string name="app_id">APP_ID</string>
     <string name="app_access_key">APP_ACCESS_KEY</string>
@@ -59,9 +59,9 @@ Users of this class must forward some life cycle methods from the activity or fr
 * `onLowMemory()`
 
 ####Adding Indoor Maps to a Activity
-Mapping SDK provides `PwDefaultMappingFragment` a default implementation of PwMappingFragment. It creates a map fragment and displays indoor maps, their markers and routing between points.
+Mapping SDK provides `PwDefaultMappingFragment`——a default implementation of PwMappingFragment. It creates a map fragment and displays indoor maps, their markers and routing between points.
 
-Define a layout: activity_main.xml
+Define a layout in activity_main.xml:
 ```XML
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/map"
@@ -69,7 +69,7 @@ Define a layout: activity_main.xml
     android:layout_height="match_parent"
     android:name="com.phunware.mapping.library.ui.PwDefaultMappingFragment" />
 ```
-In the MainActivity.java
+In the MainActivity.java:
 ```Java
 public class MainActivity extends ActionBarActivity {
     @Override
@@ -80,9 +80,7 @@ public class MainActivity extends ActionBarActivity {
     }
 }
 ```
-Update your res/values/integers.xml,
-
-To show these, replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
+Update your res/values/integers.xml. To show these, replace `BUILDING_ID` and `INITIAL_FLOOR` with your IDs in res/values/integers.xml.    
 ```xml
     <integer-array name="building_id">
         <item>BUILDING_ID</item>
@@ -98,7 +96,7 @@ To show these, replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/va
 
 
 ####Building Data
-Get building data for the map with `PwMappingModule.getBuildingDataByIdInBackground(context, long, PwOnBuildingDataListener)`. Building data contains all of the meta data for a `PwBuilding`, it's `PwFloor`s, and each LOD (level of detail) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and otherwise to function.
+Get building data for the map with `PwMappingModule.getBuildingDataByIdInBackground(context, long, PwOnBuildingDataListener)`. Building data contains all of the metadata for a `PwBuilding`, its `PwFloor`s and each level of detail (LOD) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and to otherwise function.
 
 Once building data is obtained, use the map view's method `setMapData(pwBuilding)` to pass the data to the map. It will begin loading assets and resources immediately. 
 
@@ -117,10 +115,10 @@ PwMappingModule.getInstance().getBuildingDataByIdInBackground(this, BUILDING_ID,
     }
 });
 ```
-Or you can use callbacks to get building data. `PwOnBuildingDataLoadedCallback` provides callback functions, that calls when `PwBuilding` load success or fail.    
+Or you can use callbacks to get building data. `PwOnBuildingDataLoadedCallback` provides callback functions that call when `PwBuilding` loads successfully or fails.    
 
 ####Point of Interest Data
-Get a list Points of Interest (POI) with `getPOIDataInBackground(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView` it can draw points on the map when relevant. This means that if a building has multiple floors then the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
+Get a list of points of interest (POI) with `getPOIDataInBackground(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView`, it can draw points on the map when relevant. This means that if a building has multiple floors, the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
 
 Once POI data is obtained, use the map view's method `setPOIList(pois)` to pass the data to the map.
 
@@ -137,18 +135,18 @@ PwMappingModule.getInstance().getPOIDataInBackground(this, BUILDING_ID, new PwOn
     }
 });
 ```
-After you call `setupMapData`, you can get all points for current building by `getBuildingPoints`.
+After you call `setupMapData`, you can get all points for the current building by `getBuildingPoints`.
 
 ####Event Callbacks
 This view provides the option to set callbacks for certain events:
 
-* `PwMapOverlayManagerBuilder.pwOnFloorChangedCallback(PwOnFloorChangedCallback)` registers a callback that be called once the map has completed the floor change.
-* `PwMapOverlayManagerBuilder.pwOnMapDataLoadedCallback(PwOnMapDataLoadedCallback)` registers a callback that be called once the map data loaded.
-* `PwMapOverlayManagerBuilder.pwOnBuildingDataLoadedCallback(PwOnBuildingDataLoadedCallback)` registers a callback that be called once the building data loaded.
-* `PwMapOverlayManagerBuilder.pwSvgDownloadCallback(PwSvgDownloadCallback)` registers a callback that be called once the SVG url are download.
+* `PwMapOverlayManagerBuilder.pwOnFloorChangedCallback(PwOnFloorChangedCallback)` registers a callback that will be called once the map has completed the floor change.
+* `PwMapOverlayManagerBuilder.pwOnMapDataLoadedCallback(PwOnMapDataLoadedCallback)` registers a callback that will be called once the map data has loaded.
+* `PwMapOverlayManagerBuilder.pwOnBuildingDataLoadedCallback(PwOnBuildingDataLoadedCallback)` registers a callback that will be called once the building data has loaded.
+* `PwMapOverlayManagerBuilder.pwSvgDownloadCallback(PwSvgDownloadCallback)` registers a callback that will be called once the .svg URL is downloaded.
 
 ##Blue Dot
-A user's location in a venue can be retrieved with `MyLocationLayer`. To use this layer should set showMyLocation to true, and pass the PwLocationProvider into onBuildingRetrievedSuccessful callback. A Blue Dot will be displayed on the map automatically, if available, representing the end-user's location.
+A user's location in a venue can be retrieved with `MyLocationLayer`. To use this layer, set showMyLocation to true and pass the PwLocationProvider into the onBuildingRetrievedSuccessful callback. A blue dot representing the end-user's location will be displayed on the map automatically, if available.
 
 An example of using `MyLocationLayer`:
 ```Java
@@ -165,7 +163,7 @@ An example of using `MyLocationLayer`:
         .build();
 ```
 
-Receive a callback once building data retrieved successfully, pass the location provider in requestLocationUpdates:
+To receive a callback once building data has been retrieved successfully, pass the location provider in requestLocationUpdates:
 ```java
     @Override
     public void onBuildingRetrievedSuccessful(PwBuilding pwBuilding) {
@@ -174,19 +172,18 @@ Receive a callback once building data retrieved successfully, pass the location 
 ```
 
 ##Routing
-The `PwMappingFragment` can display routes by using a `PwMapRoute`. Routes can be a path between any two points that are defined in the MaaS Portal. A route can go from a Point of Interest (POI) to a Point of Interest, or from any way-point to a POI, or "My Location" to POI.
+The `PwMappingFragment` can display routes by using a `PwMapRoute`. Routes can be a path between any two points that are defined in the MaaS portal. A route can go from a point of interest (POI) to a point of interest, from any waypoint to a POI or from "My Location" to a POI.
 
-Get data for a route (if available) with `PwMappingModule#getRoute(context, long, long, boolean)` or one of it's overloaded methods. There are also methods to help get route data in the background.
-There is a special method to help get a route from a point on the map; `getRouteFromLocation(context, float, float, long, long, boolean)`. This will find a route with the starting point near an `X` and `Y` coordinate. The actual starting point depends on the closest way-point that is set on the MaaS portal. 
-The last boolean is flag for accessible route, pass true if want to get accessible route.
+Get data for a route (if available) with `PwMappingModule#getRoute(context, long, long, boolean)` or one of its overloaded methods. There are also methods to help get route data in the background.
+There is a special method to help get a route from a point on the map: `getRouteFromLocation(context, float, float, long, long, boolean)`. This will find a route with the starting point near an `X` and `Y` coordinate. The actual starting point depends on the closest waypoint that is set on the MaaS portal. The last Boolean is flag for accessible routes——pass true if you want to retrieve accessible routes.
 
 An example of retrieving and using route data:
 ```java
-// Note that the start and end point Ids should come from a call to PwPoint#getId()
+// Note that the start and end point IDs should come from a call to PwPoint#getId()
 PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, endingPointId, new PwRouteCallback() {
     @Override
     public void onSuccess(ArrayList<PwRoute> routes) {
-        //We currently only get bag one route, so use it. Figure out how to handle multiple routes in the future.
+        //We currently only get back one route as of this time. Multiple routes will be handled in the future.
         ArrayList<PwPoint> routePoints = routes.get(0).getPoints();
         mMapRoute = new MapRoute(routePoints);
 
@@ -194,7 +191,7 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
         mMapRoute.addRoute(routePoints, mPwBuilding, mGoogleMap, mRouteColor, mRouteStrokeWidth);
         toggleMarkers(mCurrentZoom >= mMinimumMarkerZoomLevel, mCurrentFloorId);
 
-        // Animate Camera back to starting point.
+        // Animate camera back to starting point.
         final PwRoute startRoute = routes.get(0);
         if (!startRoute.getPoints().isEmpty()) {
             final PwPoint startPoint = startRoute.getPoints().get(0);
@@ -215,14 +212,14 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
 ```
 
 
-Routes are comprised of segments. In the Mapping SDK, a segment is a path between two points that are marked as an exit or a portal. Use the methods `getPreviousFloorId()` and `getNextFloorId()` to get the floorId on a `PwMapRoute`, use `showFloor` on `PwBuildingMapManager` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists, or the previous segment if one exists.
+Routes are comprised of segments. In the Mapping SDK, a segment is a path between two points that are marked as an exit or a portal. Use the methods `getPreviousFloorId()` and `getNextFloorId()` to get the floorId on a `PwMapRoute`, then use `showFloor` on `PwBuildingMapManager` to show a highlighted path along the route. The highlighted path will progress to the next segment if one exists or the previous segment if one exists.
 
 Attribution
 -----------
-MaaS Mapping uses the following 3rd party components. 
+MaaS Mapping uses the following third party components. 
 
 | Component     | Description   | License  |
 | ------------- |:-------------:| -----:|
-| [Picasso](https://github.com/square/picasso)      | A powerful image downloading and caching library for Android      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
-| [AndroidSVG](https://code.google.com/p/androidsvg/)      | A SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
+| [Picasso](https://github.com/square/picasso)      | A powerful image downloading and caching library for Android.      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
+| [AndroidSVG](https://code.google.com/p/androidsvg/)      | A SVG parser and renderer for Android.      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
 
