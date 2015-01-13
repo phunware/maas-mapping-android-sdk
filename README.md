@@ -50,8 +50,8 @@ public void onCreate() {
 ##Mapping
 Mapping starts with the `PwMappingFragment` class. It subclasses SupportMapFragment to provide a convenient interface that downloads, stores and displays indoor maps and associated points of interest. 
 
-####Life cycle
-Users of this class must forward some life cycle methods from the activity or fragment containing this view to the corresponding methods in this class. In particular the following methods must be forwarded:
+####Life Cycle
+Users of this class must forward some life cycle methods from the activity or fragment containing this view to the corresponding methods in this class. In particular, the following methods must be forwarded:
 
 * `onCreate(android.app.Activity, android.os.Bundle)`
 * `onSaveInstanceState(android.os.Bundle)`
@@ -59,7 +59,7 @@ Users of this class must forward some life cycle methods from the activity or fr
 * `onLowMemory()`
 
 ####Adding Indoor Maps to a Activity
-Mapping SDK provides `PwDefaultMappingFragment` a default implementation of PwMappingFragment, it creates a map fragment, displaying indoor map and markers, and routing between points.
+Mapping SDK provides `PwDefaultMappingFragment` a default implementation of PwMappingFragment. It creates a map fragment and displays indoor maps, their markers and routing between points.
 
 Define a layout: activity_main.xml
 ```XML
@@ -80,9 +80,9 @@ public class MainActivity extends ActionBarActivity {
     }
 }
 ```
-Update you res/values/integers.xml,
+Update your res/values/integers.xml,
 
-To show these replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
+To show these, replace `BUILDING_ID` and `INITIAL_FLOOR` with your ids in res/values/integers.xml.    
 ```xml
     <integer-array name="building_id">
         <item>BUILDING_ID</item>
