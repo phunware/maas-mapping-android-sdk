@@ -242,6 +242,20 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
 }, false);
 ```
 
+###Route Snapping Tolerance
+When in routing mode, the user's location can be forced to a route line as long as the reported, averaged or interpolated user location is within range of the route line based on some multiple of the horizontal accuracy.  The tolerance factor that is multiplied to the horizontal accuracy is configurable, but restricted to values of `PwRouteSnappingTolerance.Off`(0), `PwRouteSnappingTolerance.Normal(1.0)`, `PwRouteSnappingTolerance.Medium(1.5)` and `PwRouteSnappingTolerance.Large(2.0)`.
+
+An example to turn it off:
+```java
+    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Off);
+```
+
+An example to tune the tolerance, you can also change it to `Medium` or `Large`:
+```java
+    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Normal);
+```
+
+
 ####Marker
 Get a list of `PwBuildingMarker` there are two ways:
 * In subclass of `PwMappingFragment`, `getPwMap()` will returning the `PwMap` object, use `getBuildingMarkers(floorId)` will returning a list of `PwBuildingMarker` on the given floor.
