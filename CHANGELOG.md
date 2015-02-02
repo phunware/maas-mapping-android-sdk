@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 2.3.0 *(Coming Soon)*
+Version 2.3.0 *(2015-02-02)*
 ----------------------------
 * Follow me & Follow me w/ heading modes aligned with Google Maps
 * Offline routing
