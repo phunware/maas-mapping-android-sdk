@@ -3,17 +3,15 @@ Change Log
 
 Version 2.3.0 *(2015-02-02)*
 ----------------------------
-* Follow me & Follow me w/ heading modes aligned with Google Maps
-* Offline routing
-* Added method fetch POI type mappings via SDK
-* Added Snaps to route
-* Added on building POI loaded callback
-* Added ability to add/remove marker
-* Added Snap To Route Improvements for Enable / Disable and Custom Behavior
-* Added flag that allows developer to enable/disable blue dot smoothing
-* Fixed POI image missing issue
+* Added new "blue dot smoothing" functionality to provide a better user location tracking experience.
+* Added `setBlueDotSmoothingEnabled` method to `PwBuildingMapManager` for turning blue dot smoothing on and off.
+* Added `setRouteSnappingTolerance` method to `PwBuildingMapManager` for turning off route snapping or setting a different tolerance.
+* Added `retrievePointsOfInterestTypes` method to `PwMappingModule` for fetching all POI types.
+* Added `pwOnBuildingPOIDataLoadedCallback` method to `PwMapOverlayManagerBuilder` for getting callback when POI are loaded.
+* Added `remove` method to `PwBuildingMarker` for remove itself from PwMap.
+* Added `addMarker` to `PwMap` for add a `PwBuildingMarker` to PwMap.
 * Updated MaaSLocation SDK to '1.0.0'
-* Minor bug fixes
+* Bug fixes and performance enhancements
 
 Version 2.0.6 *(2014-09-30)*
 ----------------------------
