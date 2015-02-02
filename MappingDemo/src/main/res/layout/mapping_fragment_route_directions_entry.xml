@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginTop="16dp">
+
+        <RelativeLayout
+            android:id="@+id/route_directions_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/start_route_label_textview"
+                android:layout_alignBaseline="@+id/start_navigation_autocompletetextview"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:text="@string/mapping_start_route_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/mapping_blue" />
+
+            <com.phunware.mapping.sample.ui.InstantAutoCompleteTextView
+                android:id="@+id/start_navigation_autocompletetextview"
+                android:background="@android:color/transparent"
+                android:hint="@string/mapping_choose_starting_point_hint"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_toRightOf="@+id/start_route_label_textview"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:inputType="textNoSuggestions"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <View
+                android:id="@+id/spacer_line"
+                android:background="@color/mapping_grey_line"
+                android:layout_height="1dp"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_below="@+id/start_navigation_autocompletetextview" />
+
+            <TextView
+                android:id="@+id/end_route_label_textview"
+                android:layout_alignBaseline="@+id/end_navigation_autocompletetextview"
+                android:layout_height="wrap_content"
+                android:layout_width="48dp"
+                android:layout_marginLeft="4dp"
+                android:layout_marginRight="4dp"
+                android:text="@string/mapping_end_route_label"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="@color/mapping_red"
+                android:layout_below="@+id/spacer_line" />
+
+            <com.phunware.mapping.sample.ui.InstantAutoCompleteTextView
+                android:id="@+id/end_navigation_autocompletetextview"
+                android:background="@android:color/transparent"
+                android:hint="@string/mapping_choose_destination_hint"
+                android:layout_below="@+id/spacer_line"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_toRightOf="@+id/end_route_label_textview"
+                android:inputType="textNoSuggestions"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:singleLine="true"
+                android:ellipsize="end" />
+
+            <View
+                android:id="@+id/spacer_line3"
+                android:background="@color/mapping_grey_line"
+                android:layout_height="1dp"
+                android:layout_width="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_below="@+id/end_navigation_autocompletetextview" />
+
+            <CheckBox
+                android:id="@+id/checkbox_is_accessible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_alignTop="@+id/spacer_line3"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mapping_checkbox_accessible_route"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_marginTop="4dp"
+                android:layout_below="@+id/spacer_line3"
+                android:layout_alignLeft="@+id/end_navigation_autocompletetextview"
+                android:layout_alignStart="@+id/end_navigation_autocompletetextview"/>
+
+        </RelativeLayout>
+
+        <ImageButton
+            android:id="@+id/swap_route_imageButton"
+            android:background="@drawable/mapping_item_background_holo_light"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_navigation_swap"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/spacer_line2"
+        android:background="@color/mapping_grey_line"
+        android:layout_height="1dp"
+        android:layout_width="wrap_content"/>
+
+    <Button
+        android:id="@+id/button_done"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Route"
+        android:textColor="@android:color/primary_text_light"
+        style="@android:style/Widget.Holo.Button.Borderless" />
+
+</LinearLayout>

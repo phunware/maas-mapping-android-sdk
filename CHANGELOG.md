@@ -1,7 +1,25 @@
 Change Log
 ==========
 
+Version 2.3.0 *(Coming Soon)*
+----------------------------
+* Follow me & Follow me w/ heading modes aligned with Google Maps
+* Offline routing
+* Added method fetch POI type mappings via SDK
+* Added Snaps to route
+* Added on building POI loaded callback
+* Added ability to add/remove marker
+* Added Snap To Route Improvements for Enable / Disable and Custom Behavior
+* Added flag that allows developer to enable/disable blue dot smoothing
+* Fixed POI image missing issue
+* Updated MaaSLocation SDK to '1.0.0'
+* Minor bug fixes
+
 Version 2.0.6 *(2014-09-30)*
+----------------------------
+* Merged JavaDoc for Mapping and MappingLibrary
+* Fixed MappingLibrary-javadoc.jar and MappingLibrary-sources.jar
+* Fixed building warnings
 * Updated MaaSLocation SDK to '0.9.1'
 
 Version 2.0.5 *(2014-09-22)*

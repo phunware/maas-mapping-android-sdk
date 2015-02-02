@@ -57,4 +57,15 @@
         android:title="@string/menu_add_pois"
         android:orderInCategory="9"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_bluedot_smoothing"
+        android:title="@string/menu_bluedot_smoothing"
+        android:checkable="true"
+        android:orderInCategory="10"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_route_snapping"
+        android:title="@string/menu_route_snapping"
+        android:orderInCategory="11"
+        app:showAsAction="never"/>
 </menu>

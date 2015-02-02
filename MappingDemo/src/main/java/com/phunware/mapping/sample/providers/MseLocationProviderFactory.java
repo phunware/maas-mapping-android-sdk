@@ -5,7 +5,6 @@ import android.content.Context;
 import com.phunware.location.PwLocationProviderConnectivityDetector;
 import com.phunware.location.provider.PwLocationProvider;
 import com.phunware.location.provider.PwLocationProviderFactory;
-import com.phunware.location.provider.interceptor.PwFloorIdMapLocationInterceptor;
 import com.phunware.mapping.model.PwBuilding;
 
 public final class MseLocationProviderFactory {

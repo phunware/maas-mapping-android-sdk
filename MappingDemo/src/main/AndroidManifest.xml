@@ -8,6 +8,9 @@
     This is okay because this application will never be released for production. Do not use this permission in a real release build.-->
     <uses-permission android:name="android.permission.ACCESS_MOCK_LOCATION"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:name=".MappingSampleApplication"
         android:allowBackup="true"

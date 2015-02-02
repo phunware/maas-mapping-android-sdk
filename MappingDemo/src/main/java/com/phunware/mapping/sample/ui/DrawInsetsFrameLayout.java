@@ -24,11 +24,10 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 
-import com.phunware.mapping.library.R;
-
+import com.phunware.mapping.sample.R;
 
 /**
- * A layout that draws something in the insets passed to {@link #fitSystemWindows(Rect)}, i.e. the area above UI chrome
+ * A layout that draws something in the insets passed to {@link #fitSystemWindows(android.graphics.Rect)}, i.e. the area above UI chrome
  * (status and navigation bars, overlay action bars).
  */
 public class DrawInsetsFrameLayout extends FrameLayout {
@@ -123,7 +122,7 @@ public class DrawInsetsFrameLayout extends FrameLayout {
 
     /**
      * Allows the calling container to specify a callback for custom processing when insets change (i.e. when
-     * {@link #fitSystemWindows(Rect)} is called. This is useful for setting padding on UI elements based on
+     * {@link #fitSystemWindows(android.graphics.Rect)} is called. This is useful for setting padding on UI elements based on
      * UI chrome insets (e.g. a Google Map or a ListView). When using with ListView or GridView, remember to set
      * clipToPadding to false.
      */
