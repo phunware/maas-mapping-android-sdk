@@ -13,6 +13,7 @@ PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy i
 
 
 ###Build requirements
+Android SDK 4.0+ (API level 14) or above
 * Latest MaaS Core
 * Latest MaaS Location
 * AndroidSVG 1.2.1
