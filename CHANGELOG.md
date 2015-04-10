@@ -1,6 +1,15 @@
 Change Log
 ==========
 
+Version 2.4.0 *(2015-04-10)*
+----------------------------
+* Added options that allow routing from any point of interest, user location or dropped pin annotation to any other point of interest, user location or dropped pin marker (in other words, any type of route endpoint is now allowed on either end of the route).
+* Added `setMarkerZoomLevel` method to `PwBuildingMapManager` for toggling POI zoom level.
+* Added `setBlueDotSmoothingEnabled` method to `PwBuildingMapManager` for toggling blue dot.
+* Added DiskLRUCache to cache SVG tiles, any tile will only be render once.
+* Removed `onPreDraw` listeners, using `RenderThread` handle real time occlusion detection.
+* Updated MaaSLocation SDK to '1.0.1'
+
 Version 2.3.0 *(2015-02-02)*
 ----------------------------
 * Added new "blue dot smoothing" functionality to provide a better user location tracking experience.

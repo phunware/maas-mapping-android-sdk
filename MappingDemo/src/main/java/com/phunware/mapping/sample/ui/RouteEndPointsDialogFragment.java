@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
 
+import com.phunware.core.PwLog;
 import com.phunware.mapping.model.PwBuilding;
 import com.phunware.mapping.model.PwPoint;
 import com.phunware.mapping.sample.R;
@@ -32,6 +33,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
     private static final String KEY_START_POINT_OF_INTEREST = "KEY_START_POINT_OF_INTEREST";
     private static final String KEY_DESTINATION_POINT_OF_INTEREST = "KEY_DESTINATION_POINT_OF_INTEREST";
     private static final String KEY_HAS_LOCATION = "KEY_HAS_LOCATION";
+    private static final String KEY_HAS_FLAT_MARKER = "KEY_HAS_FLAT_MARKER";
 
     //Data
     private PwBuilding mPwBuilding;
@@ -39,6 +41,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
     private PwPoint mDestinationPointOfInterest;
     private PwPoint mStartPointOfInterest;
     private boolean mHasLocation;
+    private boolean mHasFlatMarker;
 
     //Views
     private InstantAutoCompleteTextView mStartAutoCompleteTextView;
@@ -61,12 +64,17 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
     }
 
     static RouteEndPointsDialogFragment newInstance(PwBuilding pwBuilding, ArrayList<PwPoint> pointsOfInterest, PwPoint destinationPOI, boolean hasLocation) {
+        return newInstance(pwBuilding, pointsOfInterest, destinationPOI, hasLocation, false);
+    }
+
+    static RouteEndPointsDialogFragment newInstance(PwBuilding pwBuilding, ArrayList<PwPoint> pointsOfInterest, PwPoint destinationPOI, boolean hasLocation, boolean hasFlatMarker) {
         RouteEndPointsDialogFragment fragment = new RouteEndPointsDialogFragment();
         Bundle args = new Bundle();
         args.putParcelable(KEY_BUILDING, pwBuilding);
         args.putParcelableArrayList(KEY_POINTS_OF_INTEREST, pointsOfInterest);
         args.putParcelable(KEY_DESTINATION_POINT_OF_INTEREST, destinationPOI);
         args.putBoolean(KEY_HAS_LOCATION, hasLocation);
+        args.putBoolean(KEY_HAS_FLAT_MARKER, hasFlatMarker);
         fragment.setArguments(args);
         return fragment;
     }
@@ -87,6 +95,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
             mPointsOfInterest = args.getParcelableArrayList(KEY_POINTS_OF_INTEREST);
             mDestinationPointOfInterest = args.getParcelable(KEY_DESTINATION_POINT_OF_INTEREST);
             mHasLocation = args.getBoolean(KEY_HAS_LOCATION, false);
+            mHasFlatMarker = args.getBoolean(KEY_HAS_FLAT_MARKER, false);
         } else {
             mPwBuilding = savedInstanceState.getParcelable(KEY_BUILDING);
             mPointsOfInterest = savedInstanceState.getParcelableArrayList(KEY_POINTS_OF_INTEREST);
@@ -165,12 +174,20 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
     //TODO: Look at this. Clean up. <3 Robert
     private void setupViews() {
         if (mStartPointOfInterestFilterAdapter == null) {
-            mStartPointOfInterestFilterAdapter = new PointOfInterestFilterAdapter(getActivity(), mPwBuilding, mPointsOfInterest, mHasLocation);
-            mStartAutoCompleteTextView.setAdapter(mStartPointOfInterestFilterAdapter);
+
             if (mHasLocation) {
                 mStartPointOfInterest = new PwPoint(getString(R.string.mapping_my_location));
                 mStartAutoCompleteTextView.setText(mStartPointOfInterest.getName());
             }
+
+            if (mHasFlatMarker) {
+                mStartPointOfInterest = new PwPoint(getString(R.string.mapping_flat_marker));
+                mStartAutoCompleteTextView.setText(mStartPointOfInterest.getName());
+            }
+
+            mStartPointOfInterestFilterAdapter = new PointOfInterestFilterAdapter(getActivity(), mPwBuilding, mPointsOfInterest, mHasLocation, mHasFlatMarker);
+            mStartAutoCompleteTextView.setAdapter(mStartPointOfInterestFilterAdapter);
+
             mStartAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                 @Override
@@ -193,7 +210,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
                     if (mStartPointOfInterestFilterAdapter != null && mStartPointOfInterestFilterAdapter.getCount() > 0
-                            && !mStartPointOfInterestFilterAdapter.getItem(0).getName().equalsIgnoreCase(mStartAutoCompleteTextView.getText().toString()))
+                        && !mStartPointOfInterestFilterAdapter.getItem(0).getName().equalsIgnoreCase(mStartAutoCompleteTextView.getText().toString()))
                         mStartPointOfInterest = null;
                     else if (mStartPointOfInterestFilterAdapter != null && mStartPointOfInterestFilterAdapter.getCount() > 0)
                         mStartPointOfInterest = mStartPointOfInterestFilterAdapter.getItem(0);
@@ -208,7 +225,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
         }
 
         if (mEndPointOfInterestFilterAdapter == null) {
-            mEndPointOfInterestFilterAdapter = new PointOfInterestFilterAdapter(getActivity(), mPwBuilding, mPointsOfInterest);
+            mEndPointOfInterestFilterAdapter = new PointOfInterestFilterAdapter(getActivity(), mPwBuilding, mPointsOfInterest, mHasLocation, mHasFlatMarker);
             mEndAutoCompleteTextView.setAdapter(mEndPointOfInterestFilterAdapter);
             mEndAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -236,8 +253,8 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
                 @Override
                 public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
                     if (mEndPointOfInterestFilterAdapter != null && mEndPointOfInterestFilterAdapter.getCount() > 0
-                            && !mEndPointOfInterestFilterAdapter.getItem(0).getName().equalsIgnoreCase(mEndAutoCompleteTextView.getText().toString
-                            ()))
+                        && !mEndPointOfInterestFilterAdapter.getItem(0).getName().equalsIgnoreCase(mEndAutoCompleteTextView.getText().toString
+                        ()))
                         mDestinationPointOfInterest = null;
                     else if (mEndPointOfInterestFilterAdapter != null && mEndPointOfInterestFilterAdapter.getCount() > 0)
                         mDestinationPointOfInterest = mEndPointOfInterestFilterAdapter.getItem(0);
@@ -258,7 +275,7 @@ public class RouteEndPointsDialogFragment extends DialogFragment {
 
     private void enableDoneButton() {
         final boolean enableDoneButton = (!TextUtils.isEmpty(mStartAutoCompleteTextView.getText()) && mStartPointOfInterest != null)
-                && (!TextUtils.isEmpty(mEndAutoCompleteTextView.getText()) && mDestinationPointOfInterest != null);
+            && (!TextUtils.isEmpty(mEndAutoCompleteTextView.getText()) && mDestinationPointOfInterest != null);
         mDoneButton.setEnabled(enableDoneButton);
     }
 }

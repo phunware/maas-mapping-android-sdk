@@ -38,7 +38,7 @@ public class PointOfInterestFilterAdapter extends ArrayAdapter<PwPoint> implemen
     }
 
     public PointOfInterestFilterAdapter(Context context, PwBuilding building, List<PwPoint> pointsOfInterest, boolean addMyLocation) {
-        super(context, R.layout.mapping_search_view_list_item, cloneList(context, pointsOfInterest, addMyLocation));
+        super(context, R.layout.mapping_search_view_list_item, cloneList(context, pointsOfInterest, addMyLocation, false));
 
         if (pointsOfInterest != null) {
             Collections.sort(pointsOfInterest, new PwPointNameComparator());
@@ -46,7 +46,19 @@ public class PointOfInterestFilterAdapter extends ArrayAdapter<PwPoint> implemen
         this.mContext = context;
         this.mPwBuilding = building;
         this.mFilteredList = new ArrayList<PwPoint>();
-        this.mOriginalItems = cloneList(context, pointsOfInterest, addMyLocation);
+        this.mOriginalItems = cloneList(context, pointsOfInterest, addMyLocation, false);
+    }
+
+    public PointOfInterestFilterAdapter(Context context, PwBuilding building, List<PwPoint> pointsOfInterest, boolean addMyLocation, boolean addFlatMarker) {
+        super(context, R.layout.mapping_search_view_list_item, cloneList(context, pointsOfInterest, addMyLocation, addFlatMarker));
+
+        if (pointsOfInterest != null) {
+            Collections.sort(pointsOfInterest, new PwPointNameComparator());
+        }
+        this.mContext = context;
+        this.mPwBuilding = building;
+        this.mFilteredList = new ArrayList<PwPoint>();
+        this.mOriginalItems = cloneList(context, pointsOfInterest, addMyLocation, addFlatMarker);
     }
 
     @Override
@@ -164,13 +176,21 @@ public class PointOfInterestFilterAdapter extends ArrayAdapter<PwPoint> implemen
         }
     }
 
-    public static List<PwPoint> cloneList(Context context, List<PwPoint> pwPoints, boolean addMyLocation) {
+    public static List<PwPoint> cloneList(Context context, List<PwPoint> pwPoints, boolean addMyLocation, boolean addFlatMarker) {
         if (pwPoints == null || pwPoints.isEmpty()) {
             return null;
         }
-        final List<PwPoint> clonedList = new ArrayList<PwPoint>(pwPoints.size());
+        int size = pwPoints.size();
+
+        if (addMyLocation) size++;
+        if (addFlatMarker) size++;
+
+        final List<PwPoint> clonedList = new ArrayList<PwPoint>(size);
         if (addMyLocation) {
             clonedList.add(new PwPoint(context.getString(R.string.mapping_my_location)));
+        }
+        if (addFlatMarker) {
+            clonedList.add(new PwPoint(context.getString(R.string.mapping_flat_marker)));
         }
         for (PwPoint pwPoint : pwPoints) {
             if (!pwPoint.isPortal()) {

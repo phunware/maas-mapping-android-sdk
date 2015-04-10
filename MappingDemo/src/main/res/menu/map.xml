@@ -68,4 +68,21 @@
         android:title="@string/menu_route_snapping"
         android:orderInCategory="11"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_stop_loading_building"
+        android:title="@string/menu_stop_loading_building"
+        android:orderInCategory="12"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_poi_zoom_level"
+        android:title="@string/menu_poi_zoom_level"
+        android:checkable="true"
+        android:orderInCategory="13"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_bluedot"
+        android:title="@string/menu_bluedot"
+        android:checkable="true"
+        android:orderInCategory="14"
+        app:showAsAction="never"/>
 </menu>

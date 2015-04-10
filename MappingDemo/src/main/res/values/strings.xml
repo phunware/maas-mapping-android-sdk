@@ -39,6 +39,10 @@
     <string name="menu_bluedot_smoothing">Bluedot Smoothing</string>
     <string name="menu_route_snapping">Route Snapping: %1$s</string>
     <string name="menu_route_snapping_tolerance">Route Snapper Tolerance</string>
+    <string name="mapping_flat_marker">Flat Marker</string>
+    <string name="menu_stop_loading_building">Stop Loading BLD</string>
+    <string name="menu_poi_zoom_level">Marker Zoom Level</string>
+    <string name="menu_bluedot">Blue Dot Visible</string>
 
     <string-array name="mapping_types">
         <item>Normal</item>
