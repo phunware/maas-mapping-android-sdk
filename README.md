@@ -2,7 +2,7 @@
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
 =======
-**Version 2.3.0**
+**Version 2.4.0**
 ________________
 
 
@@ -18,6 +18,7 @@ PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy i
 * Latest MaaS Location
 * AndroidSVG 1.2.1
 * Picasso 2.3.2
+* Disklrucache 2.0.2
 
 ##Prerequisites
 The sample will show a building and its points of interest in the main activity. 
@@ -241,6 +242,46 @@ PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, ending
         Toast.makeText(this, errorCode + ": " + errorMessage, Toast.LENGTH_SHORT).show();
     }
 }, false);
+```
+
+####Route - New
+The indoor routing APIs have redesigned for simplicity
+
+With this new routing APIs, you can calculating route between any PwPoint and position on the map.
+
+```java
+// Source
+PwPoint startPoint = null; // start point, it can be PwLocation
+PwDirectionsItem source = new PwDirectionsItem(startPoint);
+
+// Destination
+Location destinationLocation = null; // destination point, it can be PwPoint
+PwDirectionsItem destination = new PwDirectionsItem(destinationLocation);
+
+// Options
+PwDirectionsOptions directionsOptions = new PwDirectionsOptions();
+// Accessible route only
+directionsOptions.setRequireAccessibleRoutes(true);
+
+// Request
+PwDirectionsRequest request = new PwDirectionsRequest(source, destination, directionsOptions);
+
+// Create PwDirections and do the calculation
+PwDirections directions = new PwDirections(request);
+directions.calculate(new PwDirectionCalculateCallback() {
+    @Override
+    public void onSuccess(PwDirectionsResponse response) {
+        List<PwRoute> routes = response.getRoutes();
+
+        // Plot PwRoute to the map
+        mPwBuildingMapManager.plotRoute(response.getRoutes());
+    }
+
+    @Override
+    public void onFailure(int errorCode, String errorMessage) {
+        // Handle failures
+    }
+});
 ```
 
 ###Route Snapping Tolerance

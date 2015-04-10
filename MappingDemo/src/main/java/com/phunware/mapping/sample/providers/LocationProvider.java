@@ -1,11 +1,10 @@
 package com.phunware.mapping.sample.providers;
 
 public enum LocationProvider {
-    FUSED ("Fused"),
+    NONE ("None"),
     MOCK ("Mock"),
     MSE ("MSE"),
-    QUALCOMM ("Qualcomm"),
-    SENION ("Senion");
+    BLE("BLE");
 
     private final String displayName;
     LocationProvider(String name) {

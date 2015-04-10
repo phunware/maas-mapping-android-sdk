@@ -19,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.phunware.core.PwLog;
 import com.phunware.location.provider.PwLocationProvider;
 import com.phunware.location.provider.PwMockLocationProvider;
@@ -28,22 +30,27 @@ import com.phunware.mapping.PwOnPOITypesDownloadListener;
 import com.phunware.mapping.PwRouteCallback;
 import com.phunware.mapping.library.maps.MyLocationLayer;
 import com.phunware.mapping.library.maps.PwBuildingMapManager;
-import com.phunware.mapping.library.maps.PwMapOverlayManagerBuilder;
 import com.phunware.mapping.library.maps.PwOnBuildingPOIDataLoadedCallback;
 import com.phunware.mapping.library.maps.PwOnSnapToRouteCallback;
 import com.phunware.mapping.library.maps.PwRouteSnappingTolerance;
+import com.phunware.mapping.library.maps.directions.PwDirections;
+import com.phunware.mapping.library.maps.directions.PwDirectionsCalculateCallback;
+import com.phunware.mapping.library.maps.directions.PwDirectionsItem;
+import com.phunware.mapping.library.maps.directions.PwDirectionsOptions;
+import com.phunware.mapping.library.maps.directions.PwDirectionsRequest;
+import com.phunware.mapping.library.maps.directions.PwDirectionsResponse;
 import com.phunware.mapping.library.ui.PwBuildingMarker;
 import com.phunware.mapping.library.ui.PwMappingFragment;
+import com.phunware.mapping.library.ui.PwMarkerOptions;
 import com.phunware.mapping.model.PwBuilding;
 import com.phunware.mapping.model.PwPoint;
 import com.phunware.mapping.model.PwPointType;
 import com.phunware.mapping.model.PwRoute;
 import com.phunware.mapping.sample.R;
-import com.phunware.mapping.sample.providers.FusedLocationProviderFactory;
+import com.phunware.mapping.sample.maps.MapOverlayManagerBuilder;
 import com.phunware.mapping.sample.providers.LocationProvider;
 import com.phunware.mapping.sample.providers.MockLocationProviderFactory;
 import com.phunware.mapping.sample.providers.MseLocationProviderFactory;
-import com.phunware.mapping.sample.providers.QualcommLocationProviderFactory;
 import com.phunware.mapping.sample.providers.SenionLocationProviderFactory;
 
 import java.io.IOException;
@@ -70,13 +77,14 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     private static final float MINIMUM_FLOOR_ZOOM_LEVEL = 13f;
 
     public static final int DEFAULT_MENU_ITEM_SELECTION = 0;
+    public static final long FLAT_MARKER_ID = 90000001L;
 
     private String[] mMapTypeNames;
     private String[] mFileList;
     private int[] mBuildingList;
 
     private int mCurrentMapType;
-    private LocationProvider mCurrentProvider = LocationProvider.SENION;
+    private LocationProvider mCurrentProvider = LocationProvider.NONE;
     private int mCurrentBuilding;
     private String mCurrentMockFileName;
     private boolean mRepeat;
@@ -119,6 +127,10 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             try {
                 dialog.dismiss();
                 mCurrentBuilding = mBuildingList[which];
+
+                mCurrentProvider = LocationProvider.NONE;
+                requestLocationUpdates(null);
+
                 createPwMapOverlayManagerBuilder(null);
             } catch (Exception ex) {
                 PwLog.e(TAG, "Error occurs in mBuildingSelectionOnClickListener: " + ex.getMessage(), ex);
@@ -164,6 +176,9 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     private Menu mMenu;
     private List<PwPoint> mPwPoints;
     private List<PwBuildingMarker> mBuildingMarkers = new ArrayList<PwBuildingMarker>();
+    private Marker mFlatMarker;
+
+    private DialogFragment mStopLoadingBuildingDialogFragment = createStopLoadingBuildingDialogFragment();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -251,6 +266,18 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         return menuItemSelectionDialogFragment;
     }
 
+    private DialogFragment createStopLoadingBuildingDialogFragment() {
+        final StopLoadingBuildingDialogFragment fragment = new StopLoadingBuildingDialogFragment();
+        fragment.setOnClickListener(new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mPwBuildingMapManager.stopLoadingBuilding(getActivity().getApplicationContext());
+                fragment.dismiss();
+            }
+        });
+        return fragment;
+    }
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -285,19 +312,31 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             }
         };
 
-        mPwBuildingMapManager = new PwMapOverlayManagerBuilder(getActivity().getApplicationContext(), getPwMap())
-                .buildingId(mCurrentBuilding)
-                .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
-                .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
-                .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
-                .routeCallback(routeCallbackWithToast)
-                .showMyLocation(true)
-                .floorChangedCallback(this)
-                .pwOnBuildingDataLoadedCallback(this)
-                .pwOnBuildingPOIDataLoadedCallback(this)
-                .mapLoadedCallback(this)
-                .pwSnapToRouteCallback(this)
-                .build();
+        MapOverlayManagerBuilder builder =  new MapOverlayManagerBuilder(getActivity().getApplicationContext(), getPwMap());
+        builder.setSetupMapDataListener(new MapOverlayManagerBuilder.SetupMapDataListener() {
+            @Override
+            public void onSetupMapData() {
+                mStopLoadingBuildingDialogFragment.show(getFragmentManager(), TAG);
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        mPwBuildingMapManager = builder.buildingId(mCurrentBuilding)
+            .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
+            .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
+            .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
+            .routeCallback(routeCallbackWithToast)
+            .showMyLocation(false)
+            .floorChangedCallback(this)
+            .pwOnBuildingDataLoadedCallback(this)
+            .pwOnBuildingPOIDataLoadedCallback(this)
+            .mapLoadedCallback(this)
+            .pwSnapToRouteCallback(this)
+            .build();
 
         // Modify Google Map after PwBuildingMapManager has applied its defaults
         map.setMapType(mCurrentMapType);
@@ -311,12 +350,38 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                     if (point != null) {
                         long pointId = point.getId();
                         showRouteSelectionFragment(pointId);
+                    } else {
+                        if (marker.getId().equals(mFlatMarker.getId())) {
+                            showRouteSelectionFragment(mFlatMarker.hashCode());
+                        }
                     }
                 }
             }
         });
 
+        map.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                if (mFlatMarker != null) {
+                    mFlatMarker.remove();
+                }
+
+                mFlatMarker = getPwMap().getMap().addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(getString(R.string.mapping_flat_marker))
+                        .anchor(0.5f, 1f)
+                );
+            }
+        });
+
         return mPwBuildingMapManager;
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+        if (mFlatMarker != null && marker.getId().equals(mFlatMarker.getId())) return false;
+
+        return super.onMarkerClick(marker);
     }
 
     @Override
@@ -358,15 +423,18 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         itemRepeat.setChecked(mRepeat);
 
         final MenuItem itemBlueDotSmoothing = menu.findItem(R.id.menu_bluedot_smoothing);
-        itemBlueDotSmoothing.setChecked(mPwBuildingMapManager.isBlueDotSmoothingEnabled());
+        if (mPwBuildingMapManager != null) itemBlueDotSmoothing.setChecked(mPwBuildingMapManager.isBlueDotSmoothingEnabled());
 
         final MenuItem itemRouteSnapping = menu.findItem(R.id.menu_route_snapping);
 
         int selectedRouteSnapperTolerance = 0;
-        if (mPwBuildingMapManager.getRouteSnappingTolerance() != null) selectedRouteSnapperTolerance = mPwBuildingMapManager.getRouteSnappingTolerance().ordinal();
+        if (mPwBuildingMapManager != null)  if (mPwBuildingMapManager.getRouteSnappingTolerance() != null) selectedRouteSnapperTolerance = mPwBuildingMapManager.getRouteSnappingTolerance().ordinal();
 
         final String routeSnappingTitle = getResources().getString(R.string.menu_route_snapping, PwRouteSnappingTolerance.values()[selectedRouteSnapperTolerance]);
         itemRouteSnapping.setTitle(routeSnappingTitle);
+
+        final MenuItem itemPOIZoomLevel = menu.findItem(R.id.menu_poi_zoom_level);
+        if (mPwBuildingMapManager != null) itemPOIZoomLevel.setChecked(mPwBuildingMapManager.isMarkerZoomLevelsEnabled());
     }
 
     private String findMapTypeNameById(int mapType) {
@@ -445,6 +513,14 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             mPwBuildingMapManager.setBlueDotSmoothingEnabled(item.isChecked());
         } else if (item.getItemId() == R.id.menu_route_snapping) {
             showRouteSnapperTolerance();
+        } else if (item.getItemId() == R.id.menu_stop_loading_building) {
+            mPwBuildingMapManager.stopLoadingBuilding(getActivity().getApplicationContext());
+        } else if (item.getItemId() == R.id.menu_poi_zoom_level) {
+            item.setChecked(!item.isChecked());
+            mPwBuildingMapManager.setMarkerZoomLevelsEnabled(item.isChecked());
+        } else if (item.getItemId() == R.id.menu_bluedot) {
+            item.setChecked(!item.isChecked());
+            mPwBuildingMapManager.setBluedotEnabled(item.isChecked());
         }
 
         return super.onOptionsItemSelected(item);
@@ -581,33 +657,41 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         requestLocationUpdates(pwBuilding);
     }
 
+    @Override
+    public void onFailToLoadBuilding(String errorMessage) {
+        super.onFailToLoadBuilding(errorMessage);
+
+        mStopLoadingBuildingDialogFragment.dismiss();
+    }
+
     private void requestLocationUpdates(PwBuilding pwBuilding) {
         try {
-            mPwBuildingMapManager.removeLocationUpdates();
             final Context applicationContext = getActivity().getApplicationContext();
             PwLocationProvider locationProvider = null;
             switch (mCurrentProvider) {
-                case FUSED:
-                    locationProvider = FusedLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
-                    break;
                 case MOCK:
                     locationProvider = MockLocationProviderFactory.getInstance(applicationContext).createLocationProvider(MOCK_LOCATION_DIRECTORY + '/' + mCurrentMockFileName, this, mRepeat);
                     break;
                 case MSE:
                     locationProvider = MseLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
                     break;
-                case QUALCOMM:
-                    locationProvider = QualcommLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
-                    break;
-                case SENION:
+                case BLE:
                     locationProvider = SenionLocationProviderFactory.getInstance(applicationContext).createLocationProvider(pwBuilding);
+                    break;
+                case NONE:
+                    mPwBuildingMapManager.applyMode(MyLocationLayer.MODE_NORMAL);
+                    mPwBuildingMapManager.removeLocationUpdates();
+                    locationProvider = null;
                     break;
             }
 
             if (locationProvider == null) {
                 PwLog.e(TAG, "locationProvider is null, this should never happen, go check the code");
             } else {
+                mPwBuildingMapManager.removeLocationUpdates();
+
                 mPwBuildingMapManager.requestLocationUpdates(applicationContext, locationProvider);
+                mPwBuildingMapManager.applyMode(MyLocationLayer.MODE_NORMAL);
                 setupMyLocationButton();
             }
         } catch (Exception ex) {
@@ -646,6 +730,8 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         try {
             Toast.makeText(getActivity().getApplicationContext(), points.size() + " POI loaded", Toast.LENGTH_SHORT).show();
             this.mPwPoints = points;
+
+            mStopLoadingBuildingDialogFragment.dismiss();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -654,6 +740,8 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     @Override
     public void onBuildingPOIFailed(String errorMessage) {
         Toast.makeText(getActivity().getApplicationContext(), "POI load failed: " + errorMessage, Toast.LENGTH_SHORT).show();
+
+        mStopLoadingBuildingDialogFragment.dismiss();
     }
 
     @Override
@@ -664,23 +752,61 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     }
 
     protected void showRouteSelectionFragment(final long pointId) {
-        final RouteEndPointsDialogFragment fragment = RouteEndPointsDialogFragment.newInstance(mPwBuildingMapManager.getBuilding(),
-            (ArrayList<PwPoint>) mPwBuildingMapManager.getBuildingPoints(), findPointById(pointId, mPwBuildingMapManager.getBuildingPoints()),
-            mPwBuildingMapManager.getMyLocation() != null);
+
+        ArrayList<PwPoint> buildingPoints = (ArrayList<PwPoint>) mPwBuildingMapManager.getBuildingPoints();
+
+        final RouteEndPointsDialogFragment fragment = RouteEndPointsDialogFragment.newInstance(
+            mPwBuildingMapManager.getBuilding(),
+            buildingPoints,
+            findPointById(pointId, mPwBuildingMapManager.getBuildingPoints()),
+            mPwBuildingMapManager.getMyLocation() != null,
+            mFlatMarker != null);
+
         fragment.setPwRouteRequestedListener(new RouteEndPointsDialogFragment.PwRouteRequestedListener() {
             @Override
             public void onRouteRequested(PwPoint startPoint, PwPoint endPoint, boolean isAccessible) {
 
-                if (mPwBuildingMapManager != null && startPoint.getId() != Long.MIN_VALUE) {
-                    mRouteStartPoint = startPoint;
-                    mPwBuildingMapManager.createRoute(getActivity(), startPoint.getId(), endPoint.getId(), isAccessible);
-                    setSupportProgressBarIndeterminateVisibility(true);
-                } else if (mPwBuildingMapManager != null) {
-                    mRouteStartPoint = new PwPoint(getString(com.phunware.mapping.library.R.string.mapping_my_location));
-                    //User chose "My Location" as start Point.
-                    mPwBuildingMapManager.createRoute(getActivity(), endPoint.getId(), isAccessible);
-                    setSupportProgressBarIndeterminateVisibility(true);
+                final PwDirectionsItem startItem;
+                if (startPoint.getId() == Long.MIN_VALUE) { // My Location or Flat Marker
+                    if (startPoint.getName().equals(getString(R.string.mapping_my_location))) { // My Location
+                        startItem = new PwDirectionsItem(mPwBuildingMapManager.getMyLocation());
+                    } else { // Flat Marker
+                        startItem = new PwDirectionsItem(mPwBuildingMapManager.getDisplayedFloorId(), mFlatMarker.getPosition());
+                    }
+                } else {
+                    startItem = new PwDirectionsItem(startPoint);
                 }
+
+                final PwDirectionsItem endItem;
+                if (endPoint.getId() == Long.MIN_VALUE) { // My Location or Flat Marker
+                    if (endPoint.getName().equals(getString(R.string.mapping_my_location))) { // My Location
+                        endItem = new PwDirectionsItem(mPwBuildingMapManager.getMyLocation());
+                    } else { // Flat Marker
+                        endItem = new PwDirectionsItem(mPwBuildingMapManager.getDisplayedFloorId(), mFlatMarker.getPosition());
+                    }
+                } else {
+                    endItem = new PwDirectionsItem(endPoint);
+                }
+
+                PwDirectionsOptions options = new PwDirectionsOptions();
+                options.setRequireAccessibleRoutes(isAccessible);
+
+                PwDirectionsRequest request = new PwDirectionsRequest(startItem, endItem, options);
+
+                PwDirections directions = new PwDirections(request);
+                setSupportProgressBarIndeterminateVisibility(true);
+                directions.calculate(new PwDirectionsCalculateCallback() {
+                    @Override
+                    public void onSuccess(PwDirectionsResponse response) {
+                        mPwBuildingMapManager.plotRoute(response.getRoutes());
+                    }
+
+                    @Override
+                    public void onFailure(int errorCode, String errorMessage) {
+                        Toast.makeText(getActivity().getApplicationContext(), "Route calculation error: " + errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 // Set follow mode back to Normal
                 applyMode(MyLocationLayer.MODE_NORMAL);
 
