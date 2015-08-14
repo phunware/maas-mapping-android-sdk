@@ -11,6 +11,11 @@
             android:layout_height="match_parent"
             app:insetBackground="@color/inset_background">
 
+            <include
+                layout="@layout/maneuver_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"/>
+
         <com.phunware.mapping.library.ui.PwCheckableImageButton
                 android:id="@+id/my_location_button"
                 android:layout_width="48dp"
