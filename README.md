@@ -160,6 +160,8 @@ This view provides the option to set callbacks for certain events:
 * `PwMapOverlayManagerBuilder.pwOnBuildingPOIDataLoadedCallback(PwOnBuildingPOIDataLoadedCallback)` registers a callback that be called once the building POI data loaded.
 * `PwMapOverlayManagerBuilder.pwSvgDownloadCallback(PwSvgDownloadCallback)` registers a callback that be called once the SVG url are download.
 * `PwMapOverlayManagerBuilder.pwSnapToRouteCallback(PwOnSnapToRouteCallback)` registers a callback that be called once "Snap to route" started or stopped.
+* `PwMapOverlayManagerBuilder.pwOnRouteStepChanged(PwOnRouteStepChangedCallback)` registers a callback that be called once routeStep is changed.
+* `PwMapOverlayManagerBuilder.pwOnManeuverChanged(PwOnManeuverChangedCallback)` registers a callback that be called once maneuver is changed.
 
 
 ##Blue Dot
@@ -205,83 +207,92 @@ An example to enablue Blue Dot smoothing:
 ```
 
 ##Routing
+The data model for routes is limited to a PWRoute object which is composed of one or more PWRouteStep objects. Each step represents a series of points on the route graph for a single building floor. It is possible to have multiple steps for the same floor, they just cannot be in succession.Each time the user needs to be asked to turn or to continue straight is not really a route step. It's more of a maneuver. Each maneuver has a relative direction (bear left, turn right, go straight, etc.), a distance (optional) and a sub-sequence of points.
 The `PwMappingFragment` can display routes by using a `PwMapRoute`. Routes can be a path between any two points that are defined in the MaaS portal. A route can go from a point of interest (POI) to a point of interest, from any waypoint to a POI or from "My Location" to a POI.
 
-Get data for a route (if available) with `PwMappingModule#getRoute(context, long, long, boolean)` or one of its overloaded methods. There are also methods to help get route data in the background.
-There is a special method to help get a route from a point on the map: `getRouteFromLocation(context, float, float, long, long, boolean)`. This will find a route with the starting point near an `X` and `Y` coordinate. The actual starting point depends on the closest waypoint that is set on the MaaS portal. The last Boolean is flag for accessible routes——pass true if you want to retrieve accessible routes.
+The `PwMappingFragment` can display routes by using a `PwDirections` and `pwBuildingmapManager`. Route can be a path between any PwPoint and position on the map. A route can go from a point of interest (POI) to a point of interest, from any waypoint to a POI or from "My Location" to a POI.
+
+Get data for a route (if available) with `PwDirections#calculate(PwDirectionsCalculateCallback)`.PwDirections default constructor will expect startPoiny,EndPoint and PwDirectionsOptions object `PwDirectionRequest(PwPoint start,PwPoint end,PwDirectionsOptions options)`. PwDirectionsOptions will have the methods to set route specifications like accessibility,points that need to be excluded from route calculation etc. start and end points can be either the current location or a POI/flatMarker. 
 
 An example of retrieving and using route data:
+
 ```java
-// Note that the start and end point IDs should come from a call to PwPoint#getId()
-PwMappingModule.getInstance().getRouteInBackground(this, startingPointId, endingPointId, new PwRouteCallback() {
-    @Override
-    public void onSuccess(ArrayList<PwRoute> routes) {
-        //We currently only get back one route as of this time. Multiple routes will be handled in the future.
-        ArrayList<PwPoint> routePoints = routes.get(0).getPoints();
-        mMapRoute = new MapRoute(routePoints);
-
-        // Add route, then toggle markers
-        mMapRoute.addRoute(routePoints, mPwBuilding, mGoogleMap, mRouteColor, mRouteStrokeWidth);
-        toggleMarkers(mCurrentZoom >= mMinimumMarkerZoomLevel, mCurrentFloorId);
-
-        // Animate camera back to starting point.
-        final PwRoute startRoute = routes.get(0);
-        if (!startRoute.getPoints().isEmpty()) {
-            final PwPoint startPoint = startRoute.getPoints().get(0);
-            if (startPoint != null) {
-                changeCamera(CameraUpdateFactory.newCameraPosition(CameraPosition.fromLatLngZoom(startPoint.getLocation(), mCurrentZoom))); // DEFAULT_CAMERA_ZOOM
-            }
+PwDirectionsOptions options = new PwDirectionsOptions();
+options.setRequireAccessibleRoutes(isAccessible);
+PwDirectionsRequest request = new PwDirectionsRequest(startItem, endItem, options);
+PwDirections directions = new PwDirections(request);
+directions.calculate(new PwDirectionsCalculateCallback() {
+      @Override
+      public void onSuccess(PwDirectionsResponse response) {
+          mPwBuildingMapManager.plotRoute(response.getRoutes());
+         }
+      @Override
+      public void onFailure(int errorCode, String errorMessage) {
+         Toast.makeText(getActivity().getApplicationContext(), "Route calculation error: " + errorMessage, Toast.LENGTH_LONG).show();
         }
-        if (mPwRouteCallback != null) {
-            mPwRouteCallback.onSuccess(routes);
-        }
-    }
-
-    @Override
-    public void onFail(int errorCode, String errorMessage) {
-        Toast.makeText(this, errorCode + ": " + errorMessage, Toast.LENGTH_SHORT).show();
-    }
-}, false);
+   });
+}
+});
 ```
 
-####Route - New
-The indoor routing APIs have redesigned for simplicity
+###TURN-BY_TURN
+Indoor turn-by-turn directions in our Mapping, Navigation, and Wayfinding can be enabled  using PwBuildingMapManager . PWBuildMapManager  maintains turn-by-turn state with a property called currentManeuver that is handled as PwBuildingmapManager.setCurrentManeuver(RouteManeuver).
 
-With this new routing APIs, you can calculating route between any PwPoint and position on the map.
+ * When a route is plotted , no maneuver is used by default. 
+ * In order to use turn-by-turn, the developer must set the currentManeuver and call for plotManeuver() method from PwBuildingMapManager . By default plotManeuver will use the first maneuver from CurrentRouteStep to desiplay.
+ * if one of the user tracking modes is used ,then the maneuver is set immediately and will be changed automatically as the user moves.
+ * Without user tracking, the maneuver is only displayed.
 
 ```java
-// Source
-PwPoint startPoint = null; // start point, it can be PwLocation
-PwDirectionsItem source = new PwDirectionsItem(startPoint);
-
-// Destination
-Location destinationLocation = null; // destination point, it can be PwPoint
-PwDirectionsItem destination = new PwDirectionsItem(destinationLocation);
-
-// Options
-PwDirectionsOptions directionsOptions = new PwDirectionsOptions();
-// Accessible route only
-directionsOptions.setRequireAccessibleRoutes(true);
-
-// Request
-PwDirectionsRequest request = new PwDirectionsRequest(source, destination, directionsOptions);
-
-// Create PwDirections and do the calculation
-PwDirections directions = new PwDirections(request);
-directions.calculate(new PwDirectionCalculateCallback() {
-    @Override
-    public void onSuccess(PwDirectionsResponse response) {
-        List<PwRoute> routes = response.getRoutes();
-
-        // Plot PwRoute to the map
-        mPwBuildingMapManager.plotRoute(response.getRoutes());
-    }
-
-    @Override
-    public void onFailure(int errorCode, String errorMessage) {
-        // Handle failures
-    }
+PwDirectionsRequest request = new PwDirectionsRequest(startItem, endItem, options);
+ PwDirections directions = new PwDirections(request);
+ directions.calculate(new PwDirectionsCalculateCallback() {
+       @Override
+       public void onSuccess(PwDirectionsResponse response) {
+             mPwBuildingMapManager.plotRoute(response.getRoutes());
+            //Check if the Maneuvers array is not empty or null to call plotRouteManeuverOverlay
+             if (mPwBuildingMapManager.getCurrentRoute().getManeuvers() != null && (!mPwBuildingMapManager.getCurrentRoute().getManeuvers().isEmpty())) {
+            //set the default maneuver to display on the Route .By default it will be the first maneuver in currentRoute.
+			mPwBuildingMapManager.setCurrentManeuver(maneuver);
+			 mPwBuildingMapManager.plotManeuver();
+                    }
+            }
+            @Override
+            public void onFailure(int errorCode, String errorMessage) {
+                Toast.makeText(getActivity().getApplicationContext(), "Route calculation error: " + errorMessage, Toast.LENGTH_LONG).show();
+            }
+        });
+     }
 });
+```
+in addition to this we have added two new callbacks which get trigerred after the maneuver and step are changed.These two call backs will help developer to handle post cleanup/UI work upon change of maneuver/routestep.
+
+```java
+
+ class MappingSampleFragment extends PwMappingFragment implementsPWOnManeuverChangedCallBack,PWOnRouteStepChangedCallBack
+{
+ 
+//add callbacks to PwBuildingManage to listen for the change events.
+mPwBuildingMapManager = builder.buildingId(mCurrentBuilding)
+						.........
+						.pwOnManeuverChangedCallBack(this)
+						.PwOnRouteStepChangedCallback(this)
+						.build();
+@Override
+public void onManeuverChanged(PWRouteManeuver maneuver)
+{
+   //call to Update if any application UI is there or handle maneuver post change work.
+}
+
+@Override
+public void onRouteStepChanged(RouteStep step)
+{
+//call to Update UI or handle RouteStep post change work.    
+Toast.makeText(getActivity().getApplicationContext(),"changed routeStep is called",Toast.LENGTH_LONG).show();
+}
+ 
+}
+
 ```
 
 ###Route Snapping Tolerance

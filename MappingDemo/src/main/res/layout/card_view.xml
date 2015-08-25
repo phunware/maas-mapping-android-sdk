@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="145dp"
-    android:background="#FFF">
+    android:layout_width="match_parent" android:layout_height="160dp"
+    android:background="#FFF"
+    >
 
     <View
         android:id="@+id/lefSeparator"
@@ -25,22 +26,16 @@
     <ImageView
         android:id="@+id/imgIndicator"
         android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/lefSeparator"
         android:layout_centerVertical="true"/>
 
-    <View
-        android:id="@+id/centerPoint"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_centerInParent="true"/>
 
     <TextView
         android:id="@+id/textInstruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/centerPoint"
         android:layout_toRightOf="@+id/imgIndicator"
         android:layout_toLeftOf="@+id/rigthSeparator"
         android:layout_marginLeft="5dp"
@@ -50,7 +45,7 @@
         android:id="@+id/textNext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/centerPoint"
+        android:layout_below="@id/textInstruction"
         android:layout_toRightOf="@+id/imgIndicator"
         android:layout_marginLeft="5dp"
         android:text="NEXT:"
@@ -64,14 +59,14 @@
         android:background="#0060fda3"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/textNext"
-        android:layout_below="@+id/centerPoint"
+        android:layout_below="@id/textInstruction"
         />
 
     <TextView
         android:id="@+id/textNextDirection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/centerPoint"
+        android:layout_below="@id/textInstruction"
         android:layout_toRightOf="@+id/imgIndicatorNext"
         android:layout_marginLeft="5dp"
         android:text="Next instruction:"
