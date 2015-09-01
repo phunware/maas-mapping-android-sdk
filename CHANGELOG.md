@@ -4,7 +4,7 @@ Version 2.5.0 *(2015-08-31)*
 -----------------------------
 * Added support for turn-by-turn directions. Turn-by-turn maneuvers can be accessed by accessing the maneuvers property on a PWRoute object. You can plot a route maneuver on a PWMapView intance by calling setRouteManeuver: with a valid PWRouteManeuver object. All previous route behavior is still present and unaffected. Please see the turn-by-turn sample as an example of how to implement turn-by-turn.
 
-NOTE: You will need to plot a route maneuever in order to enter turn-by-turn mode.
+ **NOTE**: You will need to plot a route maneuever in order to enter turn-by-turn mode.
 
 * Route maneuvers switch automatically when location upates are available and the indoor user tracking mode is set to PWIndoorUserTrackingModeFollow or PWIndoorUserTrackingModeFollowWithHeading. You can manually set route maneuvers if desired but that will set the indoor user tracking mode to PWIndoorUserTrackingModeNone.
 
