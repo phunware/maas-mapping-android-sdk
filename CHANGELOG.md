@@ -12,9 +12,9 @@ Version 2.5.0 *(2015-08-31)*
 
 * Route steps are now automatically selected by the SDK in response to user initiated floor changes or location updates. A new callback has been created when a route step changes.
 
-* Added PWMapView delegate callback PwBuildingMapManager:onPwRouteStepChangedCallback:onRouteStepChanged. This method is called whenever the PWRouteStep being displayed by the map view changes.
+* Added PwBuildingMapManager callback PwBuildingMapManager:onPwRouteStepChangedCallback:onRouteStepChanged. This method is called whenever the PWRouteStep being displayed by the map view changes.
 
-* Added PWMapView delegate callback PwBuildingMapManager:onmaneuverchangedCallback:onManeuverChanged. This method is called whenever the PWRouteManeuver being displayed by the map changes. 
+* Added PwBuildingMapManager callback PwBuildingMapManager:onmaneuverchangedCallback:onManeuverChanged. This method is called whenever the PWRouteManeuver being displayed by the map changes. 
 
 * When registering a PWGPSLocationManager with the map view the location will now show on all floors regardless of whether or not there is a valid floorIDMapping match. 
 
