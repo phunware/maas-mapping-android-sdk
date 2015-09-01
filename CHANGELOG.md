@@ -18,8 +18,13 @@ Version 2.5.0 *(2015-08-31)*
 
 * When registering a PWGPSLocationManager with the map view the location will now show on all floors regardless of whether or not there is a valid floorIDMapping match. 
 
- 
+*  Updated MaaSLocation SDK to '1.2.0'
 
+* Fixed Bug for getting route from  and to same floor number in different buildings.
+
+* Added property to PWDirectionsOptions called excludedPointIdentifiers. Specify an array of point identifiers that you would like to exclude from routing. Please see PWDirectionsOptions header for more information.
+
+ 
 
 Version 2.4.0 *(2015-04-10)*
 ----------------------------
