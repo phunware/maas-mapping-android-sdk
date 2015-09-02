@@ -92,6 +92,13 @@ android {
         exclude 'res/layout/mapping_fragment_route_directions_entry.xml'
         exclude 'res/layout/mapping_search_view_list_item.xml'
         exclude 'res/menu/mapping_routes.xml'
+        exclude 'res/drawable-hdpi-v4/arrow_bear_left.png'
+        exclude 'res/drawable-hdpi-v4/arrow_bear_right.png'
+        exclude 'res/drawable-hdpi-v4/arrow_final.png'
+        exclude 'res/drawable-hdpi-v4/arrow_left.png'
+        exclude 'res/drawable-hdpi-v4/arrow_right.png'
+        exclude 'res/drawable-hdpi-v4/arrow_stairs.png'
+        exclude 'res/drawable-hdpi-v4/arrow_straight.png'
     }
 }
 

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF">
+
+    <RelativeLayout
+        android:id="@+id/mSetHeadManeuver"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/btnShowList"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@drawable/list"
+            android:background="#FFF"/>
+
+        <ImageButton
+            android:id="@+id/btnSound"
+            android:layout_width="48dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/sound_on"
+            android:background="#FFF"/>
+
+        <TextView
+            android:id="@+id/txtTotalDistance"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_toRightOf="@id/btnShowList"
+            android:layout_toLeftOf="@+id/btnSound"
+            android:layout_marginTop="8dp"
+            android:text="Total Distance: "/>
+
+        <TextView
+            android:id="@+id/txtEstimatedTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/txtTotalDistance"
+            android:layout_toRightOf="@id/btnShowList"
+            android:layout_toLeftOf="@+id/btnSound"
+            android:gravity="center"
+            android:text="Estimated Time: "/>
+
+    </RelativeLayout>
+
+    <ViewFlipper
+        android:id="@+id/mManeuverFlipper"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/mSetHeadManeuver"
+        android:visibility="invisible"/>
+
+    <RelativeLayout
+        android:id="@+id/setOfDirections"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="Directions"/>
+
+        <Button
+            android:id="@+id/btnClose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="#FFF"
+            android:text="Done"/>
+
+        <ListView
+            android:id="@+id/lstManeuvers"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/btnClose"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

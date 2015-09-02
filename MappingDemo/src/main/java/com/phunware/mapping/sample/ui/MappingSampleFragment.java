@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.support.v4.app.DialogFragment;
 import android.text.TextUtils;
 import android.util.SparseArray;
@@ -14,10 +15,17 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
-
+import android.widget.ViewFlipper;
+import android.widget.ImageButton;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -28,7 +36,10 @@ import com.phunware.location.provider.PwMockLocationProvider;
 import com.phunware.mapping.PwMappingModule;
 import com.phunware.mapping.PwOnPOITypesDownloadListener;
 import com.phunware.mapping.PwRouteCallback;
+import com.phunware.mapping.library.maps.MapUtils;
 import com.phunware.mapping.library.maps.MyLocationLayer;
+import com.phunware.mapping.library.maps.PWOnManeuverChangedCallBack;
+import com.phunware.mapping.library.maps.PWOnRouteStepChangedCallBack;
 import com.phunware.mapping.library.maps.PwBuildingMapManager;
 import com.phunware.mapping.library.maps.PwOnBuildingPOIDataLoadedCallback;
 import com.phunware.mapping.library.maps.PwOnSnapToRouteCallback;
@@ -41,11 +52,12 @@ import com.phunware.mapping.library.maps.directions.PwDirectionsRequest;
 import com.phunware.mapping.library.maps.directions.PwDirectionsResponse;
 import com.phunware.mapping.library.ui.PwBuildingMarker;
 import com.phunware.mapping.library.ui.PwMappingFragment;
-import com.phunware.mapping.library.ui.PwMarkerOptions;
+import com.phunware.mapping.model.PWRouteManeuver;
 import com.phunware.mapping.model.PwBuilding;
 import com.phunware.mapping.model.PwPoint;
 import com.phunware.mapping.model.PwPointType;
 import com.phunware.mapping.model.PwRoute;
+import com.phunware.mapping.model.RouteStep;
 import com.phunware.mapping.sample.R;
 import com.phunware.mapping.sample.maps.MapOverlayManagerBuilder;
 import com.phunware.mapping.sample.providers.LocationProvider;
@@ -55,12 +67,14 @@ import com.phunware.mapping.sample.providers.SenionLocationProviderFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Shows a map of the venue.
  */
-public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener, PwOnSnapToRouteCallback, PwOnBuildingPOIDataLoadedCallback {
+public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener, PwOnSnapToRouteCallback, PwOnBuildingPOIDataLoadedCallback ,PWOnManeuverChangedCallBack{
     private static final String TAG = MappingSampleFragment.class.getSimpleName();
 
     private static final String KEY_MAP_TYPE = "map_type";
@@ -74,7 +88,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     private static final String KEY_BUILDING_ID_LIST = "building_id_list";
     private static final String MOCK_LOCATION_DIRECTORY = "mocklocation";
     private static final float MINIMUM_MARKER_ZOOM_LEVEL = 17f;
-    private static final float MINIMUM_FLOOR_ZOOM_LEVEL = 13f;
+    private static final float MINIMUM_FLOOR_ZOOM_LEVEL = 17f;
 
     public static final int DEFAULT_MENU_ITEM_SELECTION = 0;
     public static final long FLAT_MARKER_ID = 90000001L;
@@ -88,6 +102,23 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     private int mCurrentBuilding;
     private String mCurrentMockFileName;
     private boolean mRepeat;
+    private Button changeManeuver;
+    private ViewFlipper mManeuverFlipper;
+    private RelativeLayout setHeadManeuver;
+    private TextView txtTotalDistance;
+    private TextView txtEstimatedTime;
+    private ListView lstManeuvers;
+    private ManeuverAdapter mManeuverAdapter;
+    private RelativeLayout setOfDirections;
+    private ImageButton btnShowList;
+    private ImageButton btnVoiceOut;
+    private Button btnClose;
+    private float lastX;
+    ArrayList<PWRouteManeuver> maneuvers;
+    private RelativeLayout headerRouteDisplay;
+    private ManeuverDisplayHelper maneuverDisplayHelper;
+    TextToSpeech textToSpeech;
+
 
     private DialogInterface.OnClickListener mMapTypeSelectionOnClickListener = new DialogInterface.OnClickListener() {
         @Override
@@ -121,50 +152,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         }
     };
 
-    private DialogInterface.OnClickListener mBuildingSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            try {
-                dialog.dismiss();
-                mCurrentBuilding = mBuildingList[which];
-
-                mCurrentProvider = LocationProvider.NONE;
-                requestLocationUpdates(null);
-
-                createPwMapOverlayManagerBuilder(null);
-            } catch (Exception ex) {
-                PwLog.e(TAG, "Error occurs in mBuildingSelectionOnClickListener: " + ex.getMessage(), ex);
-            }
-        }
-    };
-
-    private DialogInterface.OnClickListener mFileNameSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            try {
-                dialog.dismiss();
-
-                if (mCurrentMockFileName != null && mCurrentMockFileName.equals(mFileList[which])) {
-                    PwLog.d(TAG, "Change to the same moc location file, ignored.");
-                    return;
-                }
-
-                mCurrentMockFileName = mFileList[which];
-                requestLocationUpdates(mPwBuildingMapManager.getBuilding());
-            } catch (Exception ex) {
-                PwLog.e(TAG, "Error occurs in mFileNameSelectionOnClickListener: " + ex.getMessage(), ex);
-            }
-        }
-    };
-
-    private DialogInterface.OnClickListener mPOITypeSelectionOnClickListener = new DialogInterface.OnClickListener() {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-        }
-    };
-
-    private DialogInterface.OnClickListener mRouteSnapperToleranceSelectionOnClickListener = new DialogInterface.OnClickListener() {
+   private DialogInterface.OnClickListener mRouteSnapperToleranceSelectionOnClickListener = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
@@ -202,12 +190,15 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             mCurrentMockFileName = savedInstanceState.getString(KEY_FILE_NAME);
             mRepeat = savedInstanceState.getBoolean(KEY_REPEAT);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = super.onCreateView(inflater, container, savedInstanceState);
         final DrawInsetsFrameLayout drawInsetsFrameLayout = (DrawInsetsFrameLayout) view.findViewById(R.id.draw_insets_frameLayout);
+        maneuverDisplayHelper=new ManeuverDisplayHelper();
+        linkManeuverUItoCode(view);
         drawInsetsFrameLayout.setOnInsetsCallback(new DrawInsetsFrameLayout.OnInsetsCallback() {
             @Override
             public void onInsetsChanged(Rect insets) {
@@ -219,7 +210,259 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             }
         });
 
+        textToSpeech=new TextToSpeech(getActivity().getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    textToSpeech.setLanguage(Locale.ENGLISH);
+                }
+            }
+        });
         return view;
+    }
+
+    private void linkManeuverUItoCode(View view){
+        btnClose = (Button)view.findViewById(R.id.btnClose);
+        btnShowList = (ImageButton)view.findViewById(R.id.btnShowList);
+        setOfDirections = (RelativeLayout)view.findViewById(R.id.setOfDirections);
+        lstManeuvers = (ListView) view.findViewById(R.id.lstManeuvers);
+        txtTotalDistance = (TextView)view.findViewById(R.id.txtTotalDistance);
+        txtEstimatedTime = (TextView)view.findViewById(R.id.txtEstimatedTime);
+        setHeadManeuver = (RelativeLayout)view.findViewById(R.id.mSetHeadManeuver);
+        mManeuverFlipper = (ViewFlipper) view.findViewById(R.id.mManeuverFlipper);
+        headerRouteDisplay= (RelativeLayout) view.findViewById(R.id.mSetHeadManeuver);
+        btnVoiceOut=(ImageButton) view.findViewById(R.id.btnSound);
+        btnVoiceOut.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(btnVoiceOut.isActivated())
+                    btnVoiceOut.setActivated(false);
+                else
+                    btnVoiceOut.setActivated(true);
+            }
+        });
+
+        mManeuverFlipper.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if (mPwBuildingMapManager.getMyLocationMode() != MyLocationLayer.MODE_FOLLOW_ME) {
+                    switch (motionEvent.getAction()) {
+
+                        case MotionEvent.ACTION_DOWN:
+                            lastX = motionEvent.getX();
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            float currentX = motionEvent.getX();
+
+                            // Handling left to right screen swap.
+                            if (lastX < currentX) {
+
+                                // If there aren't any other children, just break.
+                                if (mManeuverFlipper.getDisplayedChild() == 0)
+                                    break;
+
+                                // Next screen comes in from left.
+                                mManeuverFlipper.setInAnimation(getActivity(), R.anim.slide_in_from_left);
+                                // Current screen goes out from right.
+                                mManeuverFlipper.setOutAnimation(getActivity(), R.anim.slide_out_to_right);
+
+
+                                // Display next screen.
+                                mManeuverFlipper.showPrevious();
+                                if(btnVoiceOut.isActivated()) {
+                                    playTTS("message");
+                                }
+                                PWRouteManeuver previousManeuver = mPwBuildingMapManager.getPreviousManeuver();
+                                if (previousManeuver != null) {
+                                    mManeuverAdapter.decreaseIndexOfDirection();
+                                    if (previousManeuver.isTurnManeuver && !previousManeuver.isPortalManeuver())
+                                        mPwBuildingMapManager.changeManeuver(mPwBuildingMapManager.getPreviousManeuver());
+                                    else
+                                        mPwBuildingMapManager.changeManeuver(mPwBuildingMapManager.getCurrentManeuver());
+                                }
+
+                            }
+
+                            // Handling right to left screen swap.
+                            if (lastX > currentX) {
+
+                                // If there is a child (to the left), kust break.
+                                if (mManeuverFlipper.getDisplayedChild() == (mManeuverFlipper.getChildCount() - 1))
+                                    break;
+
+                                // Next screen comes in from right.
+                                mManeuverFlipper.setInAnimation(getActivity(), R.anim.slide_in_from_right);
+                                // Current screen goes out from left.
+                                mManeuverFlipper.setOutAnimation(getActivity(), R.anim.slide_out_to_left);
+
+                                // Display previous screen.
+
+                                mManeuverFlipper.showNext();
+                                if(btnVoiceOut.isActivated())
+                                    playTTS("message");
+                                PWRouteManeuver nextManeuver = mPwBuildingMapManager.getNextManeuver();
+                                if (nextManeuver != null) {
+                                    mManeuverAdapter.increaseIndexOfDirection();
+
+                                    if (nextManeuver.isTurnManeuver && !nextManeuver.isPortalManeuver())
+                                        mPwBuildingMapManager.changeManeuver(mPwBuildingMapManager.getNextManeuver());
+                                    else
+                                        mPwBuildingMapManager.changeManeuver(mPwBuildingMapManager.getCurrentManeuver());
+
+                                }
+
+                            }
+                            break;
+                    }
+
+
+                    return true;
+                } else
+                    return false;
+            }
+
+        });
+
+        btnShowList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mManeuverFlipper.setVisibility(mManeuverFlipper.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                setHeadManeuver.setVisibility(setHeadManeuver.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                setOfDirections.setVisibility(setOfDirections.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        btnClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mManeuverFlipper.setVisibility(mManeuverFlipper.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                setHeadManeuver.setVisibility(setHeadManeuver.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+                setOfDirections.setVisibility(setOfDirections.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+            }
+        });
+    }
+
+    private void playTTS(String utteranceID) {
+        View v = mManeuverFlipper.getCurrentView();
+        TextView tv_tts = (TextView) v.findViewById(R.id.textInstruction);
+        HashMap<String, String> ttsHashMap = new HashMap<String, String>();
+        ttsHashMap.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, utteranceID);
+        textToSpeech.speak(tv_tts.getText().toString(), TextToSpeech.QUEUE_FLUSH, ttsHashMap);
+    }
+
+
+
+    private void fillManeuverFlipper(ArrayList<PWRouteManeuver> maneuversR){
+        maneuverDisplayHelper.setBuilding(mPwBuildingMapManager.getBuilding());
+        fillListOfManeuvers(maneuversR);
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 145 );
+        maneuvers= filterManeuvers(maneuversR);
+        int size = maneuvers.size();
+        double totalDistance = 0;
+
+        View lefSeparator = null;
+        View rigthSeparator = null;
+        ImageView imgIndicator = null;
+        ImageView imgIndicatorNext = null;
+        TextView textInstruction = null;
+        TextView textNextDirection = null;
+        TextView textNext = null;
+
+        for(int i = 0; i < size; i++) {
+            View tempView = inflater.inflate(R.layout.card_view, mManeuverFlipper, false);
+            tempView.setLayoutParams(params);
+
+            PWRouteManeuver iter = maneuvers.get(i);
+
+            lefSeparator = tempView.findViewById(R.id.lefSeparator);
+            rigthSeparator = tempView.findViewById(R.id.rigthSeparator);
+            imgIndicator = (ImageView)tempView.findViewById(R.id.imgIndicator);
+            imgIndicatorNext = (ImageView)tempView.findViewById(R.id.imgIndicatorNext);
+            textInstruction = (TextView)tempView.findViewById(R.id.textInstruction);
+            textNextDirection = (TextView)tempView.findViewById(R.id.textNextDirection);
+            textNext = (TextView)tempView.findViewById(R.id.textNext);
+
+            lefSeparator.setVisibility(i == 0 ? View.INVISIBLE : View.VISIBLE);
+            rigthSeparator.setVisibility(i == (size - 1) ? View.VISIBLE : View.INVISIBLE);
+
+            if(i == (size - 1)){
+                imgIndicator.setImageResource(R.drawable.arrow_final);
+                imgIndicatorNext.setVisibility(View.GONE);
+                textInstruction.setText( iter.getPoints().get(0).getName());
+                textNextDirection.setVisibility(View.GONE);
+                textNext.setVisibility(View.GONE);
+            } else{
+                imgIndicatorNext.setVisibility(View.VISIBLE);
+                textNextDirection.setVisibility(View.VISIBLE);
+                textNext.setVisibility(View.VISIBLE);
+                imgIndicator.setImageResource(maneuverDisplayHelper.getImageResourceForDirection(iter));
+                imgIndicatorNext.setImageResource(maneuverDisplayHelper.getImageResourceForDirection(iter.getNextManeuver()));
+            }
+
+            textInstruction.setText(maneuverDisplayHelper.stringForDirection(iter));
+
+            if(iter.getNextManeuver() != null) {
+                textNextDirection.setText(maneuverDisplayHelper.stringForDirection(iter.getNextManeuver()));
+            }
+            totalDistance += iter.distance;
+
+            mManeuverFlipper.addView(tempView, i);
+        }
+
+        txtTotalDistance.setText( "Total distance: " + getDistanceInFeet(totalDistance));
+        txtEstimatedTime.setText("Estimated time: " + MapUtils.estimatedTimeStringForDistance((totalDistance)));
+
+        mManeuverFlipper.setVisibility(View.VISIBLE);
+        setHeadManeuver.setVisibility(View.VISIBLE);
+    }
+
+    private String getDistanceInFeet(double totalDistance){
+        double res = totalDistance * 3.28084;
+        res = Math.ceil( res );
+        return "" + res + " feet";
+    }
+
+    private void fillListOfManeuvers(ArrayList<PWRouteManeuver> maneuversR){
+        ArrayList<PWRouteManeuver> maneuvers = cleanManeuversforList(maneuversR);
+
+        if(mManeuverAdapter == null)
+            mManeuverAdapter = new ManeuverAdapter(this.getActivity(),maneuvers,mPwBuildingMapManager );
+        else{
+            mManeuverAdapter.clear();
+            mManeuverAdapter.addAll(maneuvers);
+        }
+
+        lstManeuvers.setAdapter(mManeuverAdapter);
+        mManeuverAdapter.notifyDataSetChanged();
+    }
+
+    private ArrayList<PWRouteManeuver> filterManeuvers(ArrayList<PWRouteManeuver> maneuvers){
+        ArrayList<PWRouteManeuver> array = new ArrayList<PWRouteManeuver>();
+
+        for(PWRouteManeuver maneuver : maneuvers){
+            if(maneuver != null && !maneuver.isTurnManeuver()){
+                array.add(maneuver);
+            }
+        }
+
+        return array;
+    }
+
+    private ArrayList<PWRouteManeuver> cleanManeuversforList(ArrayList<PWRouteManeuver>  maneuvers){
+        ArrayList<PWRouteManeuver> array = new ArrayList<PWRouteManeuver>();
+
+        for(PWRouteManeuver maneuver : maneuvers){
+            if(maneuver != null && !maneuver.isTurnManeuver()){
+                array.add(maneuver);
+                array.add(maneuver.getNextManeuver());
+            }
+        }
+
+        array.remove(array.size() - 1);
+
+        return array;
     }
 
     private String[] getFileList() {
@@ -244,29 +487,13 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             itemArray.add(provider.getDisplayName());
         }
         final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findProviderIndex
-            (mCurrentProvider), itemArray.toArray(new CharSequence[itemArray.size()]), R.string.mapping_provider_choose);
+                (mCurrentProvider), itemArray.toArray(new CharSequence[itemArray.size()]), R.string.mapping_provider_choose);
         menuItemSelectionDialogFragment.setOnClickListener(mProviderSelectionOnClickListener);
         return menuItemSelectionDialogFragment;
     }
 
-    private DialogFragment createBuildingSelectionDialogFragment() {
-        final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findBuildingIndex
-            (mCurrentBuilding), R.array.building_names, R.string.mapping_building_choose);
-        menuItemSelectionDialogFragment.setOnClickListener(mBuildingSelectionOnClickListener);
-        return menuItemSelectionDialogFragment;
-    }
 
-    private DialogFragment createMockLocationFileSelectionDialogFragment() {
-        if (mFileList == null) {
-            mFileList = getFileList();
-        }
-        final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(findFileIndex
-            (mCurrentMockFileName), mFileList, R.string.mapping_file_choose);
-        menuItemSelectionDialogFragment.setOnClickListener(mFileNameSelectionOnClickListener);
-        return menuItemSelectionDialogFragment;
-    }
-
-    private DialogFragment createStopLoadingBuildingDialogFragment() {
+   private DialogFragment createStopLoadingBuildingDialogFragment() {
         final StopLoadingBuildingDialogFragment fragment = new StopLoadingBuildingDialogFragment();
         fragment.setOnClickListener(new DialogInterface.OnClickListener() {
             @Override
@@ -326,17 +553,19 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         });
 
         mPwBuildingMapManager = builder.buildingId(mCurrentBuilding)
-            .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
-            .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
-            .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
-            .routeCallback(routeCallbackWithToast)
-            .showMyLocation(false)
-            .floorChangedCallback(this)
-            .pwOnBuildingDataLoadedCallback(this)
-            .pwOnBuildingPOIDataLoadedCallback(this)
-            .mapLoadedCallback(this)
-            .pwSnapToRouteCallback(this)
-            .build();
+                .initialFloor(getResources().getIntArray(R.array.initial_floor)[findBuildingIndex(mCurrentBuilding)])
+                .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
+                .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
+                .routeCallback(routeCallbackWithToast)
+                .showMyLocation(false)
+                .floorChangedCallback(this)
+                .pwOnBuildingDataLoadedCallback(this)
+                .pwOnBuildingPOIDataLoadedCallback(this)
+                .mapLoadedCallback(this)
+                .pwSnapToRouteCallback(this)
+                .pwOnManeuverChangedCallBack(this)
+                .PwOnRouteStepChangedCallback(this)
+                .build();
 
         // Modify Google Map after PwBuildingMapManager has applied its defaults
         map.setMapType(mCurrentMapType);
@@ -367,9 +596,9 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 }
 
                 mFlatMarker = getPwMap().getMap().addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .title(getString(R.string.mapping_flat_marker))
-                        .anchor(0.5f, 1f)
+                                .position(latLng)
+                                .title(getString(R.string.mapping_flat_marker))
+                                .anchor(0.5f, 1f)
                 );
             }
         });
@@ -397,6 +626,19 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         super.onPrepareOptionsMenu(menu);
         updateMenuItems(menu);
     }
+
+    public void setManeuverFlipperToCurrentManeuver(PWRouteManeuver maneuver)
+    {
+        if(maneuvers!= null && mPwBuildingMapManager.isRouteAvailable()) {
+            for (int i = 0; i < maneuvers.size(); i++) {
+                if (maneuver.getIndex() == maneuvers.get(i).getIndex())
+                    if (mManeuverFlipper != null)
+                        mManeuverFlipper.setDisplayedChild(i);
+            }
+        }
+
+    }
+
 
     @Override
     public void onDestroy() {
@@ -489,10 +731,6 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
             createMapTypeSelectionDialogFragment().show(getChildFragmentManager(), TAG);
         } else if (item.getItemId() == R.id.menu_provider) {
             createProviderSelectionDialogFragment().show(getChildFragmentManager(), TAG);
-        } else if (item.getItemId() == R.id.menu_building) {
-            createBuildingSelectionDialogFragment().show(getChildFragmentManager(), TAG);
-        } else if (item.getItemId() == R.id.menu_mock_file) {
-            createMockLocationFileSelectionDialogFragment().show(getChildFragmentManager(), TAG);
         } else if (item.getItemId() == R.id.menu_repeat) {
             item.setChecked(!item.isChecked());
             mRepeat = item.isChecked();
@@ -538,13 +776,22 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         }
 
         final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(
-            selectedIndex,
-            tolerances,
-            R.string.menu_route_snapping_tolerance);
+                selectedIndex,
+                tolerances,
+                R.string.menu_route_snapping_tolerance);
         menuItemSelectionDialogFragment.setOnClickListener(mRouteSnapperToleranceSelectionOnClickListener);
         menuItemSelectionDialogFragment.show(getFragmentManager(), TAG);
     }
 
+    @Override
+    public void actionClearRoutes()
+    {
+        super.actionClearRoutes();
+        mManeuverFlipper.removeAllViews();
+        mManeuverFlipper.setVisibility(View.INVISIBLE);
+        headerRouteDisplay.setVisibility(View.GONE);
+
+    }
     private void removePOIs() {
         if (mPwPoints == null) {
             Toast.makeText(getActivity().getApplicationContext(), "No PwPoint, nothing to remove.", Toast.LENGTH_SHORT).show();
@@ -610,11 +857,10 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                     }
 
                     final MenuItemSelectionDialogFragment menuItemSelectionDialogFragment = MenuItemSelectionDialogFragment.newInstance(
-                        0,
-                        list,
-                        R.string.menu_poi_types);
-                    menuItemSelectionDialogFragment.setOnClickListener(mPOITypeSelectionOnClickListener);
-                    menuItemSelectionDialogFragment.show(getFragmentManager(), TAG);
+                            0,
+                            list,
+                            R.string.menu_poi_types);
+                  menuItemSelectionDialogFragment.show(getFragmentManager(), TAG);
                 }
             }
 
@@ -691,7 +937,8 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 mPwBuildingMapManager.removeLocationUpdates();
 
                 mPwBuildingMapManager.requestLocationUpdates(applicationContext, locationProvider);
-                mPwBuildingMapManager.applyMode(MyLocationLayer.MODE_NORMAL);
+                mPwBuildingMapManager.applyMode(MyLocationLayer.MODE_FOLLOW_ME);
+
                 setupMyLocationButton();
             }
         } catch (Exception ex) {
@@ -751,16 +998,29 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         marker.showInfoWindow();
     }
 
+    @Override
+    public void onManeuverChanged(PWRouteManeuver maneuver)
+    {
+        setManeuverFlipperToCurrentManeuver(maneuver);
+    }
+
+    @Override
+    public void onRouteStepChanged(RouteStep step)
+    {
+        super.onRouteStepChanged(step);
+        Toast.makeText(getActivity().getApplicationContext(),"changed routeStep is called",Toast.LENGTH_LONG).show();
+    }
+
     protected void showRouteSelectionFragment(final long pointId) {
 
         ArrayList<PwPoint> buildingPoints = (ArrayList<PwPoint>) mPwBuildingMapManager.getBuildingPoints();
 
         final RouteEndPointsDialogFragment fragment = RouteEndPointsDialogFragment.newInstance(
-            mPwBuildingMapManager.getBuilding(),
-            buildingPoints,
-            findPointById(pointId, mPwBuildingMapManager.getBuildingPoints()),
-            mPwBuildingMapManager.getMyLocation() != null,
-            mFlatMarker != null);
+                mPwBuildingMapManager.getBuilding(),
+                buildingPoints,
+                findPointById(pointId, mPwBuildingMapManager.getBuildingPoints()),
+                mPwBuildingMapManager.getMyLocation() != null,
+                mFlatMarker != null);
 
         fragment.setPwRouteRequestedListener(new RouteEndPointsDialogFragment.PwRouteRequestedListener() {
             @Override
@@ -799,6 +1059,15 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                     @Override
                     public void onSuccess(PwDirectionsResponse response) {
                         mPwBuildingMapManager.plotRoute(response.getRoutes());
+                        PwRoute startRoute=response.getRoutes().get(0);
+                        //Check if the Maneuvers array is not empty or null to call plotRouteManeuverOverlay
+                        if(startRoute.getManeuvers() != null && (!startRoute.getManeuvers().isEmpty())) {
+                            PwLog.w("AAA", "Maneuvers size: " + startRoute.getManeuvers().size());
+                            mPwBuildingMapManager.plotManeuver();
+                            if(mManeuverFlipper!=null)
+                                mManeuverFlipper.removeAllViews();
+                            fillManeuverFlipper(response.getRoutes().get(0).getManeuvers());
+                        }
                     }
 
                     @Override
@@ -808,7 +1077,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 });
 
                 // Set follow mode back to Normal
-                applyMode(MyLocationLayer.MODE_NORMAL);
+                // applyMode(MyLocationLayer.MODE_NORMAL);
 
                 hideInfoWindow(mSelectedMarker);
                 mRouteEndPoint = endPoint;
