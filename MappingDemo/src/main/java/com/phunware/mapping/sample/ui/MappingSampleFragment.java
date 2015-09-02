@@ -74,7 +74,7 @@ import java.util.Locale;
 /**
  * Shows a map of the venue.
  */
-public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener, PwOnSnapToRouteCallback, PwOnBuildingPOIDataLoadedCallback ,PWOnManeuverChangedCallBack,PWOnRouteStepChangedCallBack{
+public class MappingSampleFragment extends PwMappingFragment implements PwMockLocationProvider.MockLocationsDisabledListener, PwOnSnapToRouteCallback, PwOnBuildingPOIDataLoadedCallback ,PWOnManeuverChangedCallBack{
     private static final String TAG = MappingSampleFragment.class.getSimpleName();
 
     private static final String KEY_MAP_TYPE = "map_type";
@@ -1007,6 +1007,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
     @Override
     public void onRouteStepChanged(RouteStep step)
     {
+        super.onRouteStepChanged(step);
         Toast.makeText(getActivity().getApplicationContext(),"changed routeStep is called",Toast.LENGTH_LONG).show();
     }
 
