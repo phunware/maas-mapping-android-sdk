@@ -567,6 +567,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 .PwOnRouteStepChangedCallback(this)
                 .build();
 
+        mPwBuildingMapManager.toggleLocationAccuracyCircle=false;
         // Modify Google Map after PwBuildingMapManager has applied its defaults
         map.setMapType(mCurrentMapType);
 
