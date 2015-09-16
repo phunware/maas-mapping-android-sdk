@@ -27,6 +27,10 @@
                 <action android:name="com.openudid.GETUDID" />
             </intent-filter>
         </service>
+        <!-- SenionLab -->
+        <service
+            android:name="com.senionlab.slutilities.service.SLIndoorLocationService">
+        </service>
 
         <!-- Used by Core for efficient Analytic Caching -->
         <receiver android:name="com.phunware.core.internal.CoreReceiver">
