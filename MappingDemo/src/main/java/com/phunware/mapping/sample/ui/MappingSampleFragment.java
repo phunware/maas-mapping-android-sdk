@@ -26,6 +26,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 import android.widget.ImageButton;
+
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -270,7 +273,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
 
                                 // Display next screen.
                                 mManeuverFlipper.showPrevious();
-                                if(btnVoiceOut.isActivated()) {
+                                if (btnVoiceOut.isActivated()) {
                                     playTTS("message");
                                 }
                                 PWRouteManeuver previousManeuver = mPwBuildingMapManager.getPreviousManeuver();
@@ -299,7 +302,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                                 // Display previous screen.
 
                                 mManeuverFlipper.showNext();
-                                if(btnVoiceOut.isActivated())
+                                if (btnVoiceOut.isActivated())
                                     playTTS("message");
                                 PWRouteManeuver nextManeuver = mPwBuildingMapManager.getNextManeuver();
                                 if (nextManeuver != null) {
@@ -480,6 +483,16 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         return menuItemSelectionDialogFragment;
     }
 
+    private POISearchDialogFragment createSearchPOIDialogFragment()
+    {
+
+        ArrayList<PwPoint> buildingPoints = (ArrayList<PwPoint>) mPwBuildingMapManager.getBuildingPoints();
+
+        final POISearchDialogFragment mPOISearchDialogFragment = POISearchDialogFragment.newInstance(mPwBuildingMapManager.getBuilding(), buildingPoints);
+        return mPOISearchDialogFragment;
+    }
+
+
     private DialogFragment createProviderSelectionDialogFragment() {
         LocationProvider[] providerList = LocationProvider.values();
         ArrayList<CharSequence> itemArray = new ArrayList<CharSequence>();
@@ -567,6 +580,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
                 .PwOnRouteStepChangedCallback(this)
                 .build();
 
+        mPwBuildingMapManager.toggleLocationAccuracyCircle=false;
         // Modify Google Map after PwBuildingMapManager has applied its defaults
         map.setMapType(mCurrentMapType);
 
@@ -740,7 +754,14 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         } else if (item.getItemId() == R.id.menu_clear_cache) {
             mPwBuildingMapManager.clearCache(getActivity().getApplicationContext());
             Toast.makeText(getActivity().getApplicationContext(), R.string.text_clear_cache, Toast.LENGTH_SHORT).show();
-        } else if (item.getItemId() == R.id.menu_poi_types) {
+        }
+        else if(item.getItemId() == R.id.menu_search_POI)
+        {
+            searchPOI();
+
+        }
+
+        else if (item.getItemId() == R.id.menu_poi_types) {
             showPOITypeDialogFragment();
         } else if (item.getItemId() == R.id.menu_remove_pois) {
             removePOIs();
@@ -763,6 +784,38 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
 
         return super.onOptionsItemSelected(item);
     }
+
+    void  searchPOI()
+    {
+        POISearchDialogFragment fragment=createSearchPOIDialogFragment();
+        fragment.setPOISearchListener(new POISearchDialogFragment.PwPOISearchListener() {
+            @Override
+            public void onPOISearchRequested(PwPoint searchPoint) {
+                if(searchPoint.getFloorId()!=mPwBuildingMapManager.getDisplayedFloorId())
+                {
+                    showFloor(searchPoint.getFloorId());
+                }
+                PwBuildingMarker marker= mPwBuildingMapManager.getBuildingMarkerFromPoint(searchPoint.getId());
+                mPwBuildingMapManager.setSelectedMarker(marker.getMarker());
+                float zoom = getPwMap().getCameraPosition().zoom;
+                float minimumMarkerZoomLevel = MapUtils.getMinimalZoomLevel(searchPoint.getZoomLevel(), mPwBuildingMapManager.getMinimumMarkerZoomLevel());
+                if (zoom < minimumMarkerZoomLevel) {
+                    zoom = minimumMarkerZoomLevel;
+                }
+
+                final CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(searchPoint.getLocation().latitude, searchPoint.getLocation().longitude), zoom);
+
+                getPwMap().animateCamera(cameraUpdate, 300, null);
+                //showInfoWindow(marker.getMarker());
+                PwBuildingMarker buildingMarker=getPwMap().addMarker(marker.getMarkerOptions());
+                buildingMarker.getMarker().setVisible(true);
+                buildingMarker.getMarker().showInfoWindow();
+            }
+        });
+        fragment.show(getChildFragmentManager(), fragment.getTag());
+
+    }
+
 
     private void showRouteSnapperTolerance() {
 

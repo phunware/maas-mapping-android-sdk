@@ -43,6 +43,12 @@
         android:orderInCategory="6"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/menu_search_POI"
+        android:title="Search POI"
+        android:orderInCategory="6"
+        app:showAsAction="never"/>
+
+    <item
         android:id="@+id/menu_poi_types"
         android:title="@string/menu_poi_types"
         android:orderInCategory="7"
