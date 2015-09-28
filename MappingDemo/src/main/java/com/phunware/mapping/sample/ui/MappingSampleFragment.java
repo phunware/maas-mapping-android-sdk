@@ -785,6 +785,63 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void actionNextFloor() {
+        assert (mPwBuildingMapManager != null);
+        if (mPwBuildingMapManager != null) {
+            if (mPwBuildingMapManager.isRouteAvailable()) {
+                long CurrentfloorID= mPwBuildingMapManager.getDisplayedFloorId();
+                ArrayList<RouteStep> steps=mPwBuildingMapManager.getCurrentRoute().getSteps();
+                for(int i=0;i<steps.size();i++)
+                {
+                    if(steps.get(i).getFloorID()== CurrentfloorID)
+                    {
+                        if(i+1<steps.size())
+                            showFloor(steps.get(i+1).getFloorID());
+
+                        return;
+                    }
+
+                }
+                this.applyMode(MyLocationLayer.MODE_NORMAL);
+                invalidateOptionsMenus();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Route step unavailable", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+    @Override
+    public void actionPrevFloor() {
+        assert (mPwBuildingMapManager != null);
+        if (mPwBuildingMapManager != null) {
+            if (mPwBuildingMapManager.isRouteAvailable()) {
+                long CurrentfloorID= mPwBuildingMapManager.getDisplayedFloorId();
+                ArrayList<RouteStep> steps=mPwBuildingMapManager.getCurrentRoute().getSteps();
+                for(int i=0;i<steps.size();i++)
+                {
+                    if(steps.get(i).getFloorID()== CurrentfloorID)
+                    {
+                        if(i-1>0)
+                            showFloor(steps.get(i-1).getFloorID());
+
+                        return;
+                    }
+
+                }
+                this.applyMode(MyLocationLayer.MODE_NORMAL);
+                invalidateOptionsMenus();
+            } else {
+                Toast.makeText(getActivity().getApplicationContext(), "Route step unavailable", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+
+
     void  searchPOI()
     {
         POISearchDialogFragment fragment=createSearchPOIDialogFragment();
@@ -1050,6 +1107,8 @@ public class MappingSampleFragment extends PwMappingFragment implements PwMockLo
         marker.setVisible(true);
         marker.showInfoWindow();
     }
+
+
 
     @Override
     public void onManeuverChanged(PWRouteManeuver maneuver)
