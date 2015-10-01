@@ -1,5 +1,14 @@
 Change Log
 ==========
+
+Version 2.5.1 *(2015-09-30)*
+-----------------------------
+* Change all the endpoints of phunware.com to use HTTPS. 
+* Bug fixes and performance enhancements for V2.5.0.
+* Updated the MaaS suffix to PW for all phunware SDK's.
+* Updated the PWLocation to v1.1.1.
+* Updated the PWCore SDK to v1.3.13.
+
 Version 2.5.0 *(2015-08-31)*
 -----------------------------
 * Added support for turn-by-turn directions. Turn-by-turn maneuvers can be accessed by accessing the maneuvers property on a PWRoute object. You can plot a route maneuver on a PWMapView intance by calling setRouteManeuver: with a valid PWRouteManeuver object. All previous route behavior is still present and unaffected. Please see the turn-by-turn sample as an example of how to implement turn-by-turn.
@@ -18,7 +27,7 @@ Version 2.5.0 *(2015-08-31)*
 
 * When registering a PWGPSLocationManager with the map view the location will now show on all floors regardless of whether or not there is a valid floorIDMapping match. 
 
-*  Updated MaaSLocation SDK to '1.2.0'
+*  Updated MaaSLocation SDK to '1.1.0'
 
 * Fixed Bug for getting route from  and to same floor number in different buildings.
 
