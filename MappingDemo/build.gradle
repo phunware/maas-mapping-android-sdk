@@ -126,5 +126,5 @@ dependencies {
     }
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
-    compile (name:'MaaSMappingLibrary', ext:'aar')
+    compile (name:'PWMappingLibrary', ext:'aar')
 }
