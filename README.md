@@ -130,7 +130,7 @@ This view provides the option to set callbacks for certain events:
 
 
 ##Blue Dot
-A user's location in a venue can be retrieved with `MyLocationLayer`. To use this layer, you need a location provider. Pass a LocationProvider.Factory object to `mapManager.setLocationProviderFactory(...)` and then call `mapManager.setMyLocationEnabled(true)`. A blue dot representing the end-user's location will be displayed on the map automatically, if available.  MapManager does all the work of adding the location layer to the map so you don't have to.
+A user's location in a venue can be retrieved by setting My Location to enabled. To do this, you need a location provider. Pass a LocationProvider.Factory object to `mapManager.setLocationProviderFactory(...)` and then call `mapManager.setMyLocationEnabled(true)`. A blue dot representing the end-user's location will be displayed on the map automatically, if available.  MapManager does all the work of adding the location layer to the map so you don't have to.
 
 ##Routing
 The data model for routes is limited to a PWRoute object which is composed of one or more PWRouteStep objects. Each step represents a series of points on the route graph for a single building floor. It is possible to have multiple steps for the same floor, they just cannot be in succession.Each time the user needs to be asked to turn or to continue straight is not really a route step. It's more of a maneuver. Each maneuver has a relative direction (bear left, turn right, go straight, etc.), a distance (optional) and a sub-sequence of points.

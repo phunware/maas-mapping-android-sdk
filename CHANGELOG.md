@@ -1,9 +1,14 @@
 Change Log
 ==========
 
+Version 3.0.0 *(2016-08-01)*
+-----------------------------
+* Complete ground-up rewrite
+* See ReadMe.md for detailed use information 
+
 Version 2.5.1 *(2015-09-30)*
 -----------------------------
-* Change all the endpoints of phunware.com to use HTTPS. 
+* Change all the endpoints of phunware.com to use HTTPS.
 * Bug fixes and performance enhancements for V2.5.0.
 * Updated the MaaS suffix to PW for all phunware SDK's.
 * Updated the PWLocation to v1.1.1.
@@ -23,9 +28,9 @@ Version 2.5.0 *(2015-08-31)*
 
 * Added PwBuildingMapManager callback PwBuildingMapManager:onPwRouteStepChangedCallback:onRouteStepChanged. This method is called whenever the PWRouteStep being displayed by the map view changes.
 
-* Added PwBuildingMapManager callback PwBuildingMapManager:onmaneuverchangedCallback:onManeuverChanged. This method is called whenever the PWRouteManeuver being displayed by the map changes. 
+* Added PwBuildingMapManager callback PwBuildingMapManager:onmaneuverchangedCallback:onManeuverChanged. This method is called whenever the PWRouteManeuver being displayed by the map changes.
 
-* When registering a PWGPSLocationManager with the map view the location will now show on all floors regardless of whether or not there is a valid floorIDMapping match. 
+* When registering a PWGPSLocationManager with the map view the location will now show on all floors regardless of whether or not there is a valid floorIDMapping match.
 
 *  Updated MaaSLocation SDK to '1.1.0'
 
@@ -33,7 +38,7 @@ Version 2.5.0 *(2015-08-31)*
 
 * Added property to PWDirectionsOptions called excludedPointIdentifiers. Specify an array of point identifiers that you would like to exclude from routing. Please see PWDirectionsOptions header for more information.
 
- 
+
 
 Version 2.4.0 *(2015-04-10)*
 ----------------------------
