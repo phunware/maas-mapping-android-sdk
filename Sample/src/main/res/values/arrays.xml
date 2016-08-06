@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Senion floor IDs -->
+    <string-array name="senion_floor_nrs">
+    </string-array>
+    <!-- maas floor IDs ordered to match senion IDs -->
+    <integer-array name="maas_floor_ids">
+    </integer-array>
+</resources>
