@@ -13,18 +13,14 @@ PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy i
 
 
 ###Build requirements
-* Android SDK 4.0+ (API level 14) or above
-* Latest MaaS Core
+* Android SDK 4.0.3+ (API level 15) or above
 * Latest MaaS Location
-* AndroidSVG 1.2.1
-* Picasso 2.3.2
-* Disklrucache 2.0.2
 
 ##Prerequisites
-The sample will show a building and its points of interest in the main activity. 
+The sample will show a building and its points of interest in the main activity.
 Config resource files are in different directories; for example, use src/main for dev environment and use src/stage for stage.
 
-In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml. Those values can be found in the MaaS portal. 
+In order to communicate with APIs, replace the APP_ID, APP_ACCESS_KEY, APP_SIGNATURE_KEY and APP_ENCRYPTION_KEY in res/values/strings.xml. Those values can be found in the MaaS portal.
 ```xml
     <string name="app_id">APP_ID</string>
     <string name="app_access_key">APP_ACCESS_KEY</string>
@@ -44,38 +40,11 @@ public void onCreate() {
 ```
 
 ##Mapping
-Mapping starts with the `PwMappingFragment` class. It subclasses SupportMapFragment to provide a convenient interface that downloads, stores and displays indoor maps and associated points of interest. 
+Mapping starts with the `MapFragment` or `SupportMapFragment` class. It subclasses google maps' MapFragment or SupportMapFragment to provide a convenient interface that downloads, stores and displays indoor maps and associated points of interest.
 
-####Life Cycle
-Users of this class must forward some life cycle methods from the activity or fragment containing this view to the corresponding methods in this class. In particular, the following methods must be forwarded:
 
-* `onCreate(android.app.Activity, android.os.Bundle)`
-* `onSaveInstanceState(android.os.Bundle)`
-* `onDestroy(android.app.Activity)`
-* `onLowMemory()`
+####Adding Indoor Maps to an Activity
 
-####Adding Indoor Maps to a Activity
-Mapping SDK provides `PwDefaultMappingFragment`——a default implementation of PwMappingFragment. It creates a map fragment and displays indoor maps, their markers and routing between points.
-
-Define a layout in activity_main.xml:
-```XML
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/map"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:name="com.phunware.mapping.library.ui.PwDefaultMappingFragment" />
-```
-In the MainActivity.java:
-```Java
-public class MainActivity extends ActionBarActivity {
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
-        setContentView(R.layout.activity_main);
-    }
-}
-```
 Update your res/values/integers.xml. To show these, replace `BUILDING_ID` and `INITIAL_FLOOR` with your IDs in res/values/integers.xml.    
 ```xml
     <integer-array name="building_id">
@@ -90,121 +59,78 @@ Update your res/values/integers.xml. To show these, replace `BUILDING_ID` and `I
     <integer name="minimum_marker_zoom_level"><!-- Minimum marker zoom level --></integer>
 ```
 
+Define a layout in activity_main.xml:
+```XML
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/map"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:name="com.phunware.mapping.MapFragment" />
+```
+In the MainActivity.java:
+```Java
+public class MainActivity extends ActionBarActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        setContentView(R.layout.activity_main);
+    }
+}
+```
+Then once you have gotten location permissions and registered your app keys with PwCore, You can call
+```Java
+MapFragment mapFragment = (MapFragment) getFragmentManager()
+                .findFragmentById(R.id.map);
+        if (mapFragment != null) {
+            mapFragment.getPhunwareMapAsync(this);
+        }
+  ```
 
 ####Building Data
-Get building data for the map with `PwMappingModule.getBuildingDataByIdInBackground(context, long, PwOnBuildingDataListener)`. Building data contains all of the metadata for a `PwBuilding`, its `PwFloor`s and each level of detail (LOD) for the floors. LODs are referred to as `PwFloorResource`s. A `PwMapView` uses this data to draw a map and to otherwise function.
 
-Once building data is obtained, use the map view's method `setMapData(pwBuilding)` to pass the data to the map. It will begin loading assets and resources immediately. 
+Your Activity class should override the `onPhunwareMapReady` method of the `OnPhunwareMapReady` callback, and load the desired building in that method.
+Ex:
+``` Java
+mapManager.setPhunwareMap(map);
+        mapManager.addBuilding(getResources().getInteger(R.integer.building_id),
+                new Callback<Building>() {
+                    @Override
+                    public void onSuccess(final Building building) {
+                        if (building == null) {
+                            Toast.makeText(MainActivity.this, "No building", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                      // update the UI based on the building data
+                    }
 
-An example of retrieving and using building data:
-```Java
-PwMappingModule.getInstance().getBuildingData(this, BUILDING_ID, new PwOnBuildingDataListener() {
-    @Override
-    public void onSuccess(PwBuilding pwBuilding) {
-        if (pwBuilding != null) {
-            // Building data exists!
-            pwMapView.setMapData(pwBuilding);
-        } else {
-            // No building data found or a network error occurred.
-            Toast.makeText(context, "Error loading building data.", Toast.LENGTH_SHORT).show();
-        }
+                    @Override
+                    public void onFailure(final Throwable e) {
+                        Log.e(TAG, e.getLocalizedDescription);
+                    }
+                });
     }
-});
-```
-Or you can use callbacks to get building data. `PwOnBuildingDataLoadedCallback` provides callback functions that call when `PwBuilding` loads successfully or fails.    
+    ```
 
-####Point of Interest Data
-Get a list of points of interest (POI) with `getPOIDataInBackground(context, long, PwOnPOIDataListener)`. Once this list is given to a `PwMapView`, it can draw points on the map when relevant. This means that if a building has multiple floors, the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
+ Building data contains all of the metadata for a `Building`, its `Floor`s and each level of detail (LOD) for the floors. LODs are referred to as `FloorResource`s. The `addBuilding` call also associates the building with the mapManager's PhunwareMap and downloads all POI data for the building.
 
-Once POI data is obtained, use the map view's method `setPOIList(pois)` to pass the data to the map.
+The MapManager can draw points on the map when relevant. This means that if a building has multiple floors, the map will only display the POIs that are on the current floor. POIs can also have a minimum zoom level specified so that they will show only once that zoom level has been reached.
 
-An example of retrieving and using POI data:
-```Java
-PwMappingModule.getInstance().getPOIs(this, BUILDING_ID, new PwOnPOIDataListener() {
-    @Override
-    public void onSuccess(List<PwPoint> pois) {
-        if (pois != null) {
-            pwMapView.setPOIList(pois);
-        } else {
-            Toast.makeText(context, "Error loading poi data.", Toast.LENGTH_SHORT).show();
-        }
-    }
-});
-```
-After you call `setupMapData`, you can get all points for the current building by `getBuildingPoints`.
 
 ####Point of Interest Type
-Get all type of Points of Interest (POI) with `getPOITypes(context, PwOnPOITypesDownloadListener)`. Once the list of Points of Interest (POI) type is downloaded, it will call `onSuccess(SparseArray<PwPointType>)` method in PwOnPointOfInterestTypesDownloadListener, otherwise it will call onFailed instead.
+Get all types of Points of Interest (POI) with `mapManager.getAllPoiTypes()`. Once you've successfully loaded a building, this data will be available.
 
-An example of retrieving and using POI type data:
-```Java
-PwMappingModule.getInstance().retrievePointsOfInterestTypes(getActivity().getApplicationContext(), new PwOnPointOfInterestTypesDownloadListener() {
-    @Override
-    public void onSuccess(SparseArray<PwPointType> poiTypes) {
-        Toast.makeText(context, "POI types: " + poiTypes, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onFailed() {
-        Toast.makeText(context, R.string.text_retrieve_poi_types_failed, Toast.LENGTH_SHORT).show();
-    }
-});
-```
 
 ####Event Callbacks
 This view provides the option to set callbacks for certain events:
 
-* `PwMapOverlayManagerBuilder.pwOnFloorChangedCallback(PwOnFloorChangedCallback)` registers a callback that be called once the map has completed the floor change.
-* `PwMapOverlayManagerBuilder.pwOnMapDataLoadedCallback(PwOnMapDataLoadedCallback)` registers a callback that be called once the map data loaded.
-* `PwMapOverlayManagerBuilder.pwOnBuildingDataLoadedCallback(PwOnBuildingDataLoadedCallback)` registers a callback that be called once the building data loaded.
-* `PwMapOverlayManagerBuilder.pwOnBuildingPOIDataLoadedCallback(PwOnBuildingPOIDataLoadedCallback)` registers a callback that be called once the building POI data loaded.
-* `PwMapOverlayManagerBuilder.pwSvgDownloadCallback(PwSvgDownloadCallback)` registers a callback that be called once the SVG url are download.
-* `PwMapOverlayManagerBuilder.pwSnapToRouteCallback(PwOnSnapToRouteCallback)` registers a callback that be called once "Snap to route" started or stopped.
-* `PwMapOverlayManagerBuilder.pwOnRouteStepChanged(PwOnRouteStepChangedCallback)` registers a callback that be called once routeStep is changed.
-* `PwMapOverlayManagerBuilder.pwOnManeuverChanged(PwOnManeuverChangedCallback)` registers a callback that be called once maneuver is changed.
+* `mapManager.setFloorChangedListener(Building.OnFloorChangedListener()...)` registers a callback that will be called once the map has completed the floor change.
+* calling `mapManager.navigate(RouteOptions)` returns a `Navigator` object to assist with routing.
+* `navigator.addOnManeuverChangedListener(Navigator.OnManeuverChangedListener)` registers a callback that be called once the maneuver is changed.
 
 
 ##Blue Dot
-A user's location in a venue can be retrieved with `MyLocationLayer`. To use this layer, set showMyLocation to true and pass the PwLocationProvider into the onBuildingRetrievedSuccessful callback. A blue dot representing the end-user's location will be displayed on the map automatically, if available.
-
-An example of using `MyLocationLayer`:
-```Java
-    new PwMapOverlayManagerBuilder(getActivity().getApplicationContext(), map)
-        .buildingId(getResources().getInteger(R.integer.building_id))
-        .initialFloor(getResources().getInteger(R.integer.initial_floor))
-        .minimumFloorZoomLevel(MINIMUM_FLOOR_ZOOM_LEVEL)
-        .minimumMarkerZoomLevel(MINIMUM_MARKER_ZOOM_LEVEL)
-        .routeCallback(getPwRouteCallback())
-        .showMyLocation(true)
-        .floorChangedCallback(this)
-        .pwOnBuildingRetrievedCallback(this)
-        .mapLoadedCallback(this)
-        .build();
-```
-
-To receive a callback once building data has been retrieved successfully, pass the location provider in requestLocationUpdates:
-```java
-    @Override
-    public void onBuildingRetrievedSuccessful(PwBuilding pwBuilding) {
-        mPwBuildingMapManager.requestLocationUpdates(getActivity().getApplicationContext(), LocationProviderFactory.getInstance(getActivity().getApplicationContext()).createLocationProvider(pwBuilding));
-    }
-```
-
-###Enable/Disable Blue Dot smoothing
-
-Blue Dot is no longer as simple as moving an marker to a different coordinate when a location provider sends in a location update.  In order to provide a more enjoyable experience for users, we manipulate the user location marker in such a manner as to smoothly animate it as the user moves.  
-
-The Blue Dot smoothing is enabled by default, but you can change it on the fly.
-
-An example to disable Blue Dot smoothing:
-```java
-    mPwBuildingMapManager.setBlueDotSmoothingEnabled(false);
-```
-
-An example to enablue Blue Dot smoothing:
-```java
-    mPwBuildingMapManager.setBlueDotSmoothingEnabled(true);
-```
+A user's location in a venue can be retrieved by setting My Location to enabled. To do this, you need a location provider. Pass a LocationProvider.Factory object to `mapManager.setLocationProviderFactory(...)` and then call `mapManager.setMyLocationEnabled(true)`. A blue dot representing the end-user's location will be displayed on the map automatically, if available.  MapManager does all the work of adding the location layer to the map so you don't have to.
 
 ##Routing
 The data model for routes is limited to a PWRoute object which is composed of one or more PWRouteStep objects. Each step represents a series of points on the route graph for a single building floor. It is possible to have multiple steps for the same floor, they just cannot be in succession.Each time the user needs to be asked to turn or to continue straight is not really a route step. It's more of a maneuver. Each maneuver has a relative direction (bear left, turn right, go straight, etc.), a distance (optional) and a sub-sequence of points.
@@ -212,7 +138,7 @@ The `PwMappingFragment` can display routes by using a `PwMapRoute`. Routes can b
 
 The `PwMappingFragment` can display routes by using a `PwDirections` and `pwBuildingmapManager`. Route can be a path between any PwPoint and position on the map. A route can go from a point of interest (POI) to a point of interest, from any waypoint to a POI or from "My Location" to a POI.
 
-Get data for a route (if available) with `PwDirections#calculate(PwDirectionsCalculateCallback)`.PwDirections default constructor will expect startPoiny,EndPoint and PwDirectionsOptions object `PwDirectionRequest(PwPoint start,PwPoint end,PwDirectionsOptions options)`. PwDirectionsOptions will have the methods to set route specifications like accessibility,points that need to be excluded from route calculation etc. start and end points can be either the current location or a POI/flatMarker. 
+Get data for a route (if available) with `PwDirections#calculate(PwDirectionsCalculateCallback)`.PwDirections default constructor will expect startPoiny,EndPoint and PwDirectionsOptions object `PwDirectionRequest(PwPoint start,PwPoint end,PwDirectionsOptions options)`. PwDirectionsOptions will have the methods to set route specifications like accessibility,points that need to be excluded from route calculation etc. start and end points can be either the current location or a POI/flatMarker.
 
 An example of retrieving and using route data:
 
@@ -238,7 +164,7 @@ directions.calculate(new PwDirectionsCalculateCallback() {
 ###TURN-BY_TURN
 Indoor turn-by-turn directions in our Mapping, Navigation, and Wayfinding can be enabled  using PwBuildingMapManager . PWBuildMapManager  maintains turn-by-turn state with a property called currentManeuver that is handled as PwBuildingmapManager.setCurrentManeuver(RouteManeuver).
 
- * When a route is plotted , no maneuver is used by default. 
+ * When a route is plotted , no maneuver is used by default.
  * In order to use turn-by-turn, the developer must set the currentManeuver and call for plotManeuver() method from PwBuildingMapManager . By default plotManeuver will use the first maneuver from CurrentRouteStep to desiplay.
  * if one of the user tracking modes is used ,then the maneuver is set immediately and will be changed automatically as the user moves.
  * Without user tracking, the maneuver is only displayed.
@@ -271,7 +197,7 @@ in addition to this we have added two new callbacks which get trigerred after th
 
  class MappingSampleFragment extends PwMappingFragment implementsPWOnManeuverChangedCallBack,PWOnRouteStepChangedCallBack
 {
- 
+
 //add callbacks to PwBuildingManage to listen for the change events.
 mPwBuildingMapManager = builder.buildingId(mCurrentBuilding)
 						.........
@@ -290,24 +216,10 @@ public void onRouteStepChanged(RouteStep step)
 //call to Update UI or handle RouteStep post change work.    
 Toast.makeText(getActivity().getApplicationContext(),"changed routeStep is called",Toast.LENGTH_LONG).show();
 }
- 
+
 }
 
 ```
-
-###Route Snapping Tolerance
-When in routing mode, the user's location can be forced to a route line as long as the reported, averaged or interpolated user location is within range of the route line based on some multiple of the horizontal accuracy.  The tolerance factor that is multiplied to the horizontal accuracy is configurable, but restricted to values of `PwRouteSnappingTolerance.Off`(0), `PwRouteSnappingTolerance.Normal(1.0)`, `PwRouteSnappingTolerance.Medium(1.5)` and `PwRouteSnappingTolerance.Large(2.0)`.
-
-An example to turn it off:
-```java
-    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Off);
-```
-
-An example to tune the tolerance, you can also change it to `Medium` or `Large`:
-```java
-    mPwBuildingMapManager.setRouteSnappingTolerance(PwRouteSnappingTolerance.Normal);
-```
-
 
 ####Marker
 Get a list of `PwBuildingMarker` there are two ways:
@@ -327,7 +239,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwOnBuil
 
 	// Holds all PwPoints instances
 	private List<PwPoint> mPwPoints;
-	
+
 	// Store points into mPwPoints
     @Override
     public void onBuildingPOILoaded(final List<PwPoint> points) {
@@ -341,7 +253,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwOnBuil
 
 	// Remove building marker from map
     private void removePOIs() {
-        
+
         int size = mPwPoints.size();
         PwPoint point;
         for (int i = 0; i <size; i++) {
@@ -356,7 +268,7 @@ public class MappingSampleFragment extends PwMappingFragment implements PwOnBuil
         // Force redraw the map
         getPwMap().invalidate();
     }
-    
+
     // Add building marker to map
     private void addPOIs() {
         int size = mBuildingMarkers.size();
@@ -379,7 +291,7 @@ Routes are comprised of segments. In the Mapping SDK, a segment is a path betwee
 
 Attribution
 -----------
-MaaS Mapping uses the following third party components. 
+MaaS Mapping uses the following third party components.
 
 | Component     | Description   | License  |
 | ------------- |:-------------:| -----:|
