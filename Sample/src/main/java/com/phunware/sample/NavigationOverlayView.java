@@ -27,6 +27,10 @@ public class NavigationOverlayView extends ViewPager
     private Navigator navigator;
     private ManeuverPagerAdapter adapter;
 
+    @Override
+    public void onRouteSnapFailed() {
+    }
+
     private final OnPageChangeListener pageChangeListener = new SimpleOnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
