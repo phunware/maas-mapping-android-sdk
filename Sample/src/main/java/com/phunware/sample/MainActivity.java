@@ -655,6 +655,11 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    public void onRouteSnapFailed() {
+        Log.d(TAG, "Route snap failed. Consider rerouting here");
+    }
+
     private Marker customMarker;
     private void setupMapListeners(final PhunwareMap map) {
         // When the user taps an info window, we present the routing dialog to allow them to
