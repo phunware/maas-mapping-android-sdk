@@ -18,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.phunware.location.provider.PwLocationProvider;
+import com.phunware.location_core.PwLocationProvider;
 import com.phunware.mapping.manager.PhunwareMapManager;
 import com.phunware.mapping.manager.Router;
 import com.phunware.mapping.model.BuildingOptions;
