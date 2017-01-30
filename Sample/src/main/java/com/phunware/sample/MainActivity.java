@@ -43,7 +43,9 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.jakewharton.processphoenix.ProcessPhoenix;
 import com.phunware.core.PwCoreSession;
 import com.phunware.core.PwLog;
-import com.phunware.location.PwLocationModule;
+import com.phunware.location.provider_cmx.CMXProviderFactory;
+import com.phunware.location.provider_gps.GpsProviderFactory;
+import com.phunware.location.provider_senion.SenionProviderFactory;
 import com.phunware.mapping.Analytics;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
@@ -59,9 +61,6 @@ import com.phunware.mapping.model.PoiTypeOptions;
 import com.phunware.mapping.model.PointOptions;
 import com.phunware.mapping.model.RouteManeuverOptions;
 import com.phunware.mapping.model.RouteOptions;
-import com.phunware.mapping.provider.gps.GpsProviderFactory;
-import com.phunware.mapping.provider.mse.MseProviderFactory;
-import com.phunware.mapping.provider.senion.SenionProviderFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -247,23 +246,7 @@ public class MainActivity extends AppCompatActivity
 
     private void onLocationPermissionGranted() {
         PwCoreSession.getInstance().registerKeys(this);
-        PwCoreSession.getInstance().installModules(PwLocationModule.getInstance());
-        if (mapManager != null) {
-            String provider = getSavedProvider();
-            if (provider.equals(PREF_PROVIDER_SENION)) {
-                mapManager.setLocationProviderFactory(SenionProviderFactory.create(this,
-                        getString(R.string.sl_customer_id),
-                        getString(R.string.sl_map_id),
-                        getSenionFloorMap()));
-            } else if (provider.equals(PREF_PROVIDER_MSE)) {
-                mapManager.setLocationProviderFactory(MseProviderFactory.create(this,
-                        getString(R.string.mse_venue_guid), getMseFloorMap()));
-            } else if (provider.equals(PREF_PROVIDER_GPS)) {
-                mapManager.setLocationProviderFactory(GpsProviderFactory.create(this));
-            }
-            Toast.makeText(MainActivity.this, "Using location provider: " + provider,
-                    Toast.LENGTH_SHORT).show();
-        }
+
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
@@ -271,13 +254,36 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    private void setLocationProvider(Building building) {
+        if (mapManager != null) {
+            String provider = getSavedProvider();
+            if (provider.equals(PREF_PROVIDER_SENION)) {
+                mapManager.setLocationProvider(SenionProviderFactory.create(this,
+                        getString(R.string.sl_customer_id),
+                        getString(R.string.sl_map_id),
+                        getSenionFloorMap()).createLocationProvider(), building);
+            } else if (provider.equals(PREF_PROVIDER_MSE)) {
+                mapManager.setLocationProvider(CMXProviderFactory.create(this,
+                        getString(R.string.mse_venue_guid),
+                        getMseFloorMap()).createLocationProvider(), building);
+            } else if (provider.equals(PREF_PROVIDER_GPS)) {
+                mapManager.setLocationProvider(GpsProviderFactory.create(this)
+                        .createLocationProvider(),
+                        building);
+            }
+            mapManager.setMyLocationEnabled(true);
+
+            Toast.makeText(MainActivity.this, "Using location provider: " + provider,
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private Map<String, Long> getSenionFloorMap() {
         Map<String, Long> floorIdMap = new HashMap<>();
 
-        String[] senionKeys = getResources().getStringArray(
-                com.phunware.mapping.provider.senion.R.array.senion_floor_nrs);
+        String[] senionKeys = getResources().getStringArray(R.array.senion_floor_nrs);
         int[] maasIds = getResources()
-                .getIntArray(com.phunware.mapping.provider.senion.R.array.maas_floor_ids);
+                .getIntArray(R.array.maas_floor_ids);
         if (senionKeys.length == 0 || maasIds.length == 0) {
             PwLog.e(TAG, "Senion floor IDs and MaaS floor IDs need to be set in arrays.xml");
         }
@@ -295,9 +301,9 @@ public class MainActivity extends AppCompatActivity
         Map<String, Long> floorIdMap = new HashMap<String, Long>();
 
         String[] mseKeys = getResources()
-                .getStringArray(com.phunware.mapping.provider.mse.R.array.mse_floor_nrs);
+                .getStringArray(R.array.mse_floor_ids);
         int[] maasIds = getResources()
-                .getIntArray(com.phunware.mapping.provider.mse.R.array.maas_floor_ids);
+                .getIntArray(R.array.maas_floor_ids);
         if (mseKeys.length == 0 || maasIds.length == 0) {
             PwLog.e(TAG, "MSE floor IDs and MaaS floor IDs need to be set in arrays.xml");
         }
@@ -596,8 +602,7 @@ public class MainActivity extends AppCompatActivity
                         });
 
                         // enable my location (blue dot)
-                        mapManager.setMyLocationEnabled(true);
-
+                        setLocationProvider(building);
                         String mode = getSavedLocationMode();
                         if (mode.equalsIgnoreCase(PREF_LOCATION_FOLLOW)) {
                             mapManager.setMyLocationMode(PhunwareMapManager.MODE_FOLLOW_ME);

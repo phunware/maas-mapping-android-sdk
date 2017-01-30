@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.phunware.mapping.manager.PhunwareMapManager;
+import com.phunware.mapping.manager.SharedPreferenceCache;
 
 public class App extends Application {
 
@@ -12,7 +13,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mapManager = PhunwareMapManager.create(this);
+        mapManager = PhunwareMapManager.create(this.getApplicationContext());
     }
 
     public static App get(Context context) {
