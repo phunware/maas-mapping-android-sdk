@@ -13,8 +13,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        mapManager = PhunwareMapManager.create(new SharedPreferenceCache(this),
-                this.getFilesDir().toString());
+        mapManager = PhunwareMapManager.create(this.getApplicationContext());
     }
 
     public static App get(Context context) {
