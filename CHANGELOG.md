@@ -1,6 +1,10 @@
 Change Log
 ==========
 
+Version 3.1.1 *(2017-03-28)*
+----------------------------
+* Various bug fixes
+
 Version 3.1.0 *(2017-01-30)*
 ----------------------------
 * Building bundles implemented
