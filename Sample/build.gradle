@@ -30,9 +30,9 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.ext.supportLibVersion"
     compile "com.android.support:design:$rootProject.ext.supportLibVersion"
 
-    compile 'com.phunware.mapping:mapping:3.1.0'
-    compile 'com.phunware.location:provider-gps:3.1.0'
-    compile 'com.phunware.location:provider-senion:3.1.0'
-    compile 'com.phunware.location:provider-cmx:3.1.0'
+    compile 'com.phunware.mapping:mapping:3.1.1'
+    compile 'com.phunware.location:provider-gps:3.1.1'
+    compile 'com.phunware.location:provider-senion:3.1.1'
+    compile 'com.phunware.location:provider-cmx:3.1.1'
     compile 'com.jakewharton:process-phoenix:1.0.2'
 }
