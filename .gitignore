@@ -1,36 +1,8 @@
-# Eclipse
-.project
-.classpath
-.settings
-.checkstyle
-
-# IntelliJ IDEA
 .idea
-*.iml
-*.ipr
-*.iws
-classes
-gen-external-apklibs
-
-# Gradle
 .gradle
-gradle
-gradlew
-gradlew.bat
-build
-
-# Maven
-target
-release.properties
-pom.xml.*
-
-# Ant
-bin
-gen
-ant.properties
 local.properties
-
-# Other
+build/
+**/*.iml
 .DS_Store
-tmpcaptures
-captures
+/captures
+
