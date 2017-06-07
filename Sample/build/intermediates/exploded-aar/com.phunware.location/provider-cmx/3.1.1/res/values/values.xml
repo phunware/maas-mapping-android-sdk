@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="maas_floor_ids">
+    </integer-array>
+    <string-array name="mse_floor_nrs">
+    </string-array>
+    <string name="app_name">provider-CMX</string>
+    <string name="mse_venue_guid"/>
+</resources>

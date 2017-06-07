@@ -1,0 +1,4 @@
+#Wed Jun 07 09:51:33 CDT 2017
+base.0=/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/transforms/dex/debug/folders/1000/1f/main
+renamed.0=classes.dex
+file.0=/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/transforms/dex/debug/folders/1000/1f/main/classes.dex

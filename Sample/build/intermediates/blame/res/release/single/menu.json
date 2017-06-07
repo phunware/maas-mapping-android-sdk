@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/release/menu/activity_main_drawer.xml",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/menu/activity_main_drawer.xml"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/release/menu/main.xml",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/menu/main.xml"
+    }
+]

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.phunware.core"
+    android:versionCode="1"
+    android:versionName="3.0.3" >
+
+    <uses-sdk
+        android:minSdkVersion="15"
+        android:targetSdkVersion="22" />
+
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+
+    <application>
+        <service
+            android:name="com.OpenUDID.OpenUDID_service"
+            tools:ignore="InnerclassSeparator" >
+            <intent-filter>
+                <action android:name="com.OpenUDID.GETUDID" />
+            </intent-filter>
+        </service>
+        <service android:name="com.phunware.core.internal.CoreService" />
+    </application>
+
+</manifest>

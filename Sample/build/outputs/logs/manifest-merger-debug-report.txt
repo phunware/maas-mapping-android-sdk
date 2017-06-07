@@ -1,0 +1,238 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:2:1-51:12
+	package
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:3:5-34
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:2:11-69
+	android:versionCode
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+uses-permission#android.permission.INTERNET
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:5:5-67
+MERGED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:20:5-66
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:5:22-64
+uses-permission#android.permission.ACCESS_NETWORK_STATE
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:8:5-79
+MERGED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:19:5-78
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:8:22-76
+uses-permission#android.permission.ACCESS_FINE_LOCATION
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:11:5-79
+MERGED from [com.phunware.location:provider-gps:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-gps/3.1.1/AndroidManifest.xml:12:5-79
+MERGED from [com.phunware.location:provider-cmx:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-cmx/3.1.1/AndroidManifest.xml:16:9-83
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:11:22-76
+uses-permission#android.permission.ACCESS_COARSE_LOCATION
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:12:5-81
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:12:22-78
+application
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:14:5-49:19
+MERGED from [com.android.support:design:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/design/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:transition:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/transition/25.1.0/AndroidManifest.xml:22:5-20
+MERGED from [com.phunware.mapping:mapping:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.mapping/mapping/3.1.1/AndroidManifest.xml:11:5-15:19
+MERGED from [com.phunware.bundles:bundles:1.0.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.bundles/bundles/1.0.1/AndroidManifest.xml:11:5-14:19
+MERGED from [com.phunware.location:provider-gps:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-gps/3.1.1/AndroidManifest.xml:14:5-18:19
+MERGED from [com.phunware.location:provider-senion:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-senion/3.1.1/AndroidManifest.xml:11:5-19:19
+MERGED from [com.phunware.location:provider-cmx:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-cmx/3.1.1/AndroidManifest.xml:11:5-17:19
+MERGED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:15:5-24:19
+MERGED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:24:5-19
+MERGED from [com.phunware.location:location-core:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/location-core/3.1.1/AndroidManifest.xml:13:5-17:19
+MERGED from [com.android.support:appcompat-v7:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:animated-vector-drawable:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/AndroidManifest.xml:22:5-20
+MERGED from [com.android.support:support-vector-drawable:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/AndroidManifest.xml:23:5-20
+MERGED from [com.google.android.gms:play-services-location:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/9.6.1/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:18:5-20:19
+MERGED from [com.google.android.gms:play-services-tasks:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.6.1/AndroidManifest.xml:4:5-19
+MERGED from [com.google.android.gms:play-services-basement:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.6.1/AndroidManifest.xml:19:5-21:19
+MERGED from [com.android.support:support-v4:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-v4/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-fragment:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-fragment/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-media-compat:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-ui:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-core-utils:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.android.support:support-compat:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-compat/25.1.0/AndroidManifest.xml:25:5-20
+MERGED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:7:5-12:19
+	android:label
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:18:9-41
+	android:supportsRtl
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:19:9-35
+	android:allowBackup
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:16:9-35
+	android:icon
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:17:9-43
+	android:theme
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:20:9-40
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:15:9-28
+activity#com.phunware.sample.MainActivity
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:21:9-31:20
+	android:label
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:23:13-45
+	android:configChanges
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:25:13-72
+	android:theme
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:24:13-56
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:22:13-41
+intent-filter#android.intent.action.MAIN+android.intent.category.DEFAULT+android.intent.category.LAUNCHER
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:26:13-30:29
+action#android.intent.action.MAIN
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:27:17-69
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:27:25-66
+category#android.intent.category.DEFAULT
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:28:17-76
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:28:27-73
+category#android.intent.category.LAUNCHER
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:29:17-77
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:29:27-74
+activity#com.phunware.sample.RouteSelectionActivity
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:33:9-36:49
+	android:label
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:36:13-47
+	android:theme
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:35:13-58
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:34:13-51
+activity#com.phunware.sample.DropDownSelectionActivity
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:38:9-41:49
+	android:label
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:41:13-47
+	android:theme
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:40:13-58
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:39:13-54
+meta-data#com.phunware.APPLICATION_ID
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:43:9-96
+	android:value
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:43:63-93
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:43:20-62
+meta-data#com.phunware.ACCESS_KEY
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:44:9-96
+	android:value
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:44:59-93
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:44:20-58
+meta-data#com.phunware.SIGNATURE_KEY
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:45:9-102
+	android:value
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:45:62-99
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:45:20-61
+meta-data#com.phunware.ENCRYPTION_KEY
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:46:9-101
+	android:value
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:46:63-98
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:46:20-62
+meta-data#com.google.android.geo.API_KEY
+ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:47:9-111
+	android:value
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:47:66-109
+	android:name
+		ADDED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml:47:20-65
+uses-sdk
+INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml reason: use-sdk injection requested
+MERGED from [com.android.support:design:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/design/25.1.0/AndroidManifest.xml:21:5-23:62
+MERGED from [com.android.support:recyclerview-v7:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/25.1.0/AndroidManifest.xml:20:5-43
+MERGED from [com.android.support:transition:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/transition/25.1.0/AndroidManifest.xml:20:5-44
+MERGED from [com.phunware.mapping:mapping:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.mapping/mapping/3.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.phunware.mapping:mapping-core:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.mapping/mapping-core/3.1.1/AndroidManifest.xml:8:5-10:41
+MERGED from [com.phunware.bundles:bundles:1.0.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.bundles/bundles/1.0.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.phunware.location:provider-gps:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-gps/3.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.phunware.location:provider-senion:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-senion/3.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.phunware.location:provider-cmx:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-cmx/3.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:8:5-10:41
+MERGED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:23:5-42
+MERGED from [com.phunware.location:location-core:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/location-core/3.1.1/AndroidManifest.xml:7:5-9:41
+MERGED from [com.android.support:appcompat-v7:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/appcompat-v7/25.1.0/AndroidManifest.xml:21:5-23:78
+MERGED from [com.android.support:animated-vector-drawable:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/animated-vector-drawable/25.1.0/AndroidManifest.xml:20:5-44
+MERGED from [com.android.support:support-vector-drawable:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-vector-drawable/25.1.0/AndroidManifest.xml:21:5-43
+MERGED from [com.google.android.gms:play-services-location:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/9.6.1/AndroidManifest.xml:3:5-42
+MERGED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:17:5-42
+MERGED from [com.google.android.gms:play-services-tasks:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-tasks/9.6.1/AndroidManifest.xml:3:5-42
+MERGED from [com.google.android.gms:play-services-basement:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.6.1/AndroidManifest.xml:17:5-42
+MERGED from [com.android.support:support-v4:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-v4/25.1.0/AndroidManifest.xml:21:5-23:54
+MERGED from [com.android.support:support-fragment:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-fragment/25.1.0/AndroidManifest.xml:21:5-23:60
+MERGED from [com.android.support:support-media-compat:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-media-compat/25.1.0/AndroidManifest.xml:21:5-23:63
+MERGED from [com.android.support:support-core-ui:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-core-ui/25.1.0/AndroidManifest.xml:21:5-23:58
+MERGED from [com.android.support:support-core-utils:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-core-utils/25.1.0/AndroidManifest.xml:21:5-23:61
+MERGED from [com.android.support:support-compat:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/support-compat/25.1.0/AndroidManifest.xml:21:5-23:58
+MERGED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:5:5-43
+	tools:overrideLibrary
+		ADDED from [com.android.support:design:25.1.0] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.android.support/design/25.1.0/AndroidManifest.xml:23:9-59
+	android:targetSdkVersion
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+		INJECTED from /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/AndroidManifest.xml
+uses-permission#android.permission.ACCESS_WIFI_STATE
+ADDED from [com.phunware.location:provider-gps:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-gps/3.1.1/AndroidManifest.xml:11:5-76
+MERGED from [com.phunware.location:provider-cmx:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-cmx/3.1.1/AndroidManifest.xml:15:9-80
+MERGED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:12:5-76
+	android:name
+		ADDED from [com.phunware.location:provider-gps:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-gps/3.1.1/AndroidManifest.xml:11:22-73
+service#com.senionlab.slutilities.service.SLIndoorLocationService
+ADDED from [com.phunware.location:provider-senion:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-senion/3.1.1/AndroidManifest.xml:15:9-93
+	android:name
+		ADDED from [com.phunware.location:provider-senion:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/provider-senion/3.1.1/AndroidManifest.xml:15:18-90
+uses-permission#android.permission.BLUETOOTH
+ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:13:5-68
+MERGED from [com.phunware.location:location-core:3.1.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.location/location-core/3.1.1/AndroidManifest.xml:11:5-68
+	android:name
+		ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:13:22-65
+service#com.OpenUDID.OpenUDID_service
+ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:16:9-22:19
+	tools:ignore
+		ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:18:13-47
+	android:name
+		ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:17:13-57
+intent-filter#com.OpenUDID.GETUDID
+ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:19:13-21:29
+action#com.OpenUDID.GETUDID
+ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:20:17-63
+	android:name
+		ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:20:25-60
+service#com.phunware.core.internal.CoreService
+ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:23:9-74
+	android:name
+		ADDED from [com.phunware.core:core:3.0.3] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.phunware.core/core/3.0.3/AndroidManifest.xml:23:18-71
+uses-feature#0x00020000
+ADDED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:21:5-77
+	android:glEsVersion
+		ADDED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:21:19-51
+	android:required
+		ADDED from [com.google.android.gms:play-services-maps:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/9.6.1/AndroidManifest.xml:21:52-75
+activity#com.google.android.gms.common.api.GoogleApiActivity
+ADDED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:19:9-172
+	android:exported
+		ADDED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:19:146-170
+	android:theme
+		ADDED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:19:86-145
+	android:name
+		ADDED from [com.google.android.gms:play-services-base:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/9.6.1/AndroidManifest.xml:19:19-85
+meta-data#com.google.android.gms.version
+ADDED from [com.google.android.gms:play-services-basement:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.6.1/AndroidManifest.xml:20:9-121
+	android:value
+		ADDED from [com.google.android.gms:play-services-basement:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.6.1/AndroidManifest.xml:20:66-119
+	android:name
+		ADDED from [com.google.android.gms:play-services-basement:9.6.1] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/9.6.1/AndroidManifest.xml:20:20-65
+activity#com.jakewharton.processphoenix.ProcessPhoenix
+ADDED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:8:9-11:75
+	android:process
+		ADDED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:10:13-39
+	android:theme
+		ADDED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:11:13-72
+	android:name
+		ADDED from [com.jakewharton:process-phoenix:1.0.2] /Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/exploded-aar/com.jakewharton/process-phoenix/1.0.2/AndroidManifest.xml:9:13-73

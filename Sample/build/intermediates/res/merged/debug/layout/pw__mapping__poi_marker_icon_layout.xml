@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="4dp"
+        android:id="@+id/icon"
+        android:src="@drawable/pw__mapping__default_poi_ic"/>
+    <!--TODO: Extract dimens so implementer can override -->
+    <include
+        layout="@layout/pw__mapping__icon_name"
+        android:id="@+id/title"
+        />
+
+</LinearLayout>

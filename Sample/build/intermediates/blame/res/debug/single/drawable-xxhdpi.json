@@ -1,0 +1,54 @@
+[
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_filter_list_white_24dp.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_filter_list_white_24dp.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_stairs.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_stairs.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_bear_right.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_bear_right.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_bear_left.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_bear_left.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_elevator_down.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_elevator_down.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_elevator_up.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_elevator_up.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_left.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_left.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_clear_white.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_clear_white.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_final.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_final.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_right.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_right.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_arrow_straight.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_arrow_straight.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_stairs_down.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_stairs_down.png"
+    },
+    {
+        "merged": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/build/intermediates/res/merged/debug/drawable-xxhdpi/ic_stairs_up.png",
+        "source": "/Users/brandenchaisorn/Documents/projects/maas-mapping-android-sdk/Sample/src/main/res/drawable-xxhdpi/ic_stairs_up.png"
+    }
+]

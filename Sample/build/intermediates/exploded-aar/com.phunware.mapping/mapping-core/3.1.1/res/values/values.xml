@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="send_analytics">true</bool>
+    <color name="default_route_color">#ff007eff</color>
+    <string name="icon_s3_endpoint_resolution">normal</string>
+    <string name="icon_s3_endpoint_type">prod</string>
+    <string name="maas_poi_type_icon_url_format">https://lbs-%1$s.s3.amazonaws.com/stock_assets/icons/%2$d_%3$s.png</string>
+</resources>
