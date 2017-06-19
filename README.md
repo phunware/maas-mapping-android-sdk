@@ -1,4 +1,4 @@
-#MaaS Mapping SDK for Android
+# MaaS Mapping SDK for Android
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
 =======
