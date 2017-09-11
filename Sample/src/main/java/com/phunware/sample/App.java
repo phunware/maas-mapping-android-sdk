@@ -3,8 +3,8 @@ package com.phunware.sample;
 import android.app.Application;
 import android.content.Context;
 
+import com.phunware.core.PwActivityLifecycleCallback;
 import com.phunware.mapping.manager.PhunwareMapManager;
-import com.phunware.mapping.manager.SharedPreferenceCache;
 
 public class App extends Application {
 
@@ -14,6 +14,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mapManager = PhunwareMapManager.create(this.getApplicationContext());
+        this.registerActivityLifecycleCallbacks(new PwActivityLifecycleCallback());
     }
 
     public static App get(Context context) {
