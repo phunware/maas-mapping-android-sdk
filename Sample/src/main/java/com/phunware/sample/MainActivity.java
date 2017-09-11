@@ -245,8 +245,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void onLocationPermissionGranted() {
-        PwCoreSession.getInstance().registerKeys(this);
-
         MapFragment mapFragment = (MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
