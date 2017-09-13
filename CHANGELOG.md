@@ -1,7 +1,7 @@
 Change Log
 ==========
 
-Version 3.1.2 *(2017-09-011)*
+Version 3.1.2 *(2017-09-11)*
 ----------------------------
 * added Location Sharing API
 * added ContentProvider for map data
