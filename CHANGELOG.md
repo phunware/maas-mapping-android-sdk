@@ -1,13 +1,10 @@
 Change Log
 ==========
 
-<<<<<<< HEAD
-=======
 Version 3.1.3 *(2017-10-03)*
 ----------------------------
 * fixed authorities name for content provider
 
->>>>>>> release/3.1.3
 Version 3.1.2 *(2017-09-11)*
 ----------------------------
 * added Location Sharing API
