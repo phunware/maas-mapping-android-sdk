@@ -18,7 +18,7 @@ PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy i
 ### Documentation
 
 Developer documentation can be found at
-[developer.phunware.com](https://developer.phunware.com/pages/viewpage.action?pageId=3409284).
+[developer.phunware.com](https://developer.phunware.com/pages/viewpage.action?pageId=3410209).
 
 Attribution
 -----------
