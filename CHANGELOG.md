@@ -1,6 +1,16 @@
 Change Log
 ==========
 
+Version 3.1.3 *(2017-10-03)*
+----------------------------
+* fixed authorities name for content provider
+
+Version 3.1.2 *(2017-09-11)*
+----------------------------
+* added Location Sharing API
+* added ContentProvider for map data
+* Various bug fixes
+
 Version 3.1.1 *(2017-03-28)*
 ----------------------------
 * Various bug fixes
