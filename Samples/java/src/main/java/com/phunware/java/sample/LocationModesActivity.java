@@ -1,16 +1,12 @@
 package com.phunware.java.sample;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -28,29 +24,22 @@ import com.phunware.mapping.model.FloorOptions;
 
 import java.lang.ref.WeakReference;
 
-import static com.phunware.java.sample.PermissionUtils.canAccessLocation;
-import static com.phunware.java.sample.PermissionUtils.checkPermissions;
 
 public class LocationModesActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
         AdapterView.OnItemSelectedListener {
     private static final String TAG = LocationModesActivity.class.getSimpleName();
-    public static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
     private static final String PREF_LOCATION_MODE_FOLLOW = "Follow Me";
     private static final String PREF_LOCATION_MODE_LOCATE = "Locate Me";
 
     private PhunwareMapManager mapManager;
-    private MapFragment mapFragment;
     private Building currentBuilding;
     private ArrayAdapter<FloorOptions> floorSpinnerAdapter;
-
-    private RelativeLayout content;
     private Spinner locationModesSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_modes);
-        content = findViewById(R.id.content);
 
         Spinner floorSpinner = findViewById(R.id.floorSpinner);
         floorSpinnerAdapter = new FloorAdapter(this);
@@ -82,39 +71,10 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this);
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
-        checkPermissions(this);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        // Load the building if location permission has been granted
-        if (canAccessLocation(this)) {
-            if (mapFragment != null) {
-                mapFragment.getPhunwareMapAsync(this);
-            }
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
-            if (!canAccessLocation(this) && content != null) {
-                Snackbar.make(content, R.string.permission_snackbar_message,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.action_settings, new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                startActivityForResult(
-                                        new Intent(android.provider.Settings.ACTION_SETTINGS),
-                                        REQUEST_PERMISSION_LOCATION_FINE);
-                            }
-                        }).show();
-            }
+        if (mapFragment != null) {
+            mapFragment.getPhunwareMapAsync(this);
         }
     }
 

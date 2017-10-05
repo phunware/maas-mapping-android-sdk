@@ -1,9 +1,7 @@
 package com.phunware.kotlin.sample
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -14,8 +12,6 @@ import android.widget.Spinner
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.phunware.core.PwCoreSession
-import com.phunware.kotlin.sample.PermissionUtils.canAccessLocation
-import com.phunware.kotlin.sample.PermissionUtils.checkPermissions
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
@@ -71,33 +67,8 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
         mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        mapFragment.getPhunwareMapAsync(this)
 
-        checkPermissions(this)
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        // Load the building if location permission has been granted
-        if (canAccessLocation(this)) {
-            mapFragment.getPhunwareMapAsync(this)
-
-        }
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
-                                            grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
-            if (!canAccessLocation(this)) {
-                Snackbar.make(content, R.string.permission_snackbar_message,
-                        Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.action_settings, {
-                            startActivityForResult(
-                                    Intent(android.provider.Settings.ACTION_SETTINGS),
-                                    REQUEST_PERMISSION_LOCATION_FINE)
-                        }).show()
-            }
-        }
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
@@ -165,7 +136,6 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
 
     companion object {
         private val TAG = LocationModesActivity::class.java.simpleName
-        val REQUEST_PERMISSION_LOCATION_FINE = 1
         private val PREF_LOCATION_MODE_FOLLOW = "Follow Me"
         private val PREF_LOCATION_MODE_LOCATE = "Locate Me"
     }
