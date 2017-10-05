@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 
 class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
-    private var demoAdapter: DemoAdapter? = null
+    private lateinit var demoAdapter: DemoAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     }
 
     override fun onItemClicked(title: String) {
-        val demo = demoAdapter!!.getItem(title)
+        val demo = demoAdapter.getItem(title)
         if (demo != null) {
             startActivity(Intent(this, demo.activityClass))
         }

@@ -1,8 +1,52 @@
 <resources>
     <string name="app_name">LBS Sample (Java)</string>
 
+    <!-- Google Maps API Key -->
+    <!-- TODO: Before you run your application, you need a Google Maps API key. -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
+        AIzaSyBlGQebhOdjp6szZm7DudPEUslJBLFt83w
+    </string>
+
+    <!-- Phunware Keys -->
+    <!-- TODO: These keys must be added before using Phunware SDKs -->
+    <!-- FIXME: REMOVE VALUES -->
+    <string name="pw_app_id">188</string>
+    <string name="pw_access_key">472a99bc53046410bcb80f4994be8a19a826e0be</string>
+    <string name="pw_signature_key">042dc5127d7b486efe078da8b8eaae730217fda0</string>
+    <string name="pw_building_id">23997</string>
+
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Loads a building on a Google Map</string>
+
+    <string name="demo_location_modes_title">Location Modes</string>
+    <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
+    <string name="location_mode_normal">Normal</string>
+    <string name="location_mode_follow_me">Follow Me</string>
+    <string name="location_mode_locate_me">Locate Me</string>
+    <string-array name="location_modes_array">
+        <item>@string/location_mode_normal</item>
+        <item>@string/location_mode_follow_me</item>
+        <item>@string/location_mode_locate_me</item>
+    </string-array>
+
+    <string name="demo_custom_poi_title">Create Custom POIs</string>
+    <string name="demo_custom_poi_description">Create custom markers on the map</string>
+    <string name="custom_poi_instructions">Press and hold on the map to add a custom POI marker</string>
+    <string name="custom_poi_dialog_title">Create Custom POI</string>
+    <string name="custom_poi_dialog_message">Enter a name for this POI</string>
+    <string name="custom_poi_pin_drop_error">Can\'t drop pin outside the building bounds</string>
+
+    <!-- Buttons -->
+    <string name="button_cancel">Cancel</string>
+    <string name="button_next">Next</string>
+    <string name="button_ok">OK</string>
+
+    <!-- Floor Switching -->
+    <string name="switch_floors">Switch Floors</string>
+
+    <!-- App permissions -->
+    <string name="permission_snackbar_message">Location permission is required to use the app</string>
+    <string name="action_settings">Settings</string>
 
 </resources>

@@ -16,13 +16,13 @@ class DemoDetailsList {
                 resources.getString(R.string.demo_load_building_description),
                 LoadBuildingActivity.class));
 
-        demos.add(new Demo(resources.getString(R.string.demo_load_building_title),
-                resources.getString(R.string.demo_load_building_description),
-                LoadBuildingActivity.class));
+        demos.add(new Demo(resources.getString(R.string.demo_location_modes_title),
+                resources.getString(R.string.demo_location_modes_description),
+                LocationModesActivity.class));
 
-        demos.add(new Demo(resources.getString(R.string.demo_load_building_title),
-                resources.getString(R.string.demo_load_building_description),
-                LoadBuildingActivity.class));
+        demos.add(new Demo(resources.getString(R.string.demo_custom_poi_title),
+                resources.getString(R.string.demo_custom_poi_description),
+                CustomPOIActivity.class));
     }
 
     List<Demo> getDemos() {
