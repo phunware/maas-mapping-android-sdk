@@ -1,5 +1,5 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext.kotlin_version = '1.1.51'
     repositories {
         mavenLocal()
         mavenCentral()
@@ -11,6 +11,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.3'
         classpath 'com.noveogroup.android:check:1.2.3'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -22,6 +23,9 @@ allprojects {
         maven {
             url "https://nexus.phunware.com/content/groups/public/"
         }
+        maven {
+            url "https://maven.google.com"
+        }
     }
 }
 
@@ -31,12 +35,16 @@ configurations.all {
 }
 
 ext {
-    compileSdkVersion = 25
-    buildToolsVersion = '23.0.3'
-    minSdkVersion = 15
-    targetSdkVersion = 23
+    versionCode = 1
+    versionName = "1.0"
 
-    supportLibVersion = '25.1.0'
+    compileSdkVersion = 26
+    minSdkVersion = 21
+    targetSdkVersion = 26
+
+    buildToolsVersion = '26.0.2'
+    supportLibVersion = '26.0.2'
+
     junitVersion = '4.12'
-    okhttpVersion = '3.2.0'
+    okhttpVersion = '3.9.0'
 }
