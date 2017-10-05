@@ -19,6 +19,9 @@
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Loads a building on a Google Map</string>
 
+    <string name="demo_bluedot_title">Bluedot Location</string>
+    <string name="demo_bluedot_description">Show your location on the map using Phunware APIs</string>
+
     <string name="demo_location_modes_title">Location Modes</string>
     <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
     <string name="location_mode_normal">Normal</string>

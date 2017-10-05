@@ -16,6 +16,10 @@ class DemoDetailsList {
                 resources.getString(R.string.demo_load_building_description),
                 LoadBuildingActivity.class));
 
+        demos.add(new Demo(resources.getString(R.string.demo_bluedot_title),
+                resources.getString(R.string.demo_bluedot_description),
+                BluedotLocationActivity.class));
+
         demos.add(new Demo(resources.getString(R.string.demo_location_modes_title),
                 resources.getString(R.string.demo_location_modes_description),
                 LocationModesActivity.class));

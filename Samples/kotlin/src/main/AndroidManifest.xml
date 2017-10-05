@@ -26,6 +26,10 @@
             android:label="@string/demo_load_building_title"/>
 
         <activity
+            android:name=".BluedotLocationActivity"
+            android:label="@string/demo_bluedot_title"/>
+
+        <activity
             android:name=".LocationModesActivity"
             android:label="@string/demo_location_modes_title"/>
 

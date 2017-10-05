@@ -14,6 +14,10 @@ internal class DemoDetailsList(context: Context) {
                 resources.getString(R.string.demo_load_building_description),
                 LoadBuildingActivity::class.java))
 
+        demos.add(Demo(resources.getString(R.string.demo_bluedot_title),
+                resources.getString(R.string.demo_bluedot_description),
+                BluedotLocationActivity::class.java))
+
         demos.add(Demo(resources.getString(R.string.demo_location_modes_title),
                 resources.getString(R.string.demo_location_modes_description),
                 LocationModesActivity::class.java))
