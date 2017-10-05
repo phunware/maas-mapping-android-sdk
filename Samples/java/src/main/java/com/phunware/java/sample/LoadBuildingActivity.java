@@ -1,4 +1,4 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;

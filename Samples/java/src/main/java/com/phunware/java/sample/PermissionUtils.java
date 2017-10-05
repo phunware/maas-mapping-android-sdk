@@ -1,13 +1,13 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import static com.phunware.javasample.LocationModesActivity.REQUEST_PERMISSION_LOCATION_FINE;
-
 final class PermissionUtils {
+    private static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
+
     // Class should not be instantiated
     private PermissionUtils() {
     }

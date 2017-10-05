@@ -1,4 +1,4 @@
-package com.phunware.kotlinsample
+package com.phunware.kotlin.sample
 
 import android.content.Intent
 import android.os.Bundle
@@ -13,8 +13,8 @@ import android.widget.Spinner
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.phunware.core.PwCoreSession
-import com.phunware.kotlinsample.PermissionUtils.canAccessLocation
-import com.phunware.kotlinsample.PermissionUtils.checkPermissions
+import com.phunware.kotlin.sample.PermissionUtils.canAccessLocation
+import com.phunware.kotlin.sample.PermissionUtils.checkPermissions
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
@@ -29,11 +29,11 @@ import java.lang.ref.WeakReference
 
 class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
-    private var mapManager: PhunwareMapManager? = null
-    private var mapFragment: MapFragment? = null
-    private var currentBuilding: Building? = null
-    private var floorSpinnerAdapter: ArrayAdapter<FloorOptions>? = null
-    private var content: RelativeLayout? = null
+    private lateinit var mapManager: PhunwareMapManager
+    private lateinit var mapFragment: MapFragment
+    private lateinit var currentBuilding: Building
+    private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
+    private lateinit var content: RelativeLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +45,9 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val floor = floorSpinnerAdapter!!.getItem(id.toInt())
-                if (currentBuilding != null && floor != null) {
-                    currentBuilding!!.selectFloor(floor.level)
+                val floor = floorSpinnerAdapter.getItem(id.toInt())
+                if (floor != null) {
+                    currentBuilding.selectFloor(floor.level)
                 }
             }
 
@@ -70,19 +70,17 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
 
         // Load the building if location permission has been granted
         if (canAccessLocation(this)) {
-            if (mapFragment != null) {
-                mapFragment!!.getPhunwareMapAsync(this)
-            }
+            mapFragment.getPhunwareMapAsync(this)
         }
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
-            if (!canAccessLocation(this) && content != null) {
-                Snackbar.make(content!!, R.string.permission_snackbar_message,
+            if (!canAccessLocation(this)) {
+                Snackbar.make(content, R.string.permission_snackbar_message,
                         Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.action_settings, View.OnClickListener {
+                        .setAction(R.string.action_settings, {
                             startActivityForResult(
                                     Intent(android.provider.Settings.ACTION_SETTINGS),
                                     REQUEST_PERMISSION_LOCATION_FINE)
@@ -95,16 +93,16 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
 
-        mapManager!!.setPhunwareMap(phunwareMap)
-        mapManager!!.addBuilding(buildingId.toLong(),
+        mapManager.setPhunwareMap(phunwareMap)
+        mapManager.addBuilding(buildingId.toLong(),
                 object : Callback<Building> {
                     override fun onSuccess(building: Building) {
                         Log.d(TAG, "Building loaded successfully")
                         currentBuilding = building
 
                         // Populate floor spinner
-                        floorSpinnerAdapter!!.clear()
-                        floorSpinnerAdapter!!.addAll(building.buildingOptions.floors)
+                        floorSpinnerAdapter.clear()
+                        floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Initialize a location provider
                         setManagedLocationProvider(building)
@@ -132,12 +130,12 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
                 .buildingId(building.id.toString())
         val factory = builder.build()
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
-        mapManager!!.setLocationProvider(managedProvider, building)
-        mapManager!!.isMyLocationEnabled = true
+        mapManager.setLocationProvider(managedProvider, building)
+        mapManager.isMyLocationEnabled = true
     }
 
     companion object {
-        private val TAG = LocationModesActivity::class.java!!.getSimpleName()
+        private val TAG = BluedotLocationActivity::class.java.simpleName
         val REQUEST_PERMISSION_LOCATION_FINE = 1
     }
 }

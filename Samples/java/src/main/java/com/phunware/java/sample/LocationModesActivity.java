@@ -1,4 +1,4 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,8 +28,8 @@ import com.phunware.mapping.model.FloorOptions;
 
 import java.lang.ref.WeakReference;
 
-import static com.phunware.javasample.PermissionUtils.canAccessLocation;
-import static com.phunware.javasample.PermissionUtils.checkPermissions;
+import static com.phunware.java.sample.PermissionUtils.canAccessLocation;
+import static com.phunware.java.sample.PermissionUtils.checkPermissions;
 
 public class LocationModesActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
         AdapterView.OnItemSelectedListener {

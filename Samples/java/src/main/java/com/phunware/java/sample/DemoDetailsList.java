@@ -1,4 +1,4 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.content.Context;
 import android.content.res.Resources;

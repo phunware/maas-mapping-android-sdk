@@ -1,4 +1,4 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,13 +28,13 @@ import com.phunware.mapping.model.FloorOptions;
 
 import java.lang.ref.WeakReference;
 
-import static com.phunware.javasample.PermissionUtils.canAccessLocation;
-import static com.phunware.javasample.PermissionUtils.checkPermissions;
+import static com.phunware.java.sample.PermissionUtils.canAccessLocation;
+import static com.phunware.java.sample.PermissionUtils.checkPermissions;
 
 public class BluedotLocationActivity extends AppCompatActivity
         implements OnPhunwareMapReadyCallback {
-    private static final String TAG = LocationModesActivity.class.getSimpleName();
-    public static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
+    private static final String TAG = BluedotLocationActivity.class.getSimpleName();
+    private static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
 
     private PhunwareMapManager mapManager;
     private MapFragment mapFragment;

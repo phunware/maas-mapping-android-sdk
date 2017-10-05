@@ -1,4 +1,4 @@
-package com.phunware.javasample;
+package com.phunware.java.sample;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -31,7 +30,7 @@ import com.phunware.mapping.model.FloorOptions;
 import com.phunware.mapping.model.PointOptions;
 
 public class CustomPOIActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback {
-    private static final String TAG = LoadBuildingActivity.class.getSimpleName();
+    private static final String TAG = CustomPOIActivity.class.getSimpleName();
     private static final int ITEM_ID_CUSTOM_POI = -3; // This ID is required for custom POIs
 
     private PhunwareMapManager mapManager;

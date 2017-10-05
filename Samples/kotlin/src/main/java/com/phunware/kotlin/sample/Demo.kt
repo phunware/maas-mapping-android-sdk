@@ -1,4 +1,4 @@
-package com.phunware.kotlinsample
+package com.phunware.kotlin.sample
 
 import android.support.v7.app.AppCompatActivity
 

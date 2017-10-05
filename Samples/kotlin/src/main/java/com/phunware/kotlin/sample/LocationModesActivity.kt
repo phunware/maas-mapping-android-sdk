@@ -1,4 +1,4 @@
-package com.phunware.kotlinsample
+package com.phunware.kotlin.sample
 
 import android.content.Context
 import android.content.Intent
@@ -14,8 +14,8 @@ import android.widget.Spinner
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.phunware.core.PwCoreSession
-import com.phunware.kotlinsample.PermissionUtils.canAccessLocation
-import com.phunware.kotlinsample.PermissionUtils.checkPermissions
+import com.phunware.kotlin.sample.PermissionUtils.canAccessLocation
+import com.phunware.kotlin.sample.PermissionUtils.checkPermissions
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment

@@ -1,12 +1,13 @@
-package com.phunware.kotlinsample
+package com.phunware.kotlin.sample
 
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
-import com.phunware.kotlinsample.LocationModesActivity.Companion.REQUEST_PERMISSION_LOCATION_FINE
 
 internal object PermissionUtils {
+    private val REQUEST_PERMISSION_LOCATION_FINE = 1
+
     fun checkPermissions(activity: Activity?) {
         if (activity != null && !canAccessLocation(activity)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
