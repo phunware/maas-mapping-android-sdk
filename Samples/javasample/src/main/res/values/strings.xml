@@ -1,8 +1,0 @@
-<resources>
-    <string name="app_name">LBS Sample (Java)</string>
-
-    <!-- Demos -->
-    <string name="demo_load_building_title">Load Building</string>
-    <string name="demo_load_building_description">Loads a building on a Google Map</string>
-
-</resources>
