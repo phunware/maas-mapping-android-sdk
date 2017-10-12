@@ -46,7 +46,6 @@ class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         mapManager = PhunwareMapManager.create(this)
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().environment = PwCoreSession.Environment.DEV // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this)
 
         val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment

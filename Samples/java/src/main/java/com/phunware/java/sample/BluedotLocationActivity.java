@@ -55,7 +55,6 @@ public class BluedotLocationActivity extends AppCompatActivity
         });
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().setEnvironment(PwCoreSession.Environment.DEV); // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this);
 
         // Create the map manager and fragment used to load the building

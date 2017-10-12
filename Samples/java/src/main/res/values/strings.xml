@@ -9,11 +9,9 @@
 
     <!-- Phunware Keys -->
     <!-- TODO: These keys must be added before using Phunware SDKs -->
-    <!-- FIXME: REMOVE VALUES -->
-    <string name="pw_app_id">188</string>
-    <string name="pw_access_key">472a99bc53046410bcb80f4994be8a19a826e0be</string>
-    <string name="pw_signature_key">042dc5127d7b486efe078da8b8eaae730217fda0</string>
-    <string name="pw_building_id">23997</string>
+    <string name="pw_app_id"></string>
+    <string name="pw_access_key"></string>
+    <string name="pw_signature_key"></string>
 
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>

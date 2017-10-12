@@ -51,7 +51,6 @@ public class LoadBuildingActivity extends AppCompatActivity implements OnPhunwar
         mapManager = PhunwareMapManager.create(this);
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().setEnvironment(PwCoreSession.Environment.DEV); // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);

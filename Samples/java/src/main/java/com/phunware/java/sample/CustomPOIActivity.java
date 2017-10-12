@@ -63,7 +63,6 @@ public class CustomPOIActivity extends AppCompatActivity implements OnPhunwareMa
         mapManager = PhunwareMapManager.create(this);
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().setEnvironment(PwCoreSession.Environment.DEV); // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);

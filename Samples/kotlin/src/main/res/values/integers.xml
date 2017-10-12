@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <integer name="buildingId">23997</integer> <!-- FIXME: REMOVE VALUE -->
+    <integer name="buildingId"></integer>
 </resources>
