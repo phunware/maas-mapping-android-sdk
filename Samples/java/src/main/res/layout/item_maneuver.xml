@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light">
+
+    <ImageView
+        android:id="@+id/direction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:contentDescription="@string/direction"
+        tools:src="@drawable/ic_arrow_left" />
+
+    <TextView
+        android:id="@+id/maneuver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toEndOf="@id/direction"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        tools:text="In 78 feet, turn left" />
+
+    <TextView
+        android:id="@+id/next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/maneuver"
+        android:layout_marginStart="8dp"
+        android:text="@string/next_maneuver" />
+
+    <ImageView
+        android:id="@+id/next_direction"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@id/maneuver"
+        android:layout_marginStart="8dp"
+        android:contentDescription="@string/next_direction"
+        tools:src="@drawable/ic_arrow_left" />
+
+    <TextView
+        android:id="@+id/next_maneuver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/maneuver"
+        android:layout_marginStart="8dp"
+        tools:text="Turn left" />
+
+</RelativeLayout>
