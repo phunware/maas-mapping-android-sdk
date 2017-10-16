@@ -1,12 +1,8 @@
 # MaaS Mapping SDK for Android
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
-=======
-<<<<<<< HEAD
-**Version 3.1.3**
-=======
+
 **Version 3.2.0**
->>>>>>> release/3.2.0
 ________________
 
 ## Overview
