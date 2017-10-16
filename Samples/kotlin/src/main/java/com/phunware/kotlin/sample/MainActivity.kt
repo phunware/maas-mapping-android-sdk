@@ -15,7 +15,6 @@ import android.widget.RelativeLayout
 class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     private lateinit var demoAdapter: DemoAdapter
     private lateinit var content: RelativeLayout
-    private var hasRequiredPermissions = false
     private var permissionsSnackbar: Snackbar? = null
     private var clickedDemo: Demo? = null
 
@@ -40,7 +39,7 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     override fun onItemClicked(title: String) {
         clickedDemo = demoAdapter.getItem(title)
         if (clickedDemo != null) {
-            if (hasRequiredPermissions) {
+            if (canAccessLocation()) {
                 startDemo(clickedDemo!!)
             } else {
                 checkPermissions(this)
@@ -60,7 +59,6 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
                                             grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
             if (canAccessLocation()) {
-                hasRequiredPermissions = true
                 if (permissionsSnackbar != null) {
                     permissionsSnackbar!!.dismiss()
                 }
@@ -69,7 +67,6 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
                     clickedDemo = null
                 }
             } else if (!canAccessLocation()) {
-                hasRequiredPermissions = false
                 permissionsSnackbar = Snackbar.make(content, R.string.permission_snackbar_message,
                         Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.action_settings, {
@@ -82,13 +79,15 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
         }
     }
 
-    private fun checkPermissions(activity: Activity?) {
-        if (activity != null && !canAccessLocation()) {
+    private fun checkPermissions(activity: Activity) : Boolean {
+        if (!canAccessLocation()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 activity.requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE),
                         REQUEST_PERMISSION_LOCATION_FINE)
+                return false
             }
         }
+        return true
     }
 
     private fun canAccessLocation(): Boolean =

@@ -36,6 +36,10 @@
             android:name=".CustomPOIActivity"
             android:label="@string/demo_custom_poi_title"/>
 
+        <activity
+            android:name=".RoutingActivity"
+            android:label="@string/demo_routing_title"/>
+
         <!-- Google Maps Key -->
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>

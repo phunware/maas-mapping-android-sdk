@@ -38,6 +38,37 @@
     <string name="custom_poi_dialog_message">Enter a name for this POI</string>
     <string name="custom_poi_pin_drop_error">Can\'t drop pin outside the building bounds</string>
 
+    <string name="demo_routing_title">Routing Between POIs</string>
+    <string name="demo_routing_description">Create routes and navigate between POIs</string>
+    <string name="navigation">Navigation</string>
+    <string name="no_route">Couldn\'t find a route matching your search.</string>
+    <string name="turn_left">Turn Left</string>
+    <string name="turn_right">Turn Right</string>
+    <string name="bear_left">Bear Left</string>
+    <string name="bear_right">Bear Right</string>
+    <string name="continue_straight">Continue Straight for</string>
+    <string name="continue_straight_distance" formatted="false">
+        Continue Straight for %s feet</string>
+    <string name="unknown">Unknown</string>
+    <string name="floor_change_message_format" formatted="false">Take the %s %s %d</string>
+    <string name="up_to_level">up to level</string>
+    <string name="down_to_level">down to level</string>
+    <string name="to">to</string>
+    <string name="next_maneuver">Next: </string>
+    <string name="to_arrive"> to arrive at %1$s</string>
+    <string name="current_location">Current Location</string>
+    <string name="custom_location_title">Custom Location</string>
+    <string name="start_prompt">Select starting point…</string>
+    <string name="end_prompt">Select end point…</string>
+    <string name="accessible_route">Accessible Route</string>
+    <string name="exit_navigation">Exit Navigation</string>
+    <string name="pin_drop_error">Can\'t drop pin outside the building bounds</string>
+    <string name="elevator">elevator</string>
+    <string name="stairs">stairs</string>
+    <string name="down">down</string>
+    <string name="direction">direction</string>
+    <string name="next_direction">next direction</string>
+
     <!-- Buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_next">Next</string>

@@ -18,7 +18,6 @@ public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoO
     private static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
     private DemoAdapter demoAdapter;
     private RelativeLayout content;
-    private boolean hasRequiredPermissions = false;
     private Snackbar permissionsSnackbar;
     private Demo clickedDemo;
 
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoO
     public void onItemClicked(String title) {
         clickedDemo = demoAdapter.getItem(title);
         if (clickedDemo != null) {
-            if (hasRequiredPermissions) {
+            if (canAccessLocation()) {
                 startDemo(clickedDemo);
             } else {
                 checkPermissions(this);
@@ -66,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoO
                                            @NonNull int[] grantResults) {
         if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
             if (canAccessLocation()) {
-                hasRequiredPermissions = true;
                 if (permissionsSnackbar != null) {
                     permissionsSnackbar.dismiss();
                 }
@@ -75,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoO
                     clickedDemo = null;
                 }
             } else if (!canAccessLocation() && content != null) {
-                hasRequiredPermissions = false;
                 permissionsSnackbar = Snackbar.make(content, R.string.permission_snackbar_message,
                         Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.action_settings, new View.OnClickListener() {
@@ -91,14 +88,16 @@ public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoO
         }
     }
 
-    private void checkPermissions(Activity activity) {
+    private boolean checkPermissions(Activity activity) {
         if (activity != null && !canAccessLocation()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 activity.requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                                 Manifest.permission.READ_PHONE_STATE},
                         REQUEST_PERMISSION_LOCATION_FINE);
+                return false;
             }
         }
+        return true;
     }
 
     private boolean canAccessLocation() {
