@@ -86,7 +86,6 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
         }
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().environment = PwCoreSession.Environment.DEV // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this)
 
         // Create the map manager and fragment used to load the building
@@ -154,23 +153,25 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
     }
 
     private fun showFab(show: Boolean) {
-        val start = (if (show) 0 else 1).toFloat()
-        val end = (if (show) 1 else 0).toFloat()
-        val anims = ArrayList<Animator>(2)
-        anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_X, start, end))
-        anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_Y, start, end))
-        val s = AnimatorSet()
-        s.playTogether(anims)
-        s.addListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationStart(animation: Animator) {
-                if (show) fab.visibility = View.VISIBLE
-            }
+        runOnUiThread {
+            val start = (if (show) 0 else 1).toFloat()
+            val end = (if (show) 1 else 0).toFloat()
+            val anims = ArrayList<Animator>(2)
+            anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_X, start, end))
+            anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_Y, start, end))
+            val s = AnimatorSet()
+            s.playTogether(anims)
+            s.addListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationStart(animation: Animator) {
+                    if (show) fab.visibility = View.VISIBLE
+                }
 
-            override fun onAnimationEnd(animation: Animator) {
-                if (!show) fab.visibility = View.GONE
-            }
-        })
-        s.start()
+                override fun onAnimationEnd(animation: Animator) {
+                    if (!show) fab.visibility = View.GONE
+                }
+            })
+            s.start()
+        }
     }
 
     private fun showRoutingDialog() {
