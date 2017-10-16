@@ -38,6 +38,10 @@
             android:label="@string/demo_custom_poi_title"/>
 
         <activity
+            android:name=".SearchPoiActivity"
+            android:label="@string/demo_search_poi_title"/>
+
+        <activity
             android:name=".RoutingActivity"
             android:label="@string/demo_routing_title"/>
 
