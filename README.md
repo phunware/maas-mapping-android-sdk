@@ -2,15 +2,28 @@
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
 =======
+<<<<<<< HEAD
 **Version 3.1.3**
+=======
+**Version 3.2.0**
+>>>>>>> release/3.2.0
 ________________
-
 
 ## Overview
 This is Phunware's Android SDK for Mapping. Visit http://maas.phunware.com/ for more details and to sign up.
 
-PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy integration with Phunware's indoor maps and location-based services.
+This SDK is a comprehensive indoor mapping and wayfinding SDK that allows easy integration with Phunware's indoor maps and location-based services.
 
+### Configuration
+You will need to provide the appropriate application keys before running this sample app.  
+
+You'll need the app ID, the access key, the signature key and the building ID.  These can be found via the MaaS Portal.  Visit http://maas.phunware.com/ for more details.
+
+ 1. Edit the following app keys in strings.xml:
+11. pw_app_id
+11. pw_access_key
+11. pw_signature_key
+ 1. Edit the buildingId in integers.xml
 
 ### Build requirements
 * Android SDK 4.0.3+ (API level 15) or above
