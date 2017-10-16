@@ -112,7 +112,6 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
         });
 
         // Register the Phunware API keys
-        PwCoreSession.getInstance().setEnvironment(PwCoreSession.Environment.DEV); // FIXME: REMOVE
         PwCoreSession.getInstance().registerKeys(this);
 
         // Create the map manager and fragment used to load the building
@@ -188,25 +187,30 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
     }
 
     private void showFab(final boolean show) {
-        final float start = show ? 0 : 1;
-        final float end = show ? 1 : 0;
-        List<Animator> anims = new ArrayList<>(2);
-        anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_X, start, end));
-        anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_Y, start, end));
-        AnimatorSet s = new AnimatorSet();
-        s.playTogether(anims);
-        s.addListener(new AnimatorListenerAdapter() {
+        runOnUiThread(new Runnable() {
             @Override
-            public void onAnimationStart(Animator animation) {
-                if (show) fab.setVisibility(View.VISIBLE);
-            }
+            public void run() {
+                final float start = show ? 0 : 1;
+                final float end = show ? 1 : 0;
+                List<Animator> anims = new ArrayList<>(2);
+                anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_X, start, end));
+                anims.add(ObjectAnimator.ofFloat(fab, View.SCALE_Y, start, end));
+                AnimatorSet s = new AnimatorSet();
+                s.playTogether(anims);
+                s.addListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                        if (show) fab.setVisibility(View.VISIBLE);
+                    }
 
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                if (!show) fab.setVisibility(View.GONE);
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (!show) fab.setVisibility(View.GONE);
+                    }
+                });
+                s.start();
             }
         });
-        s.start();
     }
 
     private void showRoutingDialog() {
