@@ -3,50 +3,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingEnd="16dp"
+    android:paddingStart="16dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+    <Spinner
+        android:id="@+id/start"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:minHeight="?attr/actionBarSize" />
 
-        <RelativeLayout
-            android:id="@+id/picker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp">
+    <ImageButton
+        android:id="@+id/reverse"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_gravity="end"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:srcCompat="@drawable/ic_reverse" />
 
-            <ImageButton
-                android:id="@+id/reverse"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_centerVertical="true"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                app:srcCompat="@drawable/ic_reverse" />
+    <Spinner
+        android:id="@+id/end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize" />
 
-            <Spinner
-                android:id="@+id/start"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/reverse"
-                android:minHeight="?attr/actionBarSize" />
-
-            <Spinner
-                android:id="@+id/end"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/start"
-                android:layout_toStartOf="@id/reverse"
-                android:minHeight="?attr/actionBarSize" />
-
-        </RelativeLayout>
-
-        <CheckBox
-            android:id="@+id/accessible"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/accessible_route" />
-
-    </LinearLayout>
+    <CheckBox
+        android:id="@+id/accessible"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="@string/accessible_route" />
 
 </LinearLayout>
