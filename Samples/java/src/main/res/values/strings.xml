@@ -38,6 +38,10 @@
     <string name="custom_poi_dialog_message">Enter a name for this POI</string>
     <string name="custom_poi_pin_drop_error">Can\'t drop pin outside the building bounds</string>
 
+    <string name="demo_search_poi_title">Search For POIs</string>
+    <string name="demo_search_poi_description">Easily search for and locate POIs on the map</string>
+    <string name="search">Search</string>
+
     <string name="demo_routing_title">Routing Between POIs</string>
     <string name="demo_routing_description">Create routes and navigate between POIs</string>
     <string name="navigation">Navigation</string>

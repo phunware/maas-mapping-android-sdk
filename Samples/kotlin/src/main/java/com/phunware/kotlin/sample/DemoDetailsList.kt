@@ -26,6 +26,10 @@ internal class DemoDetailsList(context: Context) {
                 resources.getString(R.string.demo_custom_poi_description),
                 CustomPOIActivity::class.java))
 
+        demos.add(Demo(resources.getString(R.string.demo_search_poi_title),
+                resources.getString(R.string.demo_search_poi_description),
+                SearchPoiActivity::class.java))
+
         demos.add(Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity::class.java))

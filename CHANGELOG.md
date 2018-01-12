@@ -1,6 +1,12 @@
 Change Log
 ==========
 
+=======
+Version 3.2.1 *(2018-1-10)*
+----------------------------
+* metadata properly persistent in content provider
+* various bug fixes
+
 Version 3.2.0 *(2017-10-16)*
 ----------------------------
 * updated Google Play Services to 11.4.0

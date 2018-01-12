@@ -28,6 +28,10 @@ class DemoDetailsList {
                 resources.getString(R.string.demo_custom_poi_description),
                 CustomPOIActivity.class));
 
+        demos.add(new Demo(resources.getString(R.string.demo_search_poi_title),
+                resources.getString(R.string.demo_search_poi_description),
+                SearchPoiActivity.class));
+
         demos.add(new Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity.class));
