@@ -69,7 +69,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
         fab.visibility = View.GONE
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
-        navOverlay = findViewById<NavigationOverlayView>(R.id.nav_overlay)
+        navOverlay = findViewById(R.id.nav_overlay)
 
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
