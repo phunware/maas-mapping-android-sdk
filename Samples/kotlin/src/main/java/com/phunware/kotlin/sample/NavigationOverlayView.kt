@@ -109,7 +109,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             val nextDirection = v.findViewById<ImageView>(R.id.next_direction)
 
             val m = maneuvers[position]
-            if (m.mainManeuver != null && m.turnManeuver != null) {
+            if (m.mainManeuver != null) {
                 direction.setImageResource(displayHelper.getImageResourceForDirection(context,
                         m.mainManeuver!!))
                 maneuver.text = displayHelper.stringForDirection(context, m.mainManeuver)
