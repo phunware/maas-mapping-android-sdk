@@ -1,6 +1,11 @@
 Change Log
 ==========
 
+Version 3.3.0 *(2018-2-22)*
+----------------------------
+* added JWT authentication
+* fixed routing bug involving portals
+
 Version 3.2.1 *(2018-1-10)*
 ----------------------------
 * metadata properly persistent in content provider
