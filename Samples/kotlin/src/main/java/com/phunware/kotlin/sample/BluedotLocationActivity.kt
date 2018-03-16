@@ -10,6 +10,7 @@ import android.widget.RelativeLayout
 import android.widget.Spinner
 
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
@@ -62,6 +63,10 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
+
+        phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
+        phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                this@BluedotLocationActivity, R.raw.map_style))
 
         mapManager.setPhunwareMap(phunwareMap)
         mapManager.addBuilding(buildingId.toLong(),

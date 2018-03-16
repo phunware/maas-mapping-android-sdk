@@ -35,6 +35,10 @@ class DemoDetailsList {
         demos.add(new Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity.class));
+
+        demos.add(new Demo(resources.getString(R.string.demo_location_sharing_title),
+                resources.getString(R.string.demo_location_sharing_description),
+                LocationSharingActivity.class));
     }
 
     List<Demo> getDemos() {

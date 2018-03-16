@@ -73,6 +73,14 @@
     <string name="direction">direction</string>
     <string name="next_direction">next direction</string>
 
+    <string name="demo_location_sharing_title">Location Sharing</string>
+    <string name="demo_location_sharing_description">Easily share your location with other users</string>
+    <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
+    <string name="action_set_device_info">Set User Info</string>
+    <string name="set_user_info_dialog_device_name">Device Name</string>
+    <string name="set_user_info_dialog_device_type">Device Type</string>
+    <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
+
     <!-- Buttons -->
     <string name="button_cancel">Cancel</string>
     <string name="button_next">Next</string>

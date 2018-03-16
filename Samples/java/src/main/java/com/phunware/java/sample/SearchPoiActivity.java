@@ -28,6 +28,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
@@ -101,6 +102,10 @@ public class SearchPoiActivity extends AppCompatActivity implements OnPhunwareMa
     public void onPhunwareMapReady(final PhunwareMap phunwareMap) {
         // Retrieve buildingId from integers.xml
         int buildingId = getResources().getInteger(R.integer.buildingId);
+
+        phunwareMap.getGoogleMap().getUiSettings().setMapToolbarEnabled(false);
+        phunwareMap.getGoogleMap().setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                SearchPoiActivity.this, R.raw.map_style));
 
         this.phunwareMap = phunwareMap;
         mapManager.setPhunwareMap(phunwareMap);

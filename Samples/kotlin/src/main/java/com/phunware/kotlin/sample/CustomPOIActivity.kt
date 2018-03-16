@@ -11,6 +11,7 @@ import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -58,6 +59,10 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
+
+        phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
+        phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                this@CustomPOIActivity, R.raw.map_style))
 
         // Setup long click listener to create Custom POIs
         setupMapListeners(phunwareMap)
