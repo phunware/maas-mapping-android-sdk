@@ -1,4 +1,9 @@
 # Mapping SDK Changelog
+## 3.4.0 (Thursday, Apr 5th, 2018)
+#### Features
+* Updated to Google Play Services 11.8.0
+* Added customization of route lines and stroke
+
 ## 3.3.0 (Thursday, Feb 22nd, 2018)
 #### Features
 * added JWT authentication
