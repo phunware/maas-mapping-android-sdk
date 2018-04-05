@@ -1,6 +1,4 @@
 # Mapping SDK Migration Guide
-<<<<<<< HEAD
-=======
 
 ## 3.3.x to 3.4.0
 
@@ -35,7 +33,6 @@ Add the following `integer` definitions to your `integers.xml` file:
 ```
 Default values are shown above.
 
->>>>>>> release/3.4.0
 ## Upgrade from 3.2.x to 3.3.0
 
 #### General
