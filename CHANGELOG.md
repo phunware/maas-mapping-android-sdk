@@ -1,50 +1,72 @@
-Change Log
-==========
+# Mapping SDK Changelog
+## 3.4.0 (Thursday, Apr 5th, 2018)
+#### Features
+* Updated to Google Play Services 11.8.0
+* Added customization of route lines and stroke
 
-Version 3.2.1 *(2018-1-10)*
-----------------------------
+## 3.3.0 (Thursday, Feb 22nd, 2018)
+#### Features
+* added JWT authentication
+
+#### Bug fixes / performance enhancements
+* fixed routing bug involving portals
+
+#### Developer stuff
+* Added additional logging for troubleshooting
+
+## Version 3.2.1 (2018-1-10)
+
+#### Bug fixes / performance enhancements
 * metadata properly persistent in content provider
 * various bug fixes
 
-Version 3.2.0 *(2017-10-16)*
-----------------------------
+## Version 3.2.0 (2017-10-16)
+
+#### Bug fixes / performance enhancements
 * updated Google Play Services to 11.4.0
 * honor isActive flag for POI display and routing
 * added pressure change bluedot extinguish
 
-Version 3.1.3 *(2017-10-03)*
-----------------------------
+## Version 3.1.3 (2017-10-03)
+
+#### Bug fixes / performance enhancements
 * fixed authorities name for content provider
 
-Version 3.1.2 *(2017-09-11)*
-----------------------------
+## Version 3.1.2 (2017-09-11)
+
+#### Bug fixes / performance enhancements
 * added Location Sharing API
 * added ContentProvider for map data
 * Various bug fixes
 
-Version 3.1.1 *(2017-03-28)*
-----------------------------
+## Version 3.1.1 (2017-03-28)
+
+#### Bug fixes / performance enhancements
 * Various bug fixes
 
-Version 3.1.0 *(2017-01-30)*
-----------------------------
+## Version 3.1.0 (2017-01-30)
+
+#### Bug fixes / performance enhancements
 * Building bundles implemented
 * Changed interface for setting location provider
 * Updated to Core 3.0.3
 * Various bug fixes
 
-Version 3.0.1 *(2016-10-07)*
-----------------------------
+## Version 3.0.1 (2016-10-07)
+
+#### Bug fixes / performance enhancements
 * Updated Google Play Services to 9.6.1
 * Updated to Core 3.0.2
 * Various bug fixes
 
-Version 3.0.0 *(2016-08-04)*
-----------------------------
+## Version 3.0.0 (2016-08-04)
+
+#### Bug fixes / performance enhancements
 * Complete re-write of Mapping SDK
 
-Version 2.5.0 *(2015-08-31)*
------------------------------
+## Version 2.5.0 (2015-08-31)
+
+#### Bug fixes / performance enhancements
 * Added support for turn-by-turn directions. Turn-by-turn maneuvers can be accessed by accessing the maneuvers property on a PWRoute object. You can plot a route maneuver on a PWMapView intance by calling setRouteManeuver: with a valid PWRouteManeuver object. All previous route behavior is still present and unaffected. Please see the turn-by-turn sample as an example of how to implement turn-by-turn.
  **NOTE**: You will need to plot a route maneuever in order to enter turn-by-turn mode.
 * Route maneuvers switch automatically when location upates are available and the indoor user tracking mode is set to PWIndoorUserTrackingModeFollow or PWIndoorUserTrackingModeFollowWithHeading. You can manually set route maneuvers if desired but that will set the indoor user tracking mode to PWIndoorUserTrackingModeNone.
@@ -57,8 +79,9 @@ Version 2.5.0 *(2015-08-31)*
 * Fixed Bug for getting route from  and to same floor number in different buildings.
 * Added property to PWDirectionsOptions called excludedPointIdentifiers. Specify an array of point identifiers that you would like to exclude from routing. Please see PWDirectionsOptions header for more information.
 
-Version 2.4.0 *(2015-04-10)*
-----------------------------
+## Version 2.4.0 (2015-04-10)
+
+#### Bug fixes / performance enhancements
 * Added options that allow routing from any point of interest, user location or dropped pin annotation to any other point of interest, user location or dropped pin marker (in other words, any type of route endpoint is now allowed on either end of the route).
 * Added `setMarkerZoomLevel` method to `PwBuildingMapManager` for toggling POI zoom level.
 * Added `setBlueDotSmoothingEnabled` method to `PwBuildingMapManager` for toggling blue dot.
@@ -66,8 +89,9 @@ Version 2.4.0 *(2015-04-10)*
 * Removed `onPreDraw` listeners, using `RenderThread` handle real time occlusion detection.
 * Updated MaaSLocation SDK to '1.0.1'
 
-Version 2.3.0 *(2015-02-02)*
-----------------------------
+## Version 2.3.0 (2015-02-02)
+
+#### Bug fixes / performance enhancements
 * Added new "blue dot smoothing" functionality to provide a better user location tracking experience.
 * Added `setBlueDotSmoothingEnabled` method to `PwBuildingMapManager` for turning blue dot smoothing on and off.
 * Added `setRouteSnappingTolerance` method to `PwBuildingMapManager` for turning off route snapping or setting a different tolerance.
@@ -78,15 +102,17 @@ Version 2.3.0 *(2015-02-02)*
 * Updated MaaSLocation SDK to '1.0.0'
 * Bug fixes and performance enhancements
 
-Version 2.0.6 *(2014-09-30)*
-----------------------------
+## Version 2.0.6 (2014-09-30)
+
+#### Bug fixes / performance enhancements
 * Merged JavaDoc for Mapping and MappingLibrary
 * Fixed MappingLibrary-javadoc.jar and MappingLibrary-sources.jar
 * Fixed building warnings
 * Updated MaaSLocation SDK to '0.9.1'
 
-Version 2.0.5 *(2014-09-22)*
-----------------------------
+## Version 2.0.5 (2014-09-22)
+
+#### Bug fixes / performance enhancements
  * Migrating to use Google Maps v2 API from Google Play Services (4.x).
  * Added MaaS MappingLibrary module that is an Android library for wrapping support for Google Play Services (Google Maps) and MaaS Mapping SDK..
  * Added Location SDK as a dependency for MappingLibrary.
@@ -96,18 +122,21 @@ Version 2.0.5 *(2014-09-22)*
  * Updated MaaSCore to v1.3.7
  * Performance improvement, Refactor & Bug fixes
 
-Version 1.2.3 *(2014-02-26)*
-----------------------------
+## Version 1.2.3 (2014-02-26)
+
+#### Bug fixes / performance enhancements
  * Fixed builds to produce Java 6 compatible binaries using 'sourceCompatibility' and 'targetCompatibility' equal to '1.6'.
  * Requires MaaSCore v1.3.5
 
-Version 1.2.1 *(2013-12-27)*
-----------------------------
+## Version 1.2.1 (2013-12-27)
+
+#### Bug fixes / performance enhancements
  * Fixing bug around resetting the current floor. The entire view is reset now, not just the map.
  * Fixing bug where map wouldn't respond if onMapTouchListener was not set.
 
-Version 1.2.0 *(2013-12-18)*
-----------------------------
+## Version 1.2.0 (2013-12-18)
+
+#### Bug fixes / performance enhancements
  * Updating API to get allow getting routes from a location.
  * Allowing ability to set a custom center point for the map to center around.
  * Allowing ability to ignore boundaries and lock the map's touch controls.
@@ -115,33 +144,39 @@ Version 1.2.0 *(2013-12-18)*
  * Minor bug fixes
  * Updated Javadocs
 
-Version 1.1.7 *(2013-11-21)*
-----------------------------
+## Version 1.1.7 (2013-11-21)
+
+#### Bug fixes / performance enhancements
  * Fixing callback for blue dot availability.
 
-Version 1.1.6 *(2013-11-15)*
-----------------------------
+## Version 1.1.6 (2013-11-15)
+
+#### Bug fixes / performance enhancements
  * Location API 1.1 Hotfix.
 
-Version 1.1.5 *(2013-11-13)*
-----------------------------
+## Version 1.1.5 (2013-11-13)
+
+#### Bug fixes / performance enhancements
  * Custom Icon URLs can be set on a point.
  * A custom scale can be set on a Point's icon.
  * Location API uses 1.1 schema
 
-Version 1.1.4
-----------------------------
+## Version 1.1.4
+
+#### Bug fixes / performance enhancements
  * POI Layer is always at the top.
  * Supporting two finger tap on the map view.
  * Adding convenience method to get value from `PwPoint` meta data.
  * Adding listener for when Blue Dot is received.
 
-Version 1.1.3 *(2013-10-23)*
-----------------------------
+## Version 1.1.3 (2013-10-23)
+
+#### Bug fixes / performance enhancements
  * Maintenance and bug fixes.
  * Not forcing hardware acceleration.
  * Pointing POI icon urls to the right environment.
 
-Version 1.1.0 *(2013-10-16)*
-----------------------------
+## Version 1.1.0 (2013-10-16)
+
+#### Bug fixes / performance enhancements
  * Enhancing PwMapView to have better interaction (panning and zooming)

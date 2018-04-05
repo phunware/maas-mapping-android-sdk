@@ -98,7 +98,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
         internal fun getItem(position: Int): ManeuverPair = maneuvers[position]
 
-        override fun instantiateItem(container: ViewGroup, position: Int): Any? {
+        override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val context = container.context
             val v = LayoutInflater.from(context)
                     .inflate(R.layout.item_maneuver, container, false)
@@ -142,8 +142,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
                 container.addView(v)
                 return v
             }
-
-            return null
+            return 0
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
