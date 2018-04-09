@@ -41,17 +41,4 @@ object BitmapUtils {
         canvas.drawCircle(25f, 25f, 25f, paint)
         return image
     }
-
-    fun getBitmap(mainActivity: MainActivity, drawableRes: Int): Bitmap {
-        val drawable = ContextCompat.getDrawable(mainActivity, drawableRes)
-        val canvas = Canvas()
-        val bitmap = Bitmap
-                .createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight,
-                        Bitmap.Config.ARGB_8888)
-        canvas.setBitmap(bitmap)
-        drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-        drawable.draw(canvas)
-
-        return bitmap
-    }
 }
