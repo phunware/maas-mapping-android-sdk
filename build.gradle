@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.1.51'
+    ext.kotlin_version = '1.2.30'
     repositories {
         mavenLocal()
         mavenCentral()
@@ -35,7 +35,7 @@ configurations.all {
 }
 
 ext {
-    pwLocationSdkVersion = '3.3.0'
+    pwLocationSdkVersion = '3.4.0'
     pwMappingSdkVersion = '3.4.0'
 
     versionCode = 1
@@ -47,6 +47,7 @@ ext {
 
     buildToolsVersion = '27.0.3'
     supportLibVersion = '27.1.0'
+    androidMapsUtilsVersion = "0.5"
 
     junitVersion = '4.12'
     okhttpVersion = '3.10.0'

@@ -17,14 +17,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
-
+import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -34,8 +30,7 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
-
-import java.util.ArrayList
+import java.util.*
 
 class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
     private lateinit var mapManager: PhunwareMapManager
@@ -84,6 +79,10 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
+
+        phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
+        phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                this@SearchPoiActivity, R.raw.map_style))
 
         this.phunwareMap = phunwareMap
         mapManager.setPhunwareMap(phunwareMap)

@@ -11,15 +11,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.CheckBox
-import android.widget.ImageButton
-import android.widget.RelativeLayout
-import android.widget.Spinner
-
+import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.location.provider_managed.ManagedProviderFactory
@@ -35,9 +30,8 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 import com.phunware.mapping.model.RouteOptions
-
 import java.lang.ref.WeakReference
-import java.util.ArrayList
+import java.util.*
 
 class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigator.OnManeuverChangedListener {
 
@@ -106,6 +100,10 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
+
+        phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
+        phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                this@RoutingActivity, R.raw.map_style))
 
         mapManager.setPhunwareMap(phunwareMap)
         mapManager.addBuilding(buildingId.toLong(),
@@ -216,7 +214,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
             val currentLocation = LatLng(myLocation.latitude, myLocation.longitude)
             var currentFloorId = mapManager.currentBuilding.selectedFloor.id
             if (myLocation.extras != null && myLocation.extras
-                    .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
+                            .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
                 currentFloorId = myLocation.extras
                         .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
             }

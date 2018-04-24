@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
@@ -81,6 +82,10 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
     public void onPhunwareMapReady(final PhunwareMap phunwareMap) {
         // Retrieve buildingId from integers.xml
         int buildingId = getResources().getInteger(R.integer.buildingId);
+
+        phunwareMap.getGoogleMap().getUiSettings().setMapToolbarEnabled(false);
+        phunwareMap.getGoogleMap().setMapStyle(MapStyleOptions.loadRawResourceStyle(
+                LocationModesActivity.this, R.raw.map_style));
 
         mapManager.setPhunwareMap(phunwareMap);
         mapManager.addBuilding(buildingId,
