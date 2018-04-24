@@ -1,8 +1,7 @@
 package com.phunware.kotlin.sample
 
 import android.content.Context
-
-import java.util.ArrayList
+import java.util.*
 
 internal class DemoDetailsList(context: Context) {
     private val demos = ArrayList<Demo>()
@@ -33,6 +32,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_location_sharing_title),
+                resources.getString(R.string.demo_location_sharing_description),
+                LocationSharingActivity::class.java))
     }
 
     fun getDemos(): List<Demo> = demos

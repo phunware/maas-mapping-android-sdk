@@ -45,6 +45,10 @@
             android:name=".RoutingActivity"
             android:label="@string/demo_routing_title"/>
 
+        <activity
+            android:name=".LocationSharingActivity"
+            android:label="@string/demo_location_sharing_title"/>
+
         <!-- Google Maps Key -->
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key"/>
