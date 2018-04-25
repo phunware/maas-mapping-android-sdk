@@ -12,10 +12,32 @@
         android:layout_height="match_parent" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/instructions_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/map"
+        android:background="@color/semi_transparent"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/location_modes_instructions"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/location_modes_instructions"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/instructions_layout"
+        android:layout_marginTop="8dp"
         android:background="@color/semi_transparent"
         android:orientation="vertical"
         android:padding="6dp">
