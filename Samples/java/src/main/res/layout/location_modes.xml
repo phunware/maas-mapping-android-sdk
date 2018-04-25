@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -15,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignTop="@id/map"
-        android:background="@color/white"
+        android:background="@color/semi_transparent"
         android:orientation="vertical"
         android:padding="6dp">
 
@@ -28,15 +29,19 @@
             android:id="@+id/floorSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/demo_location_modes_title" />
-
-        <Spinner
-            android:id="@+id/location_modes_spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </LinearLayout>
+
+    <!--Location Mode Fab-->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/location_mode_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="16dp"
+        android:background="@color/white"
+        android:backgroundTint="@color/white"
+        android:tint="@color/inactive"
+        app:borderWidth="0dp"
+        app:srcCompat="@drawable/ic_my_location" />
 </RelativeLayout>

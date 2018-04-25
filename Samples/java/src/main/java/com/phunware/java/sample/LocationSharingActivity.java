@@ -191,6 +191,9 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
                         spinnerAdapter.clear();
                         spinnerAdapter.addAll(building.getBuildingOptions().getFloors());
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(LocationSharingActivity.this);
+
                         // Initialize a location provider
                         setManagedLocationProvider(building);
 

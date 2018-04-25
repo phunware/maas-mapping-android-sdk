@@ -26,11 +26,12 @@ import com.phunware.mapping.model.FloorOptions;
 import java.lang.ref.WeakReference;
 
 public class BluedotLocationActivity extends AppCompatActivity
-        implements OnPhunwareMapReadyCallback {
+        implements OnPhunwareMapReadyCallback, Building.OnFloorChangedListener {
     private static final String TAG = BluedotLocationActivity.class.getSimpleName();
 
     private PhunwareMapManager mapManager;
     private Building currentBuilding;
+    private Spinner floorSpinner;
     private ArrayAdapter<FloorOptions> floorSpinnerAdapter;
 
     @Override
@@ -38,7 +39,7 @@ public class BluedotLocationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluedot_location);
 
-        Spinner floorSpinner = findViewById(R.id.floorSpinner);
+        floorSpinner = findViewById(R.id.floorSpinner);
         floorSpinnerAdapter = new FloorAdapter(this);
         floorSpinner.setAdapter(floorSpinnerAdapter);
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -88,6 +89,9 @@ public class BluedotLocationActivity extends AppCompatActivity
                         floorSpinnerAdapter.clear();
                         floorSpinnerAdapter.addAll(building.getBuildingOptions().getFloors());
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(BluedotLocationActivity.this);
+
                         // Initialize a location provider
                         setManagedLocationProvider(building);
 
@@ -119,5 +123,24 @@ public class BluedotLocationActivity extends AppCompatActivity
                 = (PwManagedLocationProvider) factory.createLocationProvider();
         mapManager.setLocationProvider(managedProvider, building);
         mapManager.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onFloorChanged(Building building, long floorId) {
+        for (int index = 0; index < floorSpinnerAdapter.getCount(); index++) {
+            FloorOptions floor = floorSpinnerAdapter.getItem(index);
+            if (floor != null && floor.getId() == floorId) {
+                if (floorSpinner.getSelectedItemPosition() != index) {
+                    final int indexFinal = index;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            floorSpinner.setSelection(indexFinal);
+                        }
+                    });
+                    break;
+                }
+            }
+        }
     }
 }

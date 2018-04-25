@@ -1,7 +1,12 @@
 package com.phunware.java.sample;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +18,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
+import com.phunware.core.PwLog;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
 import com.phunware.mapping.MapFragment;
@@ -25,24 +31,43 @@ import com.phunware.mapping.model.FloorOptions;
 
 import java.lang.ref.WeakReference;
 
+import static com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME;
+import static com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME;
 
 public class LocationModesActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
-        AdapterView.OnItemSelectedListener {
+        Building.OnFloorChangedListener {
     private static final String TAG = LocationModesActivity.class.getSimpleName();
-    private static final String PREF_LOCATION_MODE_FOLLOW = "Follow Me";
-    private static final String PREF_LOCATION_MODE_LOCATE = "Locate Me";
+    private static final String PREFERENCE_NAME = "location_mode_sample";
+    private static final String PREF_LOCATION_MODE = "location_mode";
+    private static final String PREF_LOCATION_FOLLOW = "follow me";
+    private static final String PREF_LOCATION_LOCATE = "locate me";
+    private static final String PREF_LOCATION_NORMAL = "normal";
 
     private PhunwareMapManager mapManager;
     private Building currentBuilding;
+    private Spinner floorSpinner;
     private ArrayAdapter<FloorOptions> floorSpinnerAdapter;
-    private Spinner locationModesSpinner;
+
+    // Location Mode Variables
+    private FloatingActionButton locationModeFab;
+    private Handler trackingModeHandler;
+    private Runnable trackingModeRunnable;
+    private boolean isTrackingModeTimerRunning = false;
+    private String previousTrackingMode;
+
+    View.OnClickListener locationModeListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            onLocationModeFabClicked();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_modes);
 
-        Spinner floorSpinner = findViewById(R.id.floorSpinner);
+        floorSpinner = findViewById(R.id.floorSpinner);
         floorSpinnerAdapter = new FloorAdapter(this);
         floorSpinner.setAdapter(floorSpinnerAdapter);
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -59,12 +84,34 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
             }
         });
 
-        locationModesSpinner = findViewById(R.id.location_modes_spinner);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.location_modes_array, R.layout.spinner_row);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        locationModesSpinner.setAdapter(adapter);
-        locationModesSpinner.setOnItemSelectedListener(this);
+        locationModeFab = findViewById(R.id.location_mode_fab);
+        locationModeFab.setOnClickListener(locationModeListener);
+
+        trackingModeHandler = new Handler(getMainLooper());
+        trackingModeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                isTrackingModeTimerRunning = false;
+                if (mapManager.isBluedotVisibleOnMap() && mapManager.isBluedotVisibleOnFloor()) {
+                    PwLog.d(TAG, "Bluedot is visible -- resetting tracking mode");
+                    switch (previousTrackingMode) {
+                        case PREF_LOCATION_LOCATE:
+                            mapManager.setMyLocationMode(MODE_LOCATE_ME);
+                            break;
+                        case PREF_LOCATION_FOLLOW:
+                            mapManager.setMyLocationMode(MODE_FOLLOW_ME);
+                            break;
+                        default:
+                            mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL);
+                            break;
+                    }
+                    setSavedLocationMode(previousTrackingMode);
+                    updateLocationModeFab();
+                } else {
+                    PwLog.d(TAG, "Bluedot is not visible -- breaking tracking mode");
+                }
+            }
+        };
 
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this);
@@ -74,6 +121,18 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
         if (mapFragment != null) {
+            mapFragment.addOnTouchListener(new MapFragment.OnMapMovedListener() {
+                @Override
+                public void onMapMoved() {
+                    if (mapManager != null && mapManager.isBluedotVisibleOnFloor()) {
+                        int trackingMode = mapManager.getMyLocationMode();
+                        if (isTrackingModeTimerRunning || trackingMode == MODE_LOCATE_ME
+                                || trackingMode == MODE_FOLLOW_ME) {
+                            updateLocationModeBehavior();
+                        }
+                    }
+                }
+            });
             mapFragment.getPhunwareMapAsync(this);
         }
     }
@@ -98,6 +157,9 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
                         // Populate floor spinner
                         floorSpinnerAdapter.clear();
                         floorSpinnerAdapter.addAll(building.getBuildingOptions().getFloors());
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(LocationModesActivity.this);
 
                         // Initialize a location provider
                         setManagedLocationProvider(building);
@@ -132,28 +194,99 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
         mapManager.setMyLocationEnabled(true);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        updateLocationMode();
+    private void onLocationModeFabClicked() {
+        String mode = getSavedLocationMode();
+
+        // Rotate to the next location mode
+        if (mode.equalsIgnoreCase(PREF_LOCATION_FOLLOW)) {
+            mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL);
+            setSavedLocationMode(PREF_LOCATION_NORMAL);
+        } else if (mode.equalsIgnoreCase(PREF_LOCATION_LOCATE)) {
+            mapManager.setMyLocationMode(MODE_FOLLOW_ME);
+            setSavedLocationMode(PREF_LOCATION_FOLLOW);
+        } else {
+            mapManager.setMyLocationMode(MODE_LOCATE_ME);
+            setSavedLocationMode(PREF_LOCATION_LOCATE);
+        }
+
+        updateLocationModeFab();
+    }
+
+    private void updateLocationModeFab() {
+        if (locationModeFab != null) {
+            String mode = getSavedLocationMode();
+
+            // Update fab to match current location mode
+            if (mode.equalsIgnoreCase(PREF_LOCATION_FOLLOW)) {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_compass));
+                locationModeFab.setImageTintList(ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.colorAccent)));
+            } else if (mode.equalsIgnoreCase(PREF_LOCATION_LOCATE)) {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_my_location));
+                locationModeFab.setImageTintList(ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.colorAccent)));
+            } else {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_my_location));
+                locationModeFab.setImageTintList(ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.inactive)));
+            }
+
+        }
+    }
+
+    public void updateLocationModeBehavior() {
+        // Save current tracking mode and break tracking mode
+        if (!isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Breaking tracking mode while timer is running");
+            previousTrackingMode = getSavedLocationMode();
+            mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL);
+            setSavedLocationMode(PREF_LOCATION_NORMAL);
+            updateLocationModeFab();
+        }
+
+        // Cancel task if it is already running
+        if (isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Cancelling existing tracking mode timer");
+            trackingModeHandler.removeCallbacks(trackingModeRunnable);
+            isTrackingModeTimerRunning = false;
+        }
+
+        PwLog.d(TAG, "Starting tracking mode timer");
+        isTrackingModeTimerRunning = true;
+        int trackingModeSwitchInterval = 10000; // 10 seconds by default
+        trackingModeHandler.postDelayed(trackingModeRunnable, trackingModeSwitchInterval);
+    }
+
+    private String getSavedLocationMode() {
+        SharedPreferences preferences = getSharedPreferences(PREFERENCE_NAME, 0);
+        return preferences.getString(PREF_LOCATION_MODE, PREF_LOCATION_NORMAL);
+    }
+
+    private void setSavedLocationMode(final String mode) {
+        SharedPreferences preferences = getSharedPreferences(PREFERENCE_NAME, 0);
+        preferences.edit()
+                .putString(PREF_LOCATION_MODE, mode)
+                .apply();
     }
 
     @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-        // Do nothing
-    }
-
-    private void updateLocationMode() {
-        if (mapManager != null) {
-            String selectedMode = (String) locationModesSpinner.getSelectedItem();
-            switch (selectedMode) {
-                case PREF_LOCATION_MODE_FOLLOW:
-                    mapManager.setMyLocationMode(PhunwareMapManager.MODE_FOLLOW_ME);
+    public void onFloorChanged(Building building, long floorId) {
+        for (int index = 0; index < floorSpinnerAdapter.getCount(); index++) {
+            FloorOptions floor = floorSpinnerAdapter.getItem(index);
+            if (floor != null && floor.getId() == floorId) {
+                if (floorSpinner.getSelectedItemPosition() != index) {
+                    final int indexFinal = index;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            floorSpinner.setSelection(indexFinal);
+                        }
+                    });
                     break;
-                case PREF_LOCATION_MODE_LOCATE:
-                    mapManager.setMyLocationMode(PhunwareMapManager.MODE_LOCATE_ME);
-                    break;
-                default:
-                    mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL);
+                }
             }
         }
     }

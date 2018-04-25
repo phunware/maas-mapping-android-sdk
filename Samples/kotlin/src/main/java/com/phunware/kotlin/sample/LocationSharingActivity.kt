@@ -152,6 +152,9 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         spinnerAdapter.clear()
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@LocationSharingActivity)
+
                         // Initialize a location provider
                         setManagedLocationProvider(building)
 

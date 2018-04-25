@@ -33,7 +33,8 @@ import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
 import java.util.*
 
-class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigator.OnManeuverChangedListener {
+class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+        Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
@@ -115,6 +116,9 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
                         // Populate floor spinner
                         floorSpinnerAdapter.clear()
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@RoutingActivity)
 
                         // Initialize a location provider
                         setManagedLocationProvider(building)
@@ -299,6 +303,18 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
 
     override fun onRouteSnapFailed() {
         // Do Nothing
+    }
+
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
     }
 
     companion object {

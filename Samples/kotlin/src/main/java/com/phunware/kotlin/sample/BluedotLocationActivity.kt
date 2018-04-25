@@ -24,11 +24,13 @@ import com.phunware.mapping.model.FloorOptions
 
 import java.lang.ref.WeakReference
 
-class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+        Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
     private lateinit var currentBuilding: Building
+    private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
     private lateinit var content: RelativeLayout
 
@@ -37,7 +39,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         setContentView(R.layout.bluedot_location)
         content = findViewById(R.id.content)
 
-        val floorSpinner = findViewById<Spinner>(R.id.floorSpinner)
+        floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -79,6 +81,9 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
                         floorSpinnerAdapter.clear()
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@BluedotLocationActivity)
+
                         // Initialize a location provider
                         setManagedLocationProvider(building)
 
@@ -107,6 +112,18 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
+    }
+
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
     }
 
     companion object {
