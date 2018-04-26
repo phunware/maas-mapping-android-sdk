@@ -170,7 +170,6 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
                         // Start sharing location with other users
                         startLocationSharing()
-                        mapManager.startRetrievingSharedLocations(this@LocationSharingActivity)
                     }
 
                     override fun onFailure(throwable: Throwable) {
@@ -240,9 +239,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         // Remove ourself from this list
         val sharedLocationListWithoutSelf = ArrayList<SharedLocation>()
         for (location in sharedLocationList) {
-            val deviceId = PwCoreSession.getInstance()
-                    .sessionData.deviceId
-
+            val deviceId = PwCoreSession.getInstance().sessionData.deviceId
             if (deviceId != location.deviceId) {
                 sharedLocationListWithoutSelf.add(location)
             }
@@ -269,8 +266,8 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 removePersonDot(staleDevice)
             }
 
-            for (p in sharedLocationListWithoutSelf) {
-                updatePersonDot(p)
+            for (userLocation in sharedLocationListWithoutSelf) {
+                updatePersonDot(userLocation)
             }
         }
     }
