@@ -1,7 +1,8 @@
 # Mapping SDK Changelog
 ## 3.5.0 (Tuesday, Jun 5th, 2018)
-#### Features
+#### Bug fixes / performance enhancements
 * fixed icon resizing
+#### Features
 * Locate Me routing enhancements
 * added setCacheFallbackTimeout() 
 * added touch listener to MapView and MapFragment - See sample app for example
