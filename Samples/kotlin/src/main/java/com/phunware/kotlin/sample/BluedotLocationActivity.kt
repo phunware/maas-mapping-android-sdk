@@ -1,5 +1,31 @@
 package com.phunware.kotlin.sample
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -24,11 +50,13 @@ import com.phunware.mapping.model.FloorOptions
 
 import java.lang.ref.WeakReference
 
-class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+        Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
     private lateinit var currentBuilding: Building
+    private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
     private lateinit var content: RelativeLayout
 
@@ -37,7 +65,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         setContentView(R.layout.bluedot_location)
         content = findViewById(R.id.content)
 
-        val floorSpinner = findViewById<Spinner>(R.id.floorSpinner)
+        floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -79,6 +107,9 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
                         floorSpinnerAdapter.clear()
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@BluedotLocationActivity)
+
                         // Initialize a location provider
                         setManagedLocationProvider(building)
 
@@ -107,6 +138,18 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback 
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
+    }
+
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
     }
 
     companion object {

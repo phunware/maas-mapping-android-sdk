@@ -22,14 +22,7 @@
 
     <string name="demo_location_modes_title">Location Modes</string>
     <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
-    <string name="location_mode_normal">Normal</string>
-    <string name="location_mode_follow_me">Follow Me</string>
-    <string name="location_mode_locate_me">Locate Me</string>
-    <string-array name="location_modes_array">
-        <item>@string/location_mode_normal</item>
-        <item>@string/location_mode_follow_me</item>
-        <item>@string/location_mode_locate_me</item>
-    </string-array>
+    <string name="location_modes_instructions">Click the fab on the bottom right to toggle location modes. The progression goes from Normal to Locate Me to Follow Me.</string>
 
     <string name="demo_custom_poi_title">Create Custom POIs</string>
     <string name="demo_custom_poi_description">Create custom markers on the map</string>

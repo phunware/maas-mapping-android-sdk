@@ -1,5 +1,31 @@
 package com.phunware.kotlin.sample
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
@@ -33,7 +59,8 @@ import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
 import java.util.*
 
-class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigator.OnManeuverChangedListener {
+class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+        Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
@@ -115,6 +142,9 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
                         // Populate floor spinner
                         floorSpinnerAdapter.clear()
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@RoutingActivity)
 
                         // Initialize a location provider
                         setManagedLocationProvider(building)
@@ -262,7 +292,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
 
     private fun startNavigating(route: RouteOptions) {
         if (navigator != null) {
-            navigator!!.terminate()
+            navigator!!.stop()
         }
         navigator = mapManager.navigate(route)
         navigator!!.addOnManeuverChangedListener(this)
@@ -277,7 +307,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
 
     private fun stopNavigating() {
         if (navigator != null) {
-            navigator!!.terminate()
+            navigator!!.stop()
             navigator = null
         }
         navOverlayContainer.visibility = View.GONE
@@ -299,6 +329,18 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Navigat
 
     override fun onRouteSnapFailed() {
         // Do Nothing
+    }
+
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
     }
 
     companion object {

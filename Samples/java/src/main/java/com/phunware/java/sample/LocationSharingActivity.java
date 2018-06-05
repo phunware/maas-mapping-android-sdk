@@ -1,5 +1,31 @@
 package com.phunware.java.sample;
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -191,6 +217,9 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
                         spinnerAdapter.clear();
                         spinnerAdapter.addAll(building.getBuildingOptions().getFloors());
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(LocationSharingActivity.this);
+
                         // Initialize a location provider
                         setManagedLocationProvider(building);
 
@@ -206,7 +235,6 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
 
                         // Start sharing location with other users
                         startLocationSharing();
-                        mapManager.startRetrievingSharedLocations(LocationSharingActivity.this);
                     }
 
                     @Override
@@ -324,9 +352,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
         // Remove ourself from this list
         final List<SharedLocation> sharedLocationListWithoutSelf = new ArrayList<>();
         for (int i = 0; i < sharedLocationList.size(); i++) {
-            String deviceId = PwCoreSession.getInstance()
-                    .getSessionData().getDeviceId();
-
+            String deviceId = PwCoreSession.getInstance().getSessionData().getDeviceId();
             SharedLocation location = sharedLocationList.get(i);
             if (!deviceId.equals(location.getDeviceId())) {
                 sharedLocationListWithoutSelf.add(location);
@@ -343,8 +369,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
 
         // Use the set to diff against our current map
         // And remove old markers on our map
-        for (Map.Entry<String, PersonMarker> entry
-                : friendLocationMap.entrySet()) {
+        for (Map.Entry<String, PersonMarker> entry : friendLocationMap.entrySet()) {
             if (!updatedDeviceIds.contains(entry.getKey())) {
                 staleDeviceIds.add(entry.getKey());
             }
@@ -357,8 +382,8 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
                     removePersonDot(staleDevice);
                 }
 
-                for (SharedLocation p : sharedLocationListWithoutSelf) {
-                    updatePersonDot(p);
+                for (SharedLocation userLocation : sharedLocationListWithoutSelf) {
+                    updatePersonDot(userLocation);
                 }
             }
         });

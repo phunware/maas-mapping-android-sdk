@@ -1,24 +1,16 @@
 # MaaS Mapping SDK for Android
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
-**Version 3.4.0**
+=======
+**Version 3.5.0**
 ________________
+
 
 ## Overview
 This is Phunware's Android SDK for Mapping. Visit http://maas.phunware.com/ for more details and to sign up.
 
-This SDK is a comprehensive indoor mapping and wayfinding SDK that allows easy integration with Phunware's indoor maps and location-based services.
+PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy integration with Phunware's indoor maps and location-based services.
 
-### Configuration
-You will need to provide the appropriate application keys before running this sample app.  
-
-You'll need the app ID, the access key, the signature key and the building ID.  These can be found via the MaaS Portal.  Visit http://maas.phunware.com/ for more details.
-
- 1. Edit the following app keys in strings.xml:
-11. pw_app_id
-11. pw_access_key
-11. pw_signature_key
- 1. Edit the buildingId in integers.xml
 
 ### Build requirements
 * Android SDK 4.0.3+ (API level 15) or above
@@ -32,13 +24,13 @@ Attribution
 -----------
 MaaS Mapping uses the following third party components.
 
-| Component     | Description   | License  |
-| ------------- |:-------------:| -----:|
-| [Picasso](https://github.com/square/picasso)      | A powerful image downloading and caching library for Android      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
-| [AndroidSVG](https://code.google.com/p/androidsvg/)      | A SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
-| [okhttp](https://github.com/square/okhttp)        | An HTTP+HTTP/2 client for Android and Java applications by Square, Inc. | [Apache 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt) |
-| [moshi](https://github.com/square/moshi)        | A modern JSON library for Android and Java by Square, Inc. | [Apache 2.0](https://github.com/square/moshi/blob/master/LICENSE.txt) |
-| [DiskLruCache](https://github.com/JakeWharton/DiskLruCache)        | Java implementation of a Disk-based LRU cache which specifically targets Android compatibility. | [Apache 2.0](https://github.com/JakeWharton/DiskLruCache/blob/master/LICENSE.txt) |
+| Component     | Version | Description   | License  |
+| ------------- | ------- |:-------------:| -----:|
+| [Picasso](https://github.com/square/picasso)      |2.5.2| A powerful image downloading and caching library for Android      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
+| [AndroidSVG](https://github.com/BigBadaboom/androidsvg)      |1.2.1| A SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
+| [okhttp](https://github.com/square/okhttp)        |3.10.0| An HTTP+HTTP/2 client for Android and Java applications by Square, Inc. | [Apache 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt) |
+| [moshi](https://github.com/square/moshi)        |1.5.0| A modern JSON library for Android and Java by Square, Inc. | [Apache 2.0](https://github.com/square/moshi/blob/master/LICENSE.txt) |
+| [DiskLruCache](https://github.com/JakeWharton/DiskLruCache)        |2.0.2| Java implementation of a Disk-based LRU cache which specifically targets Android compatibility. | [Apache 2.0](https://github.com/JakeWharton/DiskLruCache/blob/master/LICENSE.txt) |
 
 -----------
 

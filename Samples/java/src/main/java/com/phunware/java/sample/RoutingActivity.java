@@ -1,5 +1,31 @@
 package com.phunware.java.sample;
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
@@ -8,6 +34,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,7 +77,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
-        Navigator.OnManeuverChangedListener {
+        Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
     private static final String TAG = LocationModesActivity.class.getSimpleName();
     private static final int ITEM_ID_LOCATION = -2;
 
@@ -153,6 +180,9 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
                         // Populate floor spinner
                         floorSpinnerAdapter.clear();
                         floorSpinnerAdapter.addAll(building.getBuildingOptions().getFloors());
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(RoutingActivity.this);
 
                         // Initialize a location provider
                         setManagedLocationProvider(building);
@@ -322,7 +352,7 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
 
     private void startNavigating(RouteOptions route) {
         if (navigator != null) {
-            navigator.terminate();
+            navigator.stop();
         }
         navigator = mapManager.navigate(route);
         navigator.addOnManeuverChangedListener(this);
@@ -337,7 +367,7 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
 
     private void stopNavigating() {
         if (navigator != null) {
-            navigator.terminate();
+            navigator.stop();
             navigator = null;
         }
         navOverlayContainer.setVisibility(View.GONE);
@@ -361,5 +391,24 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
     @Override
     public void onRouteSnapFailed() {
         // Do Nothing
+    }
+
+    @Override
+    public void onFloorChanged(Building building, long floorId) {
+        for (int index = 0; index < floorSpinnerAdapter.getCount(); index++) {
+            FloorOptions floor = floorSpinnerAdapter.getItem(index);
+            if (floor != null && floor.getId() == floorId) {
+                if (floorSpinner.getSelectedItemPosition() != index) {
+                    final int indexFinal = index;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            floorSpinner.setSelection(indexFinal);
+                        }
+                    });
+                    break;
+                }
+            }
+        }
     }
 }

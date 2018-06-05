@@ -1,7 +1,37 @@
 package com.phunware.kotlin.sample
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Handler
+import android.support.design.widget.FloatingActionButton
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -13,6 +43,7 @@ import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
+import com.phunware.core.PwLog
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
@@ -20,27 +51,39 @@ import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
+import com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME
+import com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 
 import java.lang.ref.WeakReference
 
-class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, AdapterView.OnItemSelectedListener {
+class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+        Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
     private lateinit var currentBuilding: Building
+    private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
 
     private lateinit var content: RelativeLayout
-    private lateinit var locationModesSpinner: Spinner
+
+    // Location Mode Variables
+    private lateinit var locationModeFab: FloatingActionButton
+    private lateinit var trackingModeHandler: Handler
+    private lateinit var trackingModeRunnable: Runnable
+    private var isTrackingModeTimerRunning = false
+    private lateinit var previousTrackingMode: String
+
+    private var locationModeListener: View.OnClickListener = View.OnClickListener { onLocationModeFabClicked() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.location_modes)
         content = findViewById(R.id.content)
 
-        val floorSpinner = findViewById<Spinner>(R.id.floorSpinner)
+        floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -54,12 +97,25 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        locationModesSpinner = findViewById(R.id.location_modes_spinner)
-        val adapter = ArrayAdapter.createFromResource(
-                this, R.array.location_modes_array, R.layout.floor_spinner_row)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        locationModesSpinner.adapter = adapter
-        locationModesSpinner.onItemSelectedListener = this
+        locationModeFab = findViewById(R.id.location_mode_fab)
+        locationModeFab.setOnClickListener(locationModeListener)
+
+        trackingModeHandler = Handler(mainLooper)
+        trackingModeRunnable = Runnable {
+            isTrackingModeTimerRunning = false
+            if (mapManager.isBluedotVisibleOnMap && mapManager.isBluedotVisibleOnFloor) {
+                PwLog.d(TAG, "Bluedot is visible -- resetting tracking mode")
+                when (previousTrackingMode) {
+                    PREF_LOCATION_LOCATE -> mapManager.myLocationMode = MODE_LOCATE_ME
+                    PREF_LOCATION_FOLLOW -> mapManager.myLocationMode = MODE_FOLLOW_ME
+                    else -> mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
+                }
+                setSavedLocationMode(previousTrackingMode)
+                updateLocationModeFab()
+            } else {
+                PwLog.d(TAG, "Bluedot is not visible -- breaking tracking mode")
+            }
+        }
 
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
@@ -67,6 +123,15 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
         mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        mapFragment.addOnTouchListener {
+            if (mapManager.isBluedotVisibleOnFloor) {
+                val trackingMode = mapManager.myLocationMode
+                if (isTrackingModeTimerRunning || trackingMode == MODE_LOCATE_ME
+                        || trackingMode == MODE_FOLLOW_ME) {
+                    updateLocationModeBehavior()
+                }
+            }
+        }
         mapFragment.getPhunwareMapAsync(this)
 
     }
@@ -89,6 +154,9 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
                         // Populate floor spinner
                         floorSpinnerAdapter.clear()
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(this@LocationModesActivity)
 
                         // Initialize a location provider
                         setManagedLocationProvider(building)
@@ -120,27 +188,107 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, A
         mapManager.isMyLocationEnabled = true
     }
 
-    override fun onItemSelected(adapterView: AdapterView<*>, view: View, i: Int, l: Long) {
-        updateLocationMode()
-    }
+    private fun onLocationModeFabClicked() {
+        val mode = getSavedLocationMode()
 
-    override fun onNothingSelected(adapterView: AdapterView<*>) {
-        // Do nothing
-    }
-
-    private fun updateLocationMode() {
-        val selectedMode = locationModesSpinner.selectedItem as String
-        when (selectedMode) {
-            PREF_LOCATION_MODE_FOLLOW -> mapManager.setMyLocationMode(PhunwareMapManager.MODE_FOLLOW_ME)
-            PREF_LOCATION_MODE_LOCATE -> mapManager.setMyLocationMode(PhunwareMapManager.MODE_LOCATE_ME)
-            else -> mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL)
+        // Rotate to the next location mode
+        when {
+            mode.equals(PREF_LOCATION_FOLLOW, ignoreCase = true) -> {
+                mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
+                setSavedLocationMode(PREF_LOCATION_NORMAL)
+            }
+            mode.equals(PREF_LOCATION_LOCATE, ignoreCase = true) -> {
+                mapManager.myLocationMode = MODE_FOLLOW_ME
+                setSavedLocationMode(PREF_LOCATION_FOLLOW)
+            }
+            else -> {
+                mapManager.myLocationMode = MODE_LOCATE_ME
+                setSavedLocationMode(PREF_LOCATION_LOCATE)
+            }
         }
 
+        updateLocationModeFab()
+    }
+
+    private fun updateLocationModeFab() {
+        val mode = getSavedLocationMode()
+
+        // Update fab to match current location mode
+        when {
+            mode.equals(PREF_LOCATION_FOLLOW, ignoreCase = true) -> {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_compass))
+                locationModeFab.imageTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.colorAccent))
+            }
+            mode.equals(PREF_LOCATION_LOCATE, ignoreCase = true) -> {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_my_location))
+                locationModeFab.imageTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.colorAccent))
+            }
+            else -> {
+                locationModeFab.setImageDrawable(
+                        ContextCompat.getDrawable(this, R.drawable.ic_my_location))
+                locationModeFab.imageTintList = ColorStateList.valueOf(
+                        ContextCompat.getColor(this, R.color.inactive))
+            }
+        }
+    }
+
+    fun updateLocationModeBehavior() {
+        // Save current tracking mode and break tracking mode
+        if (!isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Breaking tracking mode while timer is running")
+            previousTrackingMode = getSavedLocationMode()
+            mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
+            setSavedLocationMode(PREF_LOCATION_NORMAL)
+            updateLocationModeFab()
+        }
+
+        // Cancel task if it is already running
+        if (isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Cancelling existing tracking mode timer")
+            trackingModeHandler.removeCallbacks(trackingModeRunnable)
+            isTrackingModeTimerRunning = false
+        }
+
+        PwLog.d(TAG, "Starting tracking mode timer")
+        isTrackingModeTimerRunning = true
+        val trackingModeSwitchInterval = 10000 // 10 seconds by default
+        trackingModeHandler.postDelayed(trackingModeRunnable, trackingModeSwitchInterval.toLong())
+    }
+
+    private fun getSavedLocationMode(): String {
+        val preferences = getSharedPreferences(PREFERENCE_NAME, 0)
+        return preferences.getString(PREF_LOCATION_MODE, PREF_LOCATION_NORMAL)
+    }
+
+    private fun setSavedLocationMode(mode: String) {
+        val preferences = getSharedPreferences(PREFERENCE_NAME, 0)
+        preferences.edit()
+                .putString(PREF_LOCATION_MODE, mode)
+                .apply()
+    }
+
+    override fun onFloorChanged(buildingId: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
     }
 
     companion object {
         private val TAG = LocationModesActivity::class.java.simpleName
-        private val PREF_LOCATION_MODE_FOLLOW = "Follow Me"
-        private val PREF_LOCATION_MODE_LOCATE = "Locate Me"
+        private const val PREFERENCE_NAME = "location_mode_sample"
+        private const val PREF_LOCATION_MODE = "location_mode"
+        private const val PREF_LOCATION_FOLLOW = "follow me"
+        private const val PREF_LOCATION_LOCATE = "locate me"
+        private const val PREF_LOCATION_NORMAL = "normal"
     }
 }

@@ -1,4 +1,11 @@
 # Mapping SDK Changelog
+## 3.5.0 (Tuesday, Jun 5th, 2018)
+#### Features
+* fixed icon resizing
+* Locate Me routing enhancements
+* added setCacheFallbackTimeout() 
+* added touch listener to MapView and MapFragment - See sample app for example
+
 ## 3.4.0 (Thursday, Apr 5th, 2018)
 #### Features
 * Updated to Google Play Services 11.8.0

@@ -1,5 +1,31 @@
 package com.phunware.java.sample;
 
+/* Copyright (C) 2018 Phunware, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+NONINFRINGEMENT. IN NO EVENT SHALL Phunware, Inc. BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+Except as contained in this notice, the name of Phunware, Inc. shall
+not be used in advertising or otherwise to promote the sale, use or
+other dealings in this Software without prior written authorization
+from Phunware, Inc. */
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,11 +52,12 @@ import com.phunware.mapping.model.FloorOptions;
 import java.lang.ref.WeakReference;
 
 public class BluedotLocationActivity extends AppCompatActivity
-        implements OnPhunwareMapReadyCallback {
+        implements OnPhunwareMapReadyCallback, Building.OnFloorChangedListener {
     private static final String TAG = BluedotLocationActivity.class.getSimpleName();
 
     private PhunwareMapManager mapManager;
     private Building currentBuilding;
+    private Spinner floorSpinner;
     private ArrayAdapter<FloorOptions> floorSpinnerAdapter;
 
     @Override
@@ -38,7 +65,7 @@ public class BluedotLocationActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bluedot_location);
 
-        Spinner floorSpinner = findViewById(R.id.floorSpinner);
+        floorSpinner = findViewById(R.id.floorSpinner);
         floorSpinnerAdapter = new FloorAdapter(this);
         floorSpinner.setAdapter(floorSpinnerAdapter);
         floorSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -88,6 +115,9 @@ public class BluedotLocationActivity extends AppCompatActivity
                         floorSpinnerAdapter.clear();
                         floorSpinnerAdapter.addAll(building.getBuildingOptions().getFloors());
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(BluedotLocationActivity.this);
+
                         // Initialize a location provider
                         setManagedLocationProvider(building);
 
@@ -119,5 +149,24 @@ public class BluedotLocationActivity extends AppCompatActivity
                 = (PwManagedLocationProvider) factory.createLocationProvider();
         mapManager.setLocationProvider(managedProvider, building);
         mapManager.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onFloorChanged(Building building, long floorId) {
+        for (int index = 0; index < floorSpinnerAdapter.getCount(); index++) {
+            FloorOptions floor = floorSpinnerAdapter.getItem(index);
+            if (floor != null && floor.getId() == floorId) {
+                if (floorSpinner.getSelectedItemPosition() != index) {
+                    final int indexFinal = index;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            floorSpinner.setSelection(indexFinal);
+                        }
+                    });
+                    break;
+                }
+            }
+        }
     }
 }

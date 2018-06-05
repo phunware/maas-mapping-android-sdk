@@ -1,5 +1,15 @@
 # Mapping SDK Migration Guide
 
+## 3.4.x to 3.5.0
+
+#### General
+
+This release has bug fixes and feature enhancements.  See CHANGELOG.md for more info.
+
+##### Upgrade Steps
+
+1. Open the `build.gradle` from your project and change the compile statement to `com.phunware.mapping:mapping:3.5.0` and then sync the project.
+
 ## 3.3.x to 3.4.0
 
 ### Library updates
