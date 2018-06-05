@@ -191,6 +191,9 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
                         spinnerAdapter.clear();
                         spinnerAdapter.addAll(building.getBuildingOptions().getFloors());
 
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(LocationSharingActivity.this);
+
                         // Initialize a location provider
                         setManagedLocationProvider(building);
 
@@ -206,7 +209,6 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
 
                         // Start sharing location with other users
                         startLocationSharing();
-                        mapManager.startRetrievingSharedLocations(LocationSharingActivity.this);
                     }
 
                     @Override
@@ -324,9 +326,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
         // Remove ourself from this list
         final List<SharedLocation> sharedLocationListWithoutSelf = new ArrayList<>();
         for (int i = 0; i < sharedLocationList.size(); i++) {
-            String deviceId = PwCoreSession.getInstance()
-                    .getSessionData().getDeviceId();
-
+            String deviceId = PwCoreSession.getInstance().getSessionData().getDeviceId();
             SharedLocation location = sharedLocationList.get(i);
             if (!deviceId.equals(location.getDeviceId())) {
                 sharedLocationListWithoutSelf.add(location);
@@ -343,8 +343,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
 
         // Use the set to diff against our current map
         // And remove old markers on our map
-        for (Map.Entry<String, PersonMarker> entry
-                : friendLocationMap.entrySet()) {
+        for (Map.Entry<String, PersonMarker> entry : friendLocationMap.entrySet()) {
             if (!updatedDeviceIds.contains(entry.getKey())) {
                 staleDeviceIds.add(entry.getKey());
             }
@@ -357,8 +356,8 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
                     removePersonDot(staleDevice);
                 }
 
-                for (SharedLocation p : sharedLocationListWithoutSelf) {
-                    updatePersonDot(p);
+                for (SharedLocation userLocation : sharedLocationListWithoutSelf) {
+                    updatePersonDot(userLocation);
                 }
             }
         });

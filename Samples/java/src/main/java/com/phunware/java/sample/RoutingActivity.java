@@ -8,6 +8,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -50,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
-        Navigator.OnManeuverChangedListener {
+        Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
     private static final String TAG = LocationModesActivity.class.getSimpleName();
     private static final int ITEM_ID_LOCATION = -2;
 
@@ -153,6 +154,9 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
                         // Populate floor spinner
                         floorSpinnerAdapter.clear();
                         floorSpinnerAdapter.addAll(building.getBuildingOptions().getFloors());
+
+                        // Add a listener to monitor floor switches
+                        mapManager.addFloorChangedListener(RoutingActivity.this);
 
                         // Initialize a location provider
                         setManagedLocationProvider(building);
@@ -361,5 +365,24 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
     @Override
     public void onRouteSnapFailed() {
         // Do Nothing
+    }
+
+    @Override
+    public void onFloorChanged(Building building, long floorId) {
+        for (int index = 0; index < floorSpinnerAdapter.getCount(); index++) {
+            FloorOptions floor = floorSpinnerAdapter.getItem(index);
+            if (floor != null && floor.getId() == floorId) {
+                if (floorSpinner.getSelectedItemPosition() != index) {
+                    final int indexFinal = index;
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            floorSpinner.setSelection(indexFinal);
+                        }
+                    });
+                    break;
+                }
+            }
+        }
     }
 }
