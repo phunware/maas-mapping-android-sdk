@@ -352,7 +352,7 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
 
     private void startNavigating(RouteOptions route) {
         if (navigator != null) {
-            navigator.terminate();
+            navigator.stop();
         }
         navigator = mapManager.navigate(route);
         navigator.addOnManeuverChangedListener(this);
@@ -367,7 +367,7 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
 
     private void stopNavigating() {
         if (navigator != null) {
-            navigator.terminate();
+            navigator.stop();
             navigator = null;
         }
         navOverlayContainer.setVisibility(View.GONE);

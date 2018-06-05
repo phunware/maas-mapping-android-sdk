@@ -292,7 +292,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private fun startNavigating(route: RouteOptions) {
         if (navigator != null) {
-            navigator!!.terminate()
+            navigator!!.stop()
         }
         navigator = mapManager.navigate(route)
         navigator!!.addOnManeuverChangedListener(this)
@@ -307,7 +307,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private fun stopNavigating() {
         if (navigator != null) {
-            navigator!!.terminate()
+            navigator!!.stop()
             navigator = null
         }
         navOverlayContainer.visibility = View.GONE
