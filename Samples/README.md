@@ -21,12 +21,18 @@ After you have these keys you should be all set to run the use case samples!
 ## Samples
 
 ### Load Building
+
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/LoadBuildingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/LoadBuildingActivity.kt)
+
 Loads the building that is set up in the MaaS portal. The camera should pan and zoom automatically to the location of the building.
 
 #### Usage:
 Configure building on the MaaS portal
 
 ### Bluedot Location
+
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/BluedotLocationActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/BluedotLocationActivity.kt)
+
 Display current location in your building as reported by the location provider configured on MaaS
 
 #### Usage:
@@ -34,12 +40,16 @@ Display current location in your building as reported by the location provider c
 Configure location provider on building's edit page in MaaS portal, then configure for each floor
 
 ### Location Modes
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/LocationModesActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/LocationModesActivity.kt)
+
 Illustrates the three location modes supported by the Mapping SDK (Normal, Locate Me and Follow Me). Locate Me mode centers the bluedot on the screen, while the Follow Me mode centers the bluedot and adjusts the camera based on the device's heading. Normal mode does not perform any automatic centering or panning.  
 
 #### Usage:
 Click the floating action button in the bottom right corner to toggle between modes.
 
 ### Create Custom POIs
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/CustomPOIActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/CustomPOIActivity.kt)
+
 Adds a POI to the building map that is not specified in the MaaS portal.
 
 #### Usage:
@@ -47,18 +57,24 @@ Long press the map anywhere within the building boundaries. A dialog will appear
 
 
 ### Search for POIs
+Code Samples: [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/SearchPoiActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/SearchPoiActivity.kt)
+
 Search through the list of POIs contained in your building. Note that at least one POI must be present in your building in order for this sample to work.
 
 #### Usage:
 Click the floating action button in the bottom right corner to open up a dialog that lists all the POIs in a scrollable list. Either scroll through the list or type in the search field to find specific POI matches in the list. Click the desired POI and the map will pan to that POI's location.
 
 ### Routing Between POIs
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/RoutingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/RoutingActivity.kt)
+
 Route between two POIs or from your current location to a POI (if you have a bluedot). Note that for this sample to work you will need to connect your POIs with segments in the MaaS portal.
 
 #### Usage:
 Click the floating action button in the bottom right corner to open up a routing dialog that allows you to select a start and end point for your route. If you have acquired a bluedot, the start field will be automatically populated with your current location. Click `ROUTE` to display the path between the selected points (if one exists)
 
 ### Location Sharing
+Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/LocationSharingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/LocationSharingActivity.kt)
+
 Show your current location in a building as well as others in the same building.
 
 #### Usage:
