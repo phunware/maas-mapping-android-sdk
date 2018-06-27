@@ -223,6 +223,9 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
     private void onLocationModeFabClicked() {
         String mode = getSavedLocationMode();
 
+        // If tracking mode timer is running, cancel it and override with the new tracking mode
+        cancelTrackingModeTimer();
+
         // Rotate to the next location mode
         if (mode.equalsIgnoreCase(PREF_LOCATION_FOLLOW)) {
             mapManager.setMyLocationMode(PhunwareMapManager.MODE_NORMAL);
@@ -273,17 +276,23 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
             updateLocationModeFab();
         }
 
-        // Cancel task if it is already running
-        if (isTrackingModeTimerRunning) {
-            PwLog.d(TAG, "Cancelling existing tracking mode timer");
-            trackingModeHandler.removeCallbacks(trackingModeRunnable);
-            isTrackingModeTimerRunning = false;
-        }
+        cancelTrackingModeTimer();
 
         PwLog.d(TAG, "Starting tracking mode timer");
         isTrackingModeTimerRunning = true;
         int trackingModeSwitchInterval = 10000; // 10 seconds by default
         trackingModeHandler.postDelayed(trackingModeRunnable, trackingModeSwitchInterval);
+    }
+
+    private void cancelTrackingModeTimer() {
+        // Cancel task if it is already running
+        if (isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Cancelling existing tracking mode timer");
+            trackingModeHandler.removeCallbacks(trackingModeRunnable);
+            isTrackingModeTimerRunning = false;
+        } else {
+            PwLog.d(TAG, "Cannot cancel tracking mode timer because it is not running");
+        }
     }
 
     private String getSavedLocationMode() {

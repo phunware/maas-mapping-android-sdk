@@ -191,6 +191,9 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private fun onLocationModeFabClicked() {
         val mode = getSavedLocationMode()
 
+        // If tracking mode timer is running, cancel it and override with the new tracking mode
+        cancelTrackingModeTimer()
+
         // Rotate to the next location mode
         when {
             mode.equals(PREF_LOCATION_FOLLOW, ignoreCase = true) -> {
@@ -246,17 +249,23 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             updateLocationModeFab()
         }
 
-        // Cancel task if it is already running
-        if (isTrackingModeTimerRunning) {
-            PwLog.d(TAG, "Cancelling existing tracking mode timer")
-            trackingModeHandler.removeCallbacks(trackingModeRunnable)
-            isTrackingModeTimerRunning = false
-        }
+        cancelTrackingModeTimer()
 
         PwLog.d(TAG, "Starting tracking mode timer")
         isTrackingModeTimerRunning = true
         val trackingModeSwitchInterval = 10000 // 10 seconds by default
         trackingModeHandler.postDelayed(trackingModeRunnable, trackingModeSwitchInterval.toLong())
+    }
+
+    private fun cancelTrackingModeTimer() {
+        // Cancel task if it is already running
+        if (isTrackingModeTimerRunning) {
+            PwLog.d(TAG, "Cancelling existing tracking mode timer")
+            trackingModeHandler.removeCallbacks(trackingModeRunnable)
+            isTrackingModeTimerRunning = false
+        } else {
+            PwLog.d(TAG, "Cannot cancel tracking mode timer because it is not running")
+        }
     }
 
     private fun getSavedLocationMode(): String {
