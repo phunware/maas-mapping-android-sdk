@@ -1,8 +1,15 @@
 # Mapping SDK Changelog
-## 3.5.0 (Tuesday, Jun 5th, 2018)
-#### Bug fixes / performance enhancements
-* fixed icon resizing
+## 3.6.0 (Tuesday, Jul 31st, 2018)
 #### Features
+* Added APIs to change route line color and width
+
+#### Bug fixes / performance enhancements
+* Optimized map image load
+* Various bug fixes
+
+## 3.5.0 (Tuesday, Jun 5th, 2018)
+#### Features
+* fixed icon resizing
 * Locate Me routing enhancements
 * added setCacheFallbackTimeout() 
 * added touch listener to MapView and MapFragment - See sample app for example
