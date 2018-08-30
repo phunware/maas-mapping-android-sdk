@@ -35,8 +35,8 @@ configurations.all {
 }
 
 ext {
-    pwLocationSdkVersion = '3.4.4'
-    pwMappingSdkVersion = '3.6.0'
+    pwLocationSdkVersion = '3.4.5'
+    pwMappingSdkVersion = '3.6.1'
 
     versionCode = 1
     versionName = "1.0"
@@ -46,7 +46,7 @@ ext {
     targetSdkVersion = 26
 
     buildToolsVersion = '27.0.3'
-    supportLibVersion = '27.1.0'
+    supportLibVersion = '27.1.1'
     androidMapsUtilsVersion = "0.5"
 
     junitVersion = '4.12'
