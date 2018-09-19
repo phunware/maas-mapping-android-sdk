@@ -1,9 +1,16 @@
 # Mapping SDK Changelog
+## 3.7.0 (Wednesday, Sept 19th, 2018)
+#### Features
+* Updated debug dot mechanism
+
+#### Bug fixes / performance enhancements
+* Various bug fixes
+
 ## 3.6.1 (Thursday, Aug 30th, 2018)
 #### Bug fixes / performance enhancements
-* Updated routing algorithm to include weighting for floor switches 
+* Updated routing algorithm to include weighting for floor switches
 * Minor fix for content provider
-* Improved building load time by adding parallel downloading of floor resources 
+* Improved building load time by adding parallel downloading of floor resources
 
 ## 3.6.0 (Tuesday, Jul 31st, 2018)
 #### Features
