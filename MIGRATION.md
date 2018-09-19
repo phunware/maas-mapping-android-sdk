@@ -1,5 +1,16 @@
 # Mapping SDK Migration Guide
 
+## 3.6.x to 3.7.0
+
+#### General
+
+This release updates the debug dot mechanism that is used in the Location SDK. It also contains bug fixes and enhancements.
+
+##### Upgrade Steps
+
+1. Open the `build.gradle` from your project and change the compile statement to `com.phunware.mapping:mapping:3.7.0` and then sync the project.
+2. If using debug dots, you can enable/disable them by calling the showDebugDots(boolean) method in `PhunwareMapManager`. Note that in order for the debug dots to work properly, you must also be using the Phunware Location SDK (v3.5.0 or later).
+
 ## 3.5.x to 3.6.0
 
 #### General
