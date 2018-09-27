@@ -1,5 +1,11 @@
 # Mapping SDK Migration Guide
 
+## 3.7.0 to 3.7.1
+
+##### Upgrade Steps
+
+1. Open the `build.gradle` from your project and change the compile statement to `com.phunware.mapping:mapping:3.7.1` and then sync the project.
+
 ## 3.6.x to 3.7.0
 
 #### General
