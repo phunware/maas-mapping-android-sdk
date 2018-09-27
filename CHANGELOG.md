@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.7.1 (Thursday, Sept 27th, 2018)
+#### Features
+* Fixed crash if setLocationMode is never called on PhunwareMapManager
+
 ## 3.7.0 (Wednesday, Sept 19th, 2018)
 #### Features
 * Updated debug dot mechanism
