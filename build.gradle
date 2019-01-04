@@ -1,15 +1,16 @@
 buildscript {
-    ext.kotlin_version = '1.2.30'
+    ext.kotlin_version = '1.2.71'
     repositories {
+        google()
         mavenLocal()
         mavenCentral()
-        jcenter()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
         }
+        jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath 'com.noveogroup.android:check:1.2.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -17,15 +18,13 @@ buildscript {
 
 allprojects {
     repositories {
+        google()
         mavenLocal()
         mavenCentral()
-        jcenter()
         maven {
             url "https://nexus.phunware.com/content/groups/public/"
         }
-        maven {
-            url "https://maven.google.com"
-        }
+        jcenter()
     }
 }
 
@@ -35,18 +34,17 @@ configurations.all {
 }
 
 ext {
-    pwLocationSdkVersion = '3.5.0'
-    pwMappingSdkVersion = '3.7.1'
+    pwLocationSdkVersion = '3.6.0'
+    pwMappingSdkVersion = '3.8.0'
 
     versionCode = 1
     versionName = "1.0"
 
-    compileSdkVersion = 27
+    compileSdkVersion = 28
     minSdkVersion = 21
-    targetSdkVersion = 26
+    targetSdkVersion = 28
 
-    buildToolsVersion = '27.0.3'
-    supportLibVersion = '27.1.1'
+    supportLibVersion = '28.0.0'
     androidMapsUtilsVersion = "0.5"
 
     junitVersion = '4.12'

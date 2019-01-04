@@ -1,4 +1,11 @@
 # Mapping SDK Changelog
+
+## 3.8.0 (Friday, Jan 4th, 2018)
+#### Features
+* Updated to Google Play Services 16.0.0
+* Updated to Core 3.5.0
+* Built with Android Support Library 28.0.0
+
 ## 3.7.1 (Thursday, Sept 27th, 2018)
 #### Features
 * Fixed crash if setLocationMode is never called on PhunwareMapManager
