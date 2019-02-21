@@ -1,6 +1,9 @@
 # Mapping SDK Changelog
+## 3.8.1 (Thursday, Feb 21st, 2019)
+#### Features
+* Upgraded to Mapping v3.0 API
 
-## 3.8.0 (Friday, Jan 4th, 2018)
+## 3.8.0 (Friday, Jan 4th, 2019)
 #### Features
 * Updated to Google Play Services 16.0.0
 * Updated to Core 3.5.0
