@@ -1,4 +1,9 @@
 # Mapping SDK Migration Guide
+## Upgrade from 3.8.0 to 3.8.1
+
+##### Upgrade Steps
+
+1. Open the `build.gradle` from your project and change the compile statement to `com.phunware.mapping:mapping:3.8.1` and then sync the project.
 
 ## Upgrade from 3.7.1 to 3.8.0
 
