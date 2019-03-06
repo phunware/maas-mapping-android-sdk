@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TODO: Change this buildingId to match the building on MaaS -->
-    <integer name="buildingId">12345</integer>
+    <integer name="buildingId">43762</integer>
 </resources>

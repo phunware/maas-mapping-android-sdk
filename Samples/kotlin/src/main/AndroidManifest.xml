@@ -56,6 +56,18 @@
             android:name=".LocationSharingActivity"
             android:label="@string/demo_location_sharing_title" />
 
+        <activity
+            android:name=".VoicePromptActivity"
+            android:label="@string/demo_voice_prompt_title" />
+
+        <activity
+            android:name=".WalkTimeActivity"
+            android:label="@string/demo_walk_time_title" />
+
+        <activity
+            android:name=".OffRouteActivity"
+            android:label="@string/demo_off_route_title" />
+
         <!-- Google Maps Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"

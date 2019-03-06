@@ -62,6 +62,18 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_location_sharing_title),
                 resources.getString(R.string.demo_location_sharing_description),
                 LocationSharingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_voice_prompt_title),
+                resources.getString(R.string.demo_voice_prompt_description),
+                VoicePromptActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_walk_time_title),
+                resources.getString(R.string.demo_walk_time_description),
+                WalkTimeActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_off_route_title),
+                resources.getString(R.string.demo_off_route_description),
+                OffRouteActivity::class.java))
     }
 
     fun getDemos(): List<Demo> = demos
