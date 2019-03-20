@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -20,6 +21,7 @@ import com.phunware.core.PwLog
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.location_core.PwLocationProvider
+import com.phunware.mapping.bluedot.LocationManager.LocationListener
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -35,7 +37,7 @@ import java.lang.ref.WeakReference
 import java.util.ArrayList
 
 class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
-        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener {
+        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener, LocationListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
@@ -99,6 +101,9 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
+    /**
+     * OnPhunwareMapReadyCallback
+     */
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
@@ -144,6 +149,50 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 })
     }
 
+    /**
+     * Navigator.OnManeuverChangedListener
+     */
+    override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        // Update the selected floor when the maneuver floor changes
+        val maneuver = navigator.maneuvers[position]
+        val selectedPosition = floorSpinner.selectedItemPosition
+        for (i in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(i)
+            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                floorSpinner.setSelection(i)
+            }
+        }
+    }
+
+    override fun onRouteSnapFailed() {
+        // Do Nothing
+    }
+
+    /**
+     * Building.OnFloorChangedListener
+     */
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
+    }
+
+    /**
+     * LocationListener
+     */
+    override fun onLocationUpdate(p0: Location?) {
+        Log.d(TAG, "JFULLEN - Location updated. Lat = ${p0?.latitude}; Long = ${p0?.longitude}")
+    }
+
+    /**
+     * Private Methods
+     */
     private fun setManagedLocationProvider(building: Building) {
         val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
         builder.application(application)
@@ -153,6 +202,7 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
+        mapManager.addLocationUpdateListener(this)
     }
 
     private fun showFab(show: Boolean) {
@@ -295,34 +345,6 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navOverlayContainer.visibility = View.GONE
         fab.setImageResource(R.drawable.ic_navigation)
         fab.setOnClickListener(selectRouteListener)
-    }
-
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        // Update the selected floor when the maneuver floor changes
-        val maneuver = navigator.maneuvers[position]
-        val selectedPosition = floorSpinner.selectedItemPosition
-        for (i in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(i)
-            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                floorSpinner.setSelection(i)
-            }
-        }
-    }
-
-    override fun onRouteSnapFailed() {
-        // Do Nothing
-    }
-
-    override fun onFloorChanged(building: Building?, floorId: Long) {
-        for (index in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(index)
-            if (floor != null && floor.id == floorId) {
-                if (floorSpinner.selectedItemPosition != index) {
-                    runOnUiThread { floorSpinner.setSelection(index) }
-                    break
-                }
-            }
-        }
     }
 
     companion object {

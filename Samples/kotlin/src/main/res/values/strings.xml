@@ -7,9 +7,9 @@
 
     <!-- Phunware Keys -->
     <!-- TODO: These keys must be added before using Phunware SDKs -->
-    <string name="pw_app_id"></string>
-    <string name="pw_access_key"></string>
-    <string name="pw_signature_key"></string>
+    <string name="pw_app_id">1461</string>
+    <string name="pw_access_key">d1b9b7a1b5a49e106f13d97c7bb00e90765ea4ee</string>
+    <string name="pw_signature_key">b6abc7fe39b5f9f5fd9a801f20d7608d4bb9fc88</string>
 
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>
@@ -83,6 +83,8 @@
 
     <string name="demo_off_route_title">Off Route</string>
     <string name="demo_off_route_description">Alerts the user when they have gone off route</string>
+    <string name="demo_off_route_dialog_title">You are no longer\non Route</string>
+    <string name="demo_off_route_dialog_message">Please return to the route or re-route from your current location.</string>
 
     <!-- Buttons -->
     <string name="button_cancel">Cancel</string>

@@ -13,4 +13,6 @@
     <color name="teal">#008080</color>
     <color name="purple">#551A8B</color>
     <color name="yellow">#FFC30D</color>
+    <color name="azure">#0080FF</color>
+    <color name="outer_space">#4A4A4A</color>
 </resources>

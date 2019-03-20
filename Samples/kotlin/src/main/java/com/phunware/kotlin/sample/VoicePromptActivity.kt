@@ -126,7 +126,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         super.onDestroy()
     }
 
-    /*
+    /**
      * TextToSpeech.OnInitListener
      */
     override fun onInit(status: Int) {
@@ -142,7 +142,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
-    /*
+    /**
      * OnPhunwareMapReadyCallback
      */
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
@@ -190,7 +190,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 })
     }
 
-    /*
+    /**
      * Navigator.OnManeuverChangedListener
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
@@ -213,7 +213,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         // Do Nothing
     }
 
-    /*
+    /**
      * Building.OnFloorChangedListener
      */
     override fun onFloorChanged(building: Building?, floorId: Long) {
@@ -228,7 +228,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
-    /*
+    /**
      * Private Methods
      */
     private fun setManagedLocationProvider(building: Building) {

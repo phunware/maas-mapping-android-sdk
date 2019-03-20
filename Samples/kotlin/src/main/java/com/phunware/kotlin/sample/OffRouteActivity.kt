@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -15,6 +16,7 @@ import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.maps.android.PolyUtil
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.location.provider_managed.ManagedProviderFactory
@@ -27,16 +29,17 @@ import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
-import com.phunware.mapping.model.Building
-import com.phunware.mapping.model.FloorOptions
-import com.phunware.mapping.model.PointOptions
-import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
-import android.speech.tts.TextToSpeech
+import com.phunware.mapping.bluedot.LocationManager
+import com.phunware.mapping.model.*
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.math.min
 
 class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
-        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener, TextToSpeech.OnInitListener {
+        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
+        LocationManager.LocationListener,
+        OffRouteDialogFragment.OffRouteDialogListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
@@ -56,7 +59,11 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private var selectRouteListener: View.OnClickListener = View.OnClickListener { showRoutingDialog() }
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
-    private var tts: TextToSpeech? = null
+    private var dontShowOffRouteAgain: Boolean = false
+    private var modalVisible: Boolean = false
+    private val offRouteDistanceThreshold = 10.0 //distance in meters
+    private val offRouteTimeThreshold: Long = 5000 //time in milliseconds
+    private var offRouteTimer: Timer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,20 +108,9 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
-    //Required for Test-To-Speech
-    override fun onInit(status: Int) {
-        if (status == TextToSpeech.SUCCESS) {
-            // set US English as language for tts
-            val result = tts!!.setLanguage(Locale.US)
-
-            if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
-                Log.e("TTS","The Language specified is not supported!")
-            }
-        } else {
-            Log.e("TTS", "Initilization Failed!")
-        }
-    }
-
+    /**
+     * OnPhunwareMapReadyCallback
+     */
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
@@ -158,6 +154,118 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         showFab(false)
                     }
                 })
+    }
+
+    /**
+     * Navigator.OnManeuverChangedListener
+     */
+    override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        // Update the selected floor when the maneuver floor changes
+        val maneuver = navigator.maneuvers[position]
+        val selectedPosition = floorSpinner.selectedItemPosition
+        for (i in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(i)
+            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                floorSpinner.setSelection(i)
+            }
+        }
+    }
+
+    override fun onRouteSnapFailed() {
+        // Do Nothing
+    }
+
+    /**
+     * Building.OnFloorChangedListener
+     */
+    override fun onFloorChanged(building: Building?, floorId: Long) {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(index)
+            if (floor != null && floor.id == floorId) {
+                if (floorSpinner.selectedItemPosition != index) {
+                    runOnUiThread { floorSpinner.setSelection(index) }
+                    break
+                }
+            }
+        }
+    }
+
+    /**
+     * LocationListener - reports the post route snapping blue dot location.
+     */
+    override fun onLocationUpdate(p0: Location?) {
+        if (!modalVisible && !dontShowOffRouteAgain) {
+            if (p0 != null) {
+                var minDistanceInMeters = Double.MAX_VALUE
+                for (maneuver: RouteManeuverOptions in navigator!!.maneuvers) {
+                    for (i in 0..maneuver.points.size - 2) {
+                        val ptA = maneuver.points[i]
+                        val ptB = maneuver.points[i + 1]
+                        minDistanceInMeters = min(minDistanceInMeters, PolyUtil.distanceToLine(LatLng(p0!!.latitude, p0!!.longitude), ptA.location, ptB.location))
+                    }
+                }
+
+                if (minDistanceInMeters.toInt() > 0) {
+                    if (minDistanceInMeters >= offRouteDistanceThreshold) {
+                        offRouteTimer?.cancel()
+                        showModal()
+                    } else {
+                        if (offRouteTimer == null) {
+                            offRouteTimer = Timer()
+                            offRouteTimer?.schedule(object : TimerTask() {
+                                override fun run() {
+                                    showModal()
+                                    offRouteTimer = null
+                                }
+                            }, offRouteTimeThreshold)
+                        }
+                    }
+                } else {
+                    if (offRouteTimer != null) {
+                        offRouteTimer?.cancel()
+                        offRouteTimer = null
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * OffRouteDialogFragment.OffRouteDialogListener
+     */
+    override fun onDismiss(dontShowAgain: Boolean) {
+        modalVisible = false
+        dontShowOffRouteAgain = dontShowAgain
+    }
+
+    override fun onReroute() {
+        modalVisible = false
+        val currentRouteEndID = navigator?.route!!.endPointId
+        val currentRouteIsAccessible = navigator?.route!!.isAccessible
+        val currentLocation = LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
+        val router = mapManager.findRoutes(currentLocation, currentRouteEndID, mapManager.currentBuilding.selectedFloor.id, currentRouteIsAccessible)
+
+        if (router != null) {
+            val route = router.shortestRoute()
+            if (route == null) {
+                PwLog.e(OffRouteActivity.TAG, "Couldn't find route.")
+                Snackbar.make(content, R.string.no_route,
+                        Snackbar.LENGTH_SHORT).show()
+            } else {
+                startNavigating(route)
+            }
+        }
+    }
+
+    /**
+     * Private Methods
+     */
+    private fun showModal() {
+        if (!modalVisible) {
+            modalVisible = true
+            val offRouteDialog = OffRouteDialogFragment()
+            offRouteDialog.show(supportFragmentManager, "")
+        }
     }
 
     private fun setManagedLocationProvider(building: Building) {
@@ -292,7 +400,9 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (navigator != null) {
             navigator!!.stop()
         }
+
         navigator = mapManager.navigate(route)
+        mapManager.addLocationUpdateListener(this)
         navigator!!.addOnManeuverChangedListener(this)
 
         navOverlay.setNavigator(navigator!!)
@@ -308,37 +418,13 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             navigator!!.stop()
             navigator = null
         }
+        mapManager.removeLocationUpdateListener(this)
         navOverlayContainer.visibility = View.GONE
         fab.setImageResource(R.drawable.ic_navigation)
         fab.setOnClickListener(selectRouteListener)
-    }
 
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        // Update the selected floor when the maneuver floor changes
-        val maneuver = navigator.maneuvers[position]
-        val selectedPosition = floorSpinner.selectedItemPosition
-        for (i in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(i)
-            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                floorSpinner.setSelection(i)
-            }
-        }
-    }
-
-    override fun onRouteSnapFailed() {
-        // Do Nothing
-    }
-
-    override fun onFloorChanged(building: Building?, floorId: Long) {
-        for (index in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(index)
-            if (floor != null && floor.id == floorId) {
-                if (floorSpinner.selectedItemPosition != index) {
-                    runOnUiThread { floorSpinner.setSelection(index) }
-                    break
-                }
-            }
-        }
+        dontShowOffRouteAgain = false
+        modalVisible = false
     }
 
     companion object {
