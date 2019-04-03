@@ -33,12 +33,20 @@
             android:label="@string/demo_load_building_title" />
 
         <activity
+            android:name=".LoadBuildingWithoutMapActivity"
+            android:label="@string/demo_load_building_no_map_title" />
+
+        <activity
             android:name=".BluedotLocationActivity"
             android:label="@string/demo_bluedot_title" />
 
         <activity
             android:name=".LocationModesActivity"
             android:label="@string/demo_location_modes_title" />
+
+        <activity
+            android:name=".LocationModeManagedCompassActivity"
+            android:label="@string/demo_location_mode_managed_compass" />
 
         <activity
             android:name=".CustomPOIActivity"
@@ -51,6 +59,10 @@
         <activity
             android:name=".RoutingActivity"
             android:label="@string/demo_routing_title" />
+
+        <activity
+            android:name=".OneWayRoutingActivity"
+            android:label="@string/demo_one_way_routing_title" />
 
         <activity
             android:name=".LocationSharingActivity"

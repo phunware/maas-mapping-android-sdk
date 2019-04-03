@@ -39,6 +39,10 @@ internal class DemoDetailsList(context: Context) {
                 resources.getString(R.string.demo_load_building_description),
                 LoadBuildingActivity::class.java))
 
+        demos.add(Demo(resources.getString(R.string.demo_load_building_no_map_title),
+                resources.getString(R.string.demo_load_building_no_map_description),
+                LoadBuildingWithoutMapActivity::class.java))
+
         demos.add(Demo(resources.getString(R.string.demo_bluedot_title),
                 resources.getString(R.string.demo_bluedot_description),
                 BluedotLocationActivity::class.java))
@@ -46,6 +50,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_location_modes_title),
                 resources.getString(R.string.demo_location_modes_description),
                 LocationModesActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_location_mode_managed_compass),
+                resources.getString(R.string.demo_location_mode_managed_description),
+                LocationModeManagedCompassActivity::class.java))
 
         demos.add(Demo(resources.getString(R.string.demo_custom_poi_title),
                 resources.getString(R.string.demo_custom_poi_description),
@@ -58,6 +66,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_one_way_routing_title),
+                resources.getString(R.string.demo_one_way_routing_description),
+                OneWayRoutingActivity::class.java))
 
         demos.add(Demo(resources.getString(R.string.demo_location_sharing_title),
                 resources.getString(R.string.demo_location_sharing_description),

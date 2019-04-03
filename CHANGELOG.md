@@ -1,4 +1,14 @@
 # Mapping SDK Changelog
+## 3.9.0 (Tuesday, Apr 2nd, 2019)
+#### Features
+* Update for Location 3.7.0 compatibility
+* Managed Compass -- an alternate heading experience for sites that suffer from inaccurate heading
+* Ability to blend GPS with indoor location providers based on configuration in the MaaS portal
+* Added support for one way escalators in Routing
+* Ability to load buildings without attaching it to a map
+* Support for attaching a loaded building to map
+* Support for detaching buildings from map
+
 ## 3.8.1 (Thursday, Feb 21st, 2019)
 #### Features
 * Upgraded to Mapping v3.0 API
