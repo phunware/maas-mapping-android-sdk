@@ -15,12 +15,22 @@
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Loads a building on a Google Map</string>
 
+    <string name="demo_load_building_no_map_title">Load Building without map</string>
+    <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
+
     <string name="demo_bluedot_title">Bluedot Location</string>
     <string name="demo_bluedot_description">Show your location on the map using Phunware APIs</string>
 
     <string name="demo_location_modes_title">Location Modes</string>
     <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
     <string name="location_modes_instructions">Click the fab on the bottom right to toggle location modes. The progression goes from Normal to Locate Me to Follow Me.</string>
+
+    <string name="demo_location_mode_managed_compass">Location Mode - Managed Compass</string>
+    <string name="demo_location_mode_managed_description">Experience the behavior of Managed Compass in Follow Me mode</string>
+    <string name="location_mode_managed_instructions">
+        Click the fab on the bottom right to toggle location modes.
+        The progression goes from Normal to Locate Me to Follow Me. In Follow Me mode Managed Compass is enabled
+    </string>
 
     <string name="demo_custom_poi_title">Create Custom POIs</string>
     <string name="demo_custom_poi_description">Create custom markers on the map</string>
@@ -35,6 +45,10 @@
 
     <string name="demo_routing_title">Routing Between POIs</string>
     <string name="demo_routing_description">Create routes and navigate between POIs</string>
+
+    <string name="demo_one_way_routing_title">One Way Routing</string>
+    <string name="demo_one_way_routing_description">Demonstrates how to enable one way routing</string>
+
     <string name="navigation">Navigation</string>
     <string name="no_route">Couldn\'t find a route matching your search.</string>
     <string name="turn_left">Turn Left</string>
@@ -63,6 +77,7 @@
     <string name="down">down</string>
     <string name="direction">direction</string>
     <string name="next_direction">next direction</string>
+    <string name="building_not_loaded">Building not loaded.</string>
 
     <string name="demo_location_sharing_title">Location Sharing</string>
     <string name="demo_location_sharing_description">Easily share your location with other users</string>
