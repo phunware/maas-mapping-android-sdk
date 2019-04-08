@@ -67,7 +67,7 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.voice_prompt)
+        setContentView(R.layout.off_route)
         content = findViewById(R.id.content)
 
         // Initialize views for routing

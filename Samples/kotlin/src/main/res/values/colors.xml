@@ -14,5 +14,6 @@
     <color name="purple">#551A8B</color>
     <color name="yellow">#FFC30D</color>
     <color name="azure">#0080FF</color>
-    <color name="outer_space">#4A4A4A</color>
+    <color name="outer_space">#444444</color>
+    <color name="exit_red">#BF2944</color>
 </resources>

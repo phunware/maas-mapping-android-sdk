@@ -80,11 +80,18 @@
 
     <string name="demo_walk_time_title">Walk Time</string>
     <string name="demo_walk_time_description">Show the estimated time to route completion</string>
+    <string name="demo_walk_time_exit">Exit</string>
+    <string name="demo_walk_time_less_than_one_minute">&lt; 1 minute</string>
+    <string name="demo_walk_time_one_minute">%1$d minute</string>
+    <string name="demo_walk_time_multiple_minutes">%1$d minutes</string>
 
     <string name="demo_off_route_title">Off Route</string>
     <string name="demo_off_route_description">Alerts the user when they have gone off route</string>
     <string name="demo_off_route_dialog_title">You are no longer\non Route</string>
     <string name="demo_off_route_dialog_message">Please return to the route or re-route from your current location.</string>
+    <string name="demo_off_route_dialog_dismiss">DISMISS</string>
+    <string name="demo_off_route_dialog_reroute">RE-ROUTE</string>
+    <string name="demo_off_route_dialog_dont_show_again">DON\'T SHOW AGAIN</string>
 
     <!-- Buttons -->
     <string name="button_cancel">Cancel</string>
