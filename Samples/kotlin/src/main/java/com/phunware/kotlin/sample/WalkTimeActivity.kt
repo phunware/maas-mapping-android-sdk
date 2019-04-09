@@ -31,9 +31,8 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
 import com.phunware.mapping.model.*
 import java.lang.ref.WeakReference
-import java.util.ArrayList
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
+import java.text.SimpleDateFormat
+import java.util.*
 
 class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener, LocationManager.LocationListener {
@@ -67,7 +66,7 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private val gpsPositionList: MutableList<Location> = ArrayList()
     private val averageWalkSpeed = 0.7 //units in meters per second
     private var calculatedWalkSpeed = 0.0
-    private val formatter = DateTimeFormatter.ofPattern("h:mm a")
+    private val dateFormatter = SimpleDateFormat("h:mm a")
     private var routingFromCurrentLocation = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -235,7 +234,7 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         val estimateTimeInSeconds: Double
         if (routingFromCurrentLocation) {
-            if (calculatedWalkSpeed > 0.0) {
+            if (calculatedWalkSpeed >= averageWalkSpeed) {
                 estimateTimeInSeconds = (distance / calculatedWalkSpeed)
             } else {
                 estimateTimeInSeconds = (distance / averageWalkSpeed)
@@ -257,8 +256,9 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             walkTimeTextview.text = numMinutesString
         }
 
-        val arrivalTime = LocalDateTime.now().plusSeconds(estimateTimeInSeconds.toLong())
-        val formattedArrivalTime = arrivalTime.format(formatter)
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
+        val formattedArrivalTime = dateFormatter.format(calendar.time)
         arrivalTimeTextview.text = formattedArrivalTime
     }
 
