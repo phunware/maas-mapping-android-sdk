@@ -3,13 +3,13 @@
 
     <!-- Google Maps API Key -->
     <!-- TODO: Before you run your application, you need a Google Maps API key. -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDlI0KWmo6enohBoLef7Vrv-mrxrW78Vns</string>
 
     <!-- Phunware Keys -->
     <!-- TODO: These keys must be added before using Phunware SDKs -->
-    <string name="pw_app_id"></string>
-    <string name="pw_access_key"></string>
-    <string name="pw_signature_key"></string>
+    <string name="pw_app_id">1227</string>
+    <string name="pw_access_key">5594753ccbd120ea24e797f2372cbaac433feff9</string>
+    <string name="pw_signature_key">776e4bdde83b459336dbf2fa58370dbe37bb3751</string>
 
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>
@@ -79,6 +79,7 @@
     <string name="demo_voice_prompt_preferences_key">demo_voice_prompt_preferences_key</string>
 
     <string name="demo_walk_time_title">Walk Time</string>
+    <string name="demo_arrival_time_title">Arrival Time %1$s</string>
     <string name="demo_walk_time_description">Show the estimated time to route completion</string>
     <string name="demo_walk_time_exit">Exit</string>
     <string name="demo_walk_time_less_than_one_minute">&lt; 1 minute</string>

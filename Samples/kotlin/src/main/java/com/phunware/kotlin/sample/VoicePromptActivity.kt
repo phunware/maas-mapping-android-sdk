@@ -406,6 +406,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         } else {
             voice.setImageResource(R.drawable.ic_muted)
             voiceStatusTextView.setText(R.string.demo_voice_prompt_muted)
+            tts!!.stop();
         }
     }
 
