@@ -76,6 +76,7 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private lateinit var startPicker: Spinner
     private lateinit var endPicker: Spinner
     private lateinit var accessible: CheckBox
+    private lateinit var currentLocationPoint : PointOptions
 
     private var selectRouteListener: View.OnClickListener = View.OnClickListener { showRoutingDialog() }
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
@@ -87,7 +88,7 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
+        fab.hide()
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
@@ -192,11 +193,11 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             s.playTogether(anims)
             s.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    if (show) fab.visibility = View.VISIBLE
+                    if (show) fab.show()
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    if (!show) fab.visibility = View.GONE
+                    if (!show) fab.hide()
                 }
             })
             s.start()
@@ -249,11 +250,13 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 currentFloorId = myLocation.extras
                         .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
             }
-            points.add(0, PointOptions()
-                    .id(ITEM_ID_LOCATION.toLong())
+
+            currentLocationPoint = PointOptions()
+                    .id(ITEM_ID_LOCATION)
                     .location(currentLocation)
-                    .level(currentFloorId)
-                    .name(getString(R.string.current_location)))
+                    .floorId(currentFloorId)
+                    .name(getString(R.string.current_location))
+            points.add(0, currentLocationPoint)
             hasCurrentLocation = true
         }
 
@@ -270,7 +273,16 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val endId = endPicker.selectedItemId
         val isAccessible = accessible.isChecked
 
-        val router = mapManager.findRoutes(startId, endId, isAccessible)
+        val router = if (startId == ITEM_ID_LOCATION) {
+            mapManager.findRoutes(currentLocationPoint.location, endId,
+                    currentLocationPoint.floorId, isAccessible)
+        } else if (endId == ITEM_ID_LOCATION) {
+            mapManager.findRoutes(startId, currentLocationPoint.location,
+                    currentLocationPoint.floorId, isAccessible)
+        } else {
+            mapManager.findRoutes(startId, endId, isAccessible)
+        }
+
         if (router != null) {
             val route = router.shortestRoute()
             if (route == null) {
@@ -346,6 +358,6 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     companion object {
         private val TAG = LocationModesActivity::class.java.simpleName
-        private val ITEM_ID_LOCATION = -2
+        private val ITEM_ID_LOCATION = -2L
     }
 }
