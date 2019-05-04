@@ -34,7 +34,7 @@
     <string name="demo_search_poi_description">Easily search for and locate POIs on the map</string>
     <string name="search">Search</string>
 
-    <string name="demo_routing_title">Routing Between POIs</string>
+    <string name="demo_routing_title">Routing</string>
     <string name="demo_routing_description">Create routes and navigate between POIs</string>
     <string name="navigation">Navigation</string>
     <string name="no_route">Couldn\'t find a route matching your search.</string>
