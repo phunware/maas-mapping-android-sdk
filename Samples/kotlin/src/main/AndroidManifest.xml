@@ -20,7 +20,8 @@
 
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,43 +31,53 @@
 
         <activity
             android:name=".LoadBuildingActivity"
-            android:label="@string/demo_load_building_title" />
+            android:label="@string/demo_load_building_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".BluedotLocationActivity"
-            android:label="@string/demo_bluedot_title" />
+            android:label="@string/demo_bluedot_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".LocationModesActivity"
-            android:label="@string/demo_location_modes_title" />
+            android:label="@string/demo_location_modes_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".CustomPOIActivity"
-            android:label="@string/demo_custom_poi_title" />
+            android:label="@string/demo_custom_poi_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".SearchPoiActivity"
-            android:label="@string/demo_search_poi_title" />
+            android:label="@string/demo_search_poi_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".RoutingActivity"
-            android:label="@string/demo_routing_title" />
+            android:label="@string/demo_routing_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".LocationSharingActivity"
-            android:label="@string/demo_location_sharing_title" />
+            android:label="@string/demo_location_sharing_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".VoicePromptActivity"
-            android:label="@string/demo_voice_prompt_title" />
+            android:label="@string/demo_voice_prompt_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".WalkTimeActivity"
-            android:label="@string/demo_walk_time_title" />
+            android:label="@string/demo_walk_time_title"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".OffRouteActivity"
-            android:label="@string/demo_off_route_title" />
+            android:label="@string/demo_off_route_title"
+            android:screenOrientation="portrait"/>
 
         <!-- Google Maps Key -->
         <meta-data

@@ -7,9 +7,9 @@
 
     <!-- Phunware Keys -->
     <!-- TODO: These keys must be added before using Phunware SDKs -->
-    <string name="pw_app_id">1227</string>
-    <string name="pw_access_key">5594753ccbd120ea24e797f2372cbaac433feff9</string>
-    <string name="pw_signature_key">776e4bdde83b459336dbf2fa58370dbe37bb3751</string>
+    <string name="pw_app_id"></string>
+    <string name="pw_access_key"></string>
+    <string name="pw_signature_key"></string>
 
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>
