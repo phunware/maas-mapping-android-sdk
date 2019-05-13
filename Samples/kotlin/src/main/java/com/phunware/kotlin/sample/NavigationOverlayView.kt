@@ -103,7 +103,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         PwLog.e("NavigationOverlayView", "Off route")
     }
 
-    private class ManeuverPair {
+    public class ManeuverPair {
         internal var mainPos: Int = 0
         internal var turnPos: Int = 0
         internal var mainManeuver: RouteManeuverOptions? = null
@@ -176,5 +176,9 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
 
         override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
+    }
+
+    fun getManeuverPair() : ManeuverPair {
+        return adapter.getItem(currentItem)
     }
 }

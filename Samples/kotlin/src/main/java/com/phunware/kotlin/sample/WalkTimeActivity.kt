@@ -258,8 +258,9 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
-        val formattedArrivalTime = dateFormatter.format(calendar.time)
-        arrivalTimeTextview.text = formattedArrivalTime
+        val formattedArrivalTime : String = dateFormatter.format(calendar.time)
+        val formattedArrivalTimeText = String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
+        arrivalTimeTextview.text = formattedArrivalTimeText
     }
 
     private fun setManagedLocationProvider(building: Building) {

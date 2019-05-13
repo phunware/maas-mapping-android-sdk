@@ -118,6 +118,7 @@
             android:background="@color/exit_red"
             android:textColor="@color/white"
             android:fontFamily="sans-serif-medium"
+            android:textAllCaps="false"
             android:textSize="18.67dp"/>
 
     </RelativeLayout>
