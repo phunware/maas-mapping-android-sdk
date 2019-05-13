@@ -29,10 +29,7 @@ import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
-import com.phunware.mapping.model.Building
-import com.phunware.mapping.model.FloorOptions
-import com.phunware.mapping.model.PointOptions
-import com.phunware.mapping.model.RouteOptions
+import com.phunware.mapping.model.*
 import java.lang.ref.WeakReference
 import java.util.ArrayList
 import java.util.Locale
@@ -205,7 +202,26 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
 
         if (voiceEnabled) {
-            textToVoice(displayHelper.stringForDirection(this, maneuver))
+            val pair = navOverlay.getManeuverPair()
+            var text = displayHelper.stringForDirection(this, pair.mainManeuver)
+
+            val turnManeuver  = pair.turnManeuver
+            var turnable : Boolean  = false
+            if(turnManeuver != null)
+            {
+                turnable = turnManeuver.isTurnManeuver
+            }
+
+            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable)
+            {
+                text += " then "
+                text += displayHelper.stringForDirection(this, turnManeuver)
+            }
+            else
+            {
+                text += " to arrive at the destination."
+            }
+            textToVoice(text)
         }
     }
 
