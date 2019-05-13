@@ -207,19 +207,16 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
             val turnManeuver  = pair.turnManeuver
             var turnable : Boolean  = false
-            if(turnManeuver != null)
-            {
+            if(turnManeuver != null) {
                 turnable = turnManeuver.isTurnManeuver
             }
 
-            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable)
-            {
-                text += " then "
+            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable) {
+                text += getString(R.string.demo_voice_prompt_then)
                 text += displayHelper.stringForDirection(this, turnManeuver)
             }
-            else
-            {
-                text += " to arrive at the destination."
+            else {
+                text += getString(R.string.demo_voice_prompt_arrive_at_destination)
             }
             textToVoice(text)
         }

@@ -178,8 +178,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     }
 
-    fun getManeuverPair() : ManeuverPair
-    {
+    fun getManeuverPair() : ManeuverPair {
         return adapter.getItem(currentItem)
     }
 }
