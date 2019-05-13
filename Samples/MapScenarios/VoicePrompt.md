@@ -42,18 +42,15 @@ override fun onManeuverChanged(navigator: Navigator, position: Int) {
 
             val turnManeuver  = pair.turnManeuver
             var turnable : Boolean  = false
-            if(turnManeuver != null)
-            {
+            if(turnManeuver != null) {
                 turnable = turnManeuver.isTurnManeuver
             }
 
-            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable)
-            {
+            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable) {
                 text += " then "
                 text += displayHelper.stringForDirection(this, turnManeuver)
             }
-            else
-            {
+            else {
                 text += " to arrive at the destination."
             }
             textToVoice(text)
