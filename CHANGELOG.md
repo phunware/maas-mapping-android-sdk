@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.7.2 (Wednesday, Jun 26th, 2019)
+#### Bug fixes / performance enhancements
+* Added API to retrieve map marker object
+
 ## 3.7.1 (Thursday, Sept 27th, 2018)
 #### Features
 * Fixed crash if setLocationMode is never called on PhunwareMapManager
