@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.1 (Wednesday, Jun 26th, 2019)
+#### Bug fixes / performance enhancements
+* Added API to retreive map marker object
+
 ## 3.9.0 (Tuesday, Apr 2nd, 2019)
 #### Features
 * Update for Location 3.7.0 compatibility
