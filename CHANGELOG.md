@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.2 (Wednesday, Aug 7th, 2019)
+#### Bug fixes / performance enhancements
+* Performance improvements in map animation
+
 ## 3.9.1 (Wednesday, Jun 26th, 2019)
 #### Bug fixes / performance enhancements
 * Added API to retreive map marker object
