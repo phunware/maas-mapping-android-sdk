@@ -356,6 +356,13 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = LocationModesActivity::class.java.simpleName
         private val ITEM_ID_LOCATION = -2L

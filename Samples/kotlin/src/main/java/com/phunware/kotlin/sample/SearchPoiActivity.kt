@@ -287,6 +287,13 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = SearchPoiActivity::class.java.simpleName
     }

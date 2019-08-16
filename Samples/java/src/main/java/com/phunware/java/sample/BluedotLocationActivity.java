@@ -169,4 +169,12 @@ public class BluedotLocationActivity extends AppCompatActivity
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapManager != null) {
+            mapManager.onDestroy();
+        }
+    }
 }

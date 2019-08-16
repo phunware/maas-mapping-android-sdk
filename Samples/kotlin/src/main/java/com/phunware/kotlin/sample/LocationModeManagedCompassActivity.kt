@@ -293,6 +293,13 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = LocationModeManagedCompassActivity::class.java.simpleName
         private const val PREFERENCE_NAME = "location_mode_sample"

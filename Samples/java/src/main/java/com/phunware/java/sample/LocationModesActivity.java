@@ -325,4 +325,12 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapManager != null) {
+            mapManager.onDestroy();
+        }
+    }
 }
