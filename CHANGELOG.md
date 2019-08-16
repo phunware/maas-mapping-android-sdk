@@ -1,4 +1,10 @@
 # Mapping SDK Changelog
+## 3.9.3 (Friday, Aug 16th, 2019)
+#### Bug fixes / performance enhancements
+* Bug fix for OnManeuverChangedListener not getting invoked when walking backwards
+* Memory Optimizations
+* Added an API to perform cleanup on PhunwareMapManager
+
 ## 3.9.2 (Wednesday, Aug 7th, 2019)
 #### Bug fixes / performance enhancements
 * Performance improvements in map animation
