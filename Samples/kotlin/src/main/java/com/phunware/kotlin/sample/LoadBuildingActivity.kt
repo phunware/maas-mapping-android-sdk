@@ -114,6 +114,13 @@ class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                 })
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = LoadBuildingActivity::class.java.simpleName
     }

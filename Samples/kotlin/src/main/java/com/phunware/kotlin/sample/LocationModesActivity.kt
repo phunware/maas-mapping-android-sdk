@@ -292,6 +292,13 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = LocationModesActivity::class.java.simpleName
         private const val PREFERENCE_NAME = "location_mode_sample"

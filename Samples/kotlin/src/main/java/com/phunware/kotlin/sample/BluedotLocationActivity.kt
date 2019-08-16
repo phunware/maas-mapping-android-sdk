@@ -152,6 +152,13 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
+
     companion object {
         private val TAG = BluedotLocationActivity::class.java.simpleName
     }

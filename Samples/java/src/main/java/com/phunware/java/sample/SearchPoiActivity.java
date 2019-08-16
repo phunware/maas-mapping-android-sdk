@@ -166,6 +166,14 @@ public class SearchPoiActivity extends AppCompatActivity implements OnPhunwareMa
                 });
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapManager != null) {
+            mapManager.onDestroy();
+        }
+    }
+
     private void showFab(final boolean show) {
         runOnUiThread(new Runnable() {
             @Override
