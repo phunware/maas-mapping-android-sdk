@@ -424,4 +424,12 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
             }
         }
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapManager != null) {
+            mapManager.onDestroy();
+        }
+    }
 }

@@ -123,4 +123,12 @@ public class LoadBuildingActivity extends AppCompatActivity implements OnPhunwar
                     }
                 });
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mapManager != null) {
+            mapManager.onDestroy();
+        }
+    }
 }

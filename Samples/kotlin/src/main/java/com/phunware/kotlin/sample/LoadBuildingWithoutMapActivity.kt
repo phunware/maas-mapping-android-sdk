@@ -157,6 +157,12 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager?.let {
+            it.onDestroy()
+        }
+    }
 
     companion object {
         private val TAG = LoadBuildingWithoutMapActivity::class.java.simpleName
