@@ -6,6 +6,7 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
@@ -35,7 +36,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
-        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener, LocationManager.LocationListener {
+    Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
+    LocationManager.LocationListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
@@ -54,7 +56,8 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private lateinit var endPicker: Spinner
     private lateinit var accessible: CheckBox
 
-    private var selectRouteListener: View.OnClickListener = View.OnClickListener { showRoutingDialog() }
+    private var selectRouteListener: View.OnClickListener =
+        View.OnClickListener { showRoutingDialog() }
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
 
     //Walk Time Views
@@ -68,6 +71,10 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private var calculatedWalkSpeed = 0.0
     private val dateFormatter = SimpleDateFormat("h:mm a")
     private var routingFromCurrentLocation = false
+    private var isManaged = false
+    private var currentManeuverIndex = -1
+    private val handler = Handler()
+    private val timeUpdater = Runnable { updateWalkTime() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +91,7 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
+        fab.hide()
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
@@ -93,7 +100,12 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 val floor = floorSpinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
                     currentBuilding.selectFloor(floor.level)
@@ -128,50 +140,55 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val buildingId = resources.getInteger(R.integer.buildingId)
 
         phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
-        phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                this@WalkTimeActivity, R.raw.map_style))
+        phunwareMap.googleMap.setMapStyle(
+            MapStyleOptions.loadRawResourceStyle(
+                this@WalkTimeActivity, R.raw.map_style
+            )
+        )
 
         mapManager.setPhunwareMap(phunwareMap)
         mapManager.addBuilding(buildingId.toLong(),
-                object : Callback<Building> {
-                    override fun onSuccess(building: Building) {
-                        Log.d(TAG, "Building loaded successfully")
-                        currentBuilding = building
+            object : Callback<Building> {
+                override fun onSuccess(building: Building) {
+                    Log.d(TAG, "Building loaded successfully")
+                    currentBuilding = building
 
-                        // Populate floor spinner
-                        floorSpinnerAdapter.clear()
-                        floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+                    // Populate floor spinner
+                    floorSpinnerAdapter.clear()
+                    floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
-                        // Add a listener to monitor floor switches
-                        mapManager.addFloorChangedListener(this@WalkTimeActivity)
+                    // Add a listener to monitor floor switches
+                    mapManager.addFloorChangedListener(this@WalkTimeActivity)
 
-                        // Initialize a location provider
-                        setManagedLocationProvider(building)
+                    // Initialize a location provider
+                    setManagedLocationProvider(building)
 
-                        // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
-                        building.selectFloor(initialFloor.level)
+                    // Set building to initial floor value
+                    val initialFloor = building.initialFloor()
+                    building.selectFloor(initialFloor.level)
 
-                        // Animate the camera to the building at an appropriate zoom level
-                        val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                    // Animate the camera to the building at an appropriate zoom level
+                    val cameraUpdate = CameraUpdateFactory
+                        .newLatLngBounds(initialFloor.bounds, 4)
+                    phunwareMap.googleMap.animateCamera(cameraUpdate)
 
-                        // Enabled fab for routing
-                        showFab(true)
-                    }
+                    // Enabled fab for routing
+                    showFab(true)
+                }
 
-                    override fun onFailure(throwable: Throwable) {
-                        Log.d(TAG, "Error when loading building -- " + throwable.message)
-                        showFab(false)
-                    }
-                })
+                override fun onFailure(throwable: Throwable) {
+                    Log.d(TAG, "Error when loading building -- " + throwable.message)
+                    showFab(false)
+                }
+            })
     }
 
     /**
      * Navigator.OnManeuverChangedListener
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        this.currentManeuverIndex = position
+
         // Update the selected floor when the maneuver floor changes
         val maneuver = navigator.maneuvers[position]
         val selectedPosition = floorSpinner.selectedItemPosition
@@ -183,7 +200,7 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
 
         //Make call to update walk time
-        updateWalkTime(position)
+        updateWalkTime()
     }
 
     override fun onRouteSnapFailed() {
@@ -209,6 +226,11 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * LocationListener
      */
     override fun onLocationUpdate(p0: Location?) {
+        if (!isManaged) {
+            mapManager.myLocationMode = PhunwareMapManager.MODE_FOLLOW_ME
+            isManaged = true
+        }
+
         if (p0 != null) {
             gpsPositionList.add(p0)
             while (gpsPositionList.count() > 5) {
@@ -218,16 +240,17 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val firstLocation = gpsPositionList.first()
             val lastLocation = gpsPositionList.last()
             val distanceCovered = firstLocation.distanceTo(lastLocation)
-            calculatedWalkSpeed = distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
+            calculatedWalkSpeed =
+                distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
         }
     }
 
     /**
      * Private Methods
      */
-    private fun updateWalkTime(maneuverIndex: Int) {
+    private fun updateWalkTime() {
         var distance = 0.0
-        for (i in maneuverIndex until navigator!!.maneuvers.count()) {
+        for (i in currentManeuverIndex until navigator!!.maneuvers.count()) {
             val maneuver = navigator!!.maneuvers[i]
             distance += maneuver.distance
         }
@@ -249,25 +272,30 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val numMinutes: Int = (estimateTimeInSeconds / 60.0).toInt()
             val numMinutesString: String
             if (numMinutes == 1) {
-                numMinutesString = resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
+                numMinutesString =
+                    resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
             } else {
-                numMinutesString = resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
+                numMinutesString =
+                    resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
             }
             walkTimeTextview.text = numMinutesString
         }
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
-        val formattedArrivalTime : String = dateFormatter.format(calendar.time)
-        val formattedArrivalTimeText = String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
+        val formattedArrivalTime: String = dateFormatter.format(calendar.time)
+        val formattedArrivalTimeText =
+            String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
         arrivalTimeTextview.text = formattedArrivalTimeText
+        handler.removeCallbacks(timeUpdater)
+        handler.postDelayed(timeUpdater, UPDATE_DELAY)
     }
 
     private fun setManagedLocationProvider(building: Building) {
         val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
         builder.application(application)
-                .context(WeakReference(application))
-                .buildingId(building.id.toString())
+            .context(WeakReference(application))
+            .buildingId(building.id.toString())
         val factory = builder.build()
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
         mapManager.setLocationProvider(managedProvider, building)
@@ -285,11 +313,11 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             s.playTogether(anims)
             s.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    if (show) fab.visibility = View.VISIBLE
+                    if (show) fab.show()
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    if (!show) fab.visibility = View.GONE
+                    if (!show) fab.hide()
                 }
             })
             s.start()
@@ -305,13 +333,13 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         initDialogUI(dialogView)
 
         builder.setView(dialogView)
-                .setTitle("Select a Route")
-                .setMessage("Choose two points to route between")
-                .setCancelable(false)
-                .setPositiveButton("Route", { _, _ -> getRoutes() })
-                .setNegativeButton("Cancel", { _, _ ->
-                    // Do Nothing - Close Dialog
-                })
+            .setTitle("Select a Route")
+            .setMessage("Choose two points to route between")
+            .setCancelable(false)
+            .setPositiveButton("Route", { _, _ -> getRoutes() })
+            .setNegativeButton("Cancel", { _, _ ->
+                // Do Nothing - Close Dialog
+            })
 
         val d = builder.create()
         d.show()
@@ -328,8 +356,8 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val points = ArrayList<PointOptions>()
 
         currentBuilding.floorOptions
-                .filter { it != null && it.poiOptions != null }
-                .forEach { points.addAll(it.poiOptions) }
+            .filter { it != null && it.poiOptions != null }
+            .forEach { points.addAll(it.poiOptions) }
 
 
         var hasCurrentLocation = false
@@ -338,15 +366,18 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val currentLocation = LatLng(myLocation.latitude, myLocation.longitude)
             var currentFloorId = mapManager.currentBuilding.selectedFloor.id
             if (myLocation.extras != null && myLocation.extras
-                            .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
+                    .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
+            ) {
                 currentFloorId = myLocation.extras
-                        .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
+                    .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
             }
-            points.add(0, PointOptions()
+            points.add(
+                0, PointOptions()
                     .id(WalkTimeActivity.ITEM_ID_LOCATION.toLong())
                     .location(currentLocation)
                     .level(currentFloorId)
-                    .name(getString(R.string.current_location)))
+                    .name(getString(R.string.current_location))
+            )
             hasCurrentLocation = true
         }
 
@@ -365,8 +396,14 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         var router: Router
         if (startId.compareTo(ITEM_ID_LOCATION) == 0) {
-            val currentLocation = LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
-            router = mapManager.findRoutes(currentLocation, endId, mapManager.currentBuilding.selectedFloor.id, isAccessible)
+            val currentLocation =
+                LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
+            router = mapManager.findRoutes(
+                currentLocation,
+                endId,
+                mapManager.currentBuilding.selectedFloor.id,
+                isAccessible
+            )
             routingFromCurrentLocation = true
         } else {
             router = mapManager.findRoutes(startId, endId, isAccessible)
@@ -376,8 +413,10 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val route = router.shortestRoute()
             if (route == null) {
                 PwLog.e(WalkTimeActivity.TAG, "Couldn't find route.")
-                Snackbar.make(content, R.string.no_route,
-                        Snackbar.LENGTH_SHORT).show()
+                Snackbar.make(
+                    content, R.string.no_route,
+                    Snackbar.LENGTH_SHORT
+                ).show()
             } else {
                 startNavigating(route)
             }
@@ -402,11 +441,11 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         navOverlay.setNavigator(navigator!!)
         navOverlayContainer.visibility = View.VISIBLE
-        fab.visibility = View.GONE
+        fab.hide()
         floorSpinnerView.visibility = View.GONE
         walkTimeView.visibility = View.VISIBLE
 
-        navigator!!.start()
+        navigator?.start()
     }
 
     private fun stopNavigating() {
@@ -417,14 +456,15 @@ class WalkTimeActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager.removeLocationUpdateListener(this)
         navOverlayContainer.visibility = View.GONE
         floorSpinnerView.visibility = View.VISIBLE
-        fab.visibility = View.VISIBLE
+        fab.show()
         walkTimeView.visibility = View.GONE
         routingFromCurrentLocation = false
+        handler.removeCallbacks(timeUpdater)
     }
 
     companion object {
         private val TAG = WalkTimeActivity::class.java.simpleName
         private val ITEM_ID_LOCATION = -2
+        private const val UPDATE_DELAY = 5000L
     }
-
 }
