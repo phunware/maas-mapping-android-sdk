@@ -79,7 +79,7 @@ import java.util.List;
 public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
         Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
     private static final String TAG = LocationModesActivity.class.getSimpleName();
-    private static final int ITEM_ID_LOCATION = -2;
+    private static final long ITEM_ID_LOCATION = -2;
 
     private PhunwareMapManager mapManager;
     private Building currentBuilding;
@@ -95,6 +95,7 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
     private Spinner startPicker;
     private Spinner endPicker;
     private CheckBox accessible;
+    private PointOptions currentLocationPoint;
 
     View.OnClickListener selectRouteListener = new View.OnClickListener() {
         @Override
@@ -308,11 +309,13 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
                 currentFloorId = myLocation.getExtras()
                         .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID);
             }
-            points.add(0, new PointOptions()
+
+            currentLocationPoint = new PointOptions()
                     .id(ITEM_ID_LOCATION)
                     .location(currentLocation)
-                    .level(currentFloorId)
-                    .name(getString(R.string.current_location)));
+                    .floorId(currentFloorId)
+                    .name(getString(R.string.current_location));
+            points.add(0, currentLocationPoint);
             hasCurrentLocation = true;
         }
 
@@ -329,7 +332,17 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
         long endId = endPicker.getSelectedItemId();
         boolean isAccessible = accessible.isChecked();
 
-        Router router = mapManager.findRoutes(startId, endId, isAccessible);
+        Router router = null;
+        if (startId == ITEM_ID_LOCATION) {
+            router = mapManager.findRoutes(currentLocationPoint.getLocation(), endId,
+                    currentLocationPoint.getFloorId(), isAccessible);
+        } else if (endId == ITEM_ID_LOCATION) {
+            router = mapManager.findRoutes(startId, currentLocationPoint.getLocation(),
+                    currentLocationPoint.getFloorId(), isAccessible);
+        } else {
+            router = mapManager.findRoutes(startId, endId, isAccessible);
+        }
+
         if (router != null) {
             RouteOptions route = router.shortestRoute();
             if (route == null) {

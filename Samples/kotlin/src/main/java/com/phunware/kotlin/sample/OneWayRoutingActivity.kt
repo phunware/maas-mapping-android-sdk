@@ -52,7 +52,6 @@ import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
-import com.phunware.mapping.manager.Router
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
@@ -60,7 +59,7 @@ import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
 import java.util.*
 
-class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
@@ -132,9 +131,10 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
         phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                this@RoutingActivity, R.raw.map_style))
+                this@OneWayRoutingActivity, R.raw.map_style))
 
         mapManager.setPhunwareMap(phunwareMap)
+        mapManager.enableOnewayRouting(true)
         mapManager.addBuilding(buildingId.toLong(),
                 object : Callback<Building> {
                     override fun onSuccess(building: Building) {
@@ -146,7 +146,7 @@ class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Add a listener to monitor floor switches
-                        mapManager.addFloorChangedListener(this@RoutingActivity)
+                        mapManager.addFloorChangedListener(this@OneWayRoutingActivity)
 
                         // Initialize a location provider
                         setManagedLocationProvider(building)
