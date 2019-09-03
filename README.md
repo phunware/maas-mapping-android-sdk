@@ -2,7 +2,7 @@
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
 =======
-**Version 3.9.3**
+**Version 3.9.4**
 ________________
 
 
@@ -27,9 +27,9 @@ MaaS Mapping uses the following third party components.
 | Component     | Version | Description   | License  |
 | ------------- | ------- |:-------------:| -----:|
 | [Picasso](https://github.com/square/picasso)      |2.5.2| A powerful image downloading and caching library for Android      |   [Apache 2.0](https://github.com/square/picasso/blob/master/LICENSE.txt) |
-| [AndroidSVG](https://github.com/BigBadaboom/androidsvg)      |1.2.1| A SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
+| [AndroidSVG](https://github.com/BigBadaboom/androidsvg)      |1.4| An SVG parser and renderer for Android      |   [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0) |
 | [okhttp](https://github.com/square/okhttp)        |3.10.0| An HTTP+HTTP/2 client for Android and Java applications by Square, Inc. | [Apache 2.0](https://github.com/square/okhttp/blob/master/LICENSE.txt) |
-| [moshi](https://github.com/square/moshi)        |1.5.0| A modern JSON library for Android and Java by Square, Inc. | [Apache 2.0](https://github.com/square/moshi/blob/master/LICENSE.txt) |
+| [moshi](https://github.com/square/moshi)        |1.6.0| A modern JSON library for Android and Java by Square, Inc. | [Apache 2.0](https://github.com/square/moshi/blob/master/LICENSE.txt) |
 | [DiskLruCache](https://github.com/JakeWharton/DiskLruCache)        |2.0.2| Java implementation of a Disk-based LRU cache which specifically targets Android compatibility. | [Apache 2.0](https://github.com/JakeWharton/DiskLruCache/blob/master/LICENSE.txt) |
 
 -----------
