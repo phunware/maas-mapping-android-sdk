@@ -1,4 +1,9 @@
 # Mapping SDK Changelog
+## 3.9.4 (Tuesday, Sep 3rd, 2019)
+#### Bug fixes / performance enhancements
+* Updated android svg library to 1.4
+* Updated bundles library to 1.1.4
+
 ## 3.9.3 (Friday, Aug 16th, 2019)
 #### Bug fixes / performance enhancements
 * Bug fix for OnManeuverChangedListener not getting invoked when walking backwards
