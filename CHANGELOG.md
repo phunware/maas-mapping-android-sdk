@@ -1,5 +1,5 @@
 # Mapping SDK Changelog
-## 3.9.5 (Thursday, Sep 19th, 2019)
+## 3.9.5 (Wednesday, Sep 19th, 2019)
 #### Bug Fixes
 * Added unique names for modules to address issues with duplicate kotlin_module files
 
