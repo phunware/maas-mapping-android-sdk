@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.5 (Wednesday, Sep 19th, 2019)
+#### Bug Fixes
+* Added unique names for modules to address issues with duplicate kotlin_module files
+
 ## 3.9.4 (Tuesday, Sep 3rd, 2019)
 #### Bug fixes / performance enhancements
 * Updated android svg library to 1.4
