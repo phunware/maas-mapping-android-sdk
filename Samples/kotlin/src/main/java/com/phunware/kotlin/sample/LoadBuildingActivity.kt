@@ -29,14 +29,19 @@ from Phunware, Inc. */
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.util.TypedValue
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMapOptions
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
+import com.phunware.kotlin.sample.CustomMapFragment.Companion.newInstance
 
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -75,8 +80,11 @@ class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
-        mapFragment.getPhunwareMapAsync(this)
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.map, newInstance(this, this))
+                .commit()
+        }
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {

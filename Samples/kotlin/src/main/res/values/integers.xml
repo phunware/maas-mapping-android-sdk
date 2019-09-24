@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TODO: Change this buildingId to match the building on MaaS -->
-    <integer name="buildingId">12345</integer>
+    <integer name="buildingId">1234</integer>
+    <!-- TODO: Change this building Lat/Lng to match the building on MaaS -->
+    <!-- use from within an xml layout file -->
+    <item name="building_latitude" type="integer" format="float">30.360292</item>
+    <item name="building_longitude" type="integer" format="float">-97.742193</item>
 </resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TODO: Change this building Lat/Lng to match the building on MaaS -->
+    <!-- use to extract resources programmatically -->
+    <item name="building_lat" format="float" type="dimen">30.360292</item>
+    <item name="building_lng" format="float" type="dimen">-97.742193</item>
+</resources>

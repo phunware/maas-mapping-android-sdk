@@ -78,8 +78,11 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
-        mapFragment.getPhunwareMapAsync(this)
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.map, CustomMapFragment.newInstance(this, this))
+                .commit()
+        }
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {

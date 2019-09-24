@@ -112,9 +112,12 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
 
-        mapFragment.getPhunwareMapAsync(this)
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.map, CustomMapFragment.newInstance(this, this))
+                .commit()
+        }
     }
 
     override fun onBackPressed() {
