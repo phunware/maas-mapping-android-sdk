@@ -38,9 +38,9 @@ import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
+import com.phunware.kotlin.sample.CustomMapFragment.Companion.newInstance
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.manager.Callback
@@ -54,7 +54,6 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
-    private lateinit var mapFragment: MapFragment
     private lateinit var currentBuilding: Building
     private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
@@ -84,8 +83,11 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
-        mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
-        mapFragment.getPhunwareMapAsync(this)
+        if (savedInstanceState == null) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.map, newInstance(this, this))
+                .commit()
+        }
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {

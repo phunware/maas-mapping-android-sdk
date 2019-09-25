@@ -12,9 +12,11 @@ In order to see these use cases in action, you will need to set up the sample to
 
 1. To obtain the Phunware credentials you will need to login to the MaaS portal and obtain your app's `appId`, `accessKey`, and `signatureKey`. Find instructions on how to obtain these keys [here](https://developer.phunware.com/display/DD/Phunware+SDK+On-boarding#PhunwareSDKOn-boarding-GeneralOn-boardingStepsforALLAndroidSDKs). Steps 3 and 4 detail how to add these keys to the `strings.xml`
 
-2. There is also a string resource for `google_maps_key` in the `strings.xml` folder. If you need help getting a Google Maps API Key,  please find instructions [here](https://developers.google.com/maps/documentation/android-sdk/start#step_4_get_a_google_maps_api_key).
+2. There is also a string resource for `google_maps_key` in the `strings.xml` folder. If you need help getting a Google Maps API Key, please find instructions [here](https://developers.google.com/maps/documentation/android-sdk/start#step_4_get_a_google_maps_api_key).
 
-3. Lastly, you will need to retrieve your `buildingId` from the MaaS portal. to do this, you'll need to navigate to the Mapping section and open the settings for your building. This can be done by drilling down the menu to the building level (Venue-->Campus-->Building). Hover your mouse over the desired building and click the gear icon to see your building configuration. Once you have your `buildingId`, add it to `integers.xml` to point the sample at your building.
+3. You will also need to retrieve your `buildingId` from the MaaS portal. to do this, you'll need to navigate to the Mapping section and open the settings for your building. This can be done by drilling down the menu to the building level (Venue-->Campus-->Building). Hover your mouse over the desired building and click the gear icon to see your building configuration. Once you have your `buildingId`, add it to `integers.xml` to point the sample at your building.
+
+4. For better user experience, you may want to retrieve the corresponding `Latitude` and `Longitude` values for the `buildingId`. The `Load Building` and `Bluedot Location` samples are using these values to initialize the camera position before loading the maps. Failing to initialize the camera will zoom out on location(0, 0). `Load Building` is adding these values as xml attributes to the layout where the MapFragment is used. `Bluedot Location` is initializing the camera location and zoom programmatically by creating a customised MapFragment (extending the provided MapFragment from the SDK). `Latitude` and `Longitude` values are added to `integers.xml`.
 
 After you have these keys you should be all set to run the use case samples!
 
