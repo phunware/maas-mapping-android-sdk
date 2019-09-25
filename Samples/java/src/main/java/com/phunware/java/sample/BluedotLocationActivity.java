@@ -26,6 +26,8 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
+import static com.phunware.java.sample.CustomMapFragment.getInstance;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -87,10 +89,11 @@ public class BluedotLocationActivity extends AppCompatActivity
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this);
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
-        if (mapFragment != null) {
-            mapFragment.getPhunwareMapAsync(this);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                .replace(R.id.map, getInstance(this, this))
+                .commit();
         }
     }
 
