@@ -9,8 +9,8 @@
 - Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId`in strings.xml and integers.xml.
 
 ### Sample Code
-- [OffRouteActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteActivity.kt)
-- [OffRouteDialogFragment.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteDialogFragment.kt)
+- [OffRouteActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteActivity.kt)
+- [OffRouteDialogFragment.kt](kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteDialogFragment.kt)
 
 **Step 1: Copy the following files to your project**
 
