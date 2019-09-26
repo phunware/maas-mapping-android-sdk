@@ -26,6 +26,8 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
+import static com.phunware.java.sample.CustomMapFragment.getInstance;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +43,6 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
-import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;
 import com.phunware.mapping.manager.Callback;
@@ -87,10 +88,11 @@ public class BluedotLocationActivity extends AppCompatActivity
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this);
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
 
-        if (mapFragment != null) {
-            mapFragment.getPhunwareMapAsync(this);
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                .replace(R.id.map, getInstance(this, this))
+                .commit();
         }
     }
 
