@@ -344,7 +344,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val endId = endPicker.selectedItemId
         val isAccessible = accessible.isChecked
 
-        var router: Router
+        val router: Router?
         if (startId.compareTo(ITEM_ID_LOCATION) == 0) {
             val currentLocation = LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
             router = mapManager.findRoutes(currentLocation, endId, mapManager.currentBuilding.selectedFloor.id, isAccessible)
@@ -361,6 +361,9 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             } else {
                 startNavigating(route)
             }
+        } else {
+            Snackbar.make(content, R.string.no_route, Snackbar.LENGTH_SHORT).show()
+            PwLog.e(TAG, "Couldn't find route.")
         }
     }
 
