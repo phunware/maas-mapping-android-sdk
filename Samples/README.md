@@ -2,7 +2,7 @@
 
 ## Overview
 
-* Seven different use cases that exhibit different applications of the Mapping SDK
+* Use cases that exhibit different applications of the Mapping SDK
 * Written in both Java and Kotlin
 * Each use case is contained within it's own Activity class
 
@@ -79,6 +79,21 @@ Show your current location in a building as well as others in the same building.
 
 #### Usage:
 Open this sample two or more devices (iOS or Android) to view other user's locations. Note that the samples must be configured to point at the same building and must both be open simultaneously to work properly. You can click the `SET USER INFO` button in the top right corner to create a friendly name and device type that other users will see.
+
+### Voice Prompt
+Code Samples:  [Kotlin](VoicePrompt.md)
+
+Read route instruction aloud to the user as they swipe through the route instructions or as they traverse them with indoor location.
+
+### Walk Time
+Code Samples:  [Kotlin](WalkTime.md)
+
+Display walk time at the bottom of map.
+
+### Off Route
+Code Samples:  [Kotlin](OffRouteAlerts.md)
+
+Monitor the users location updates and alert the user if they deviated from the route using a predetermined distance and time threshold.
 
 ## Privacy
 

@@ -9,9 +9,9 @@
 - Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId` in `strings.xml` and `integers.xml`.
 
 ### Sample Code
-- [VoicePromptActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/VoicePromptActivity.kt)
-- [NavigationOverlayView.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/NavigationOverlayView.kt)
-- [ManeuverDisplayHelper.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/ManeuverDisplayHelper.kt)
+- [VoicePromptActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/VoicePromptActivity.kt)
+- [NavigationOverlayView.kt](kotlin/src/main/java/com/phunware/kotlin/sample/NavigationOverlayView.kt)
+- [ManeuverDisplayHelper.kt](kotlin/src/main/java/com/phunware/kotlin/sample/ManeuverDisplayHelper.kt)
 
 **Step 1: Copy the following files to your project**
 
