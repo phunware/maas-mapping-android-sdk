@@ -2,7 +2,7 @@
 
 [Android MaaS Mapping Documentation](http://phunware.github.io/maas-mapping-android-sdk/)
 =======
-**Version 3.9.5**
+**Version 3.9.6**
 ________________
 
 
