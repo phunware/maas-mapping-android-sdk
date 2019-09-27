@@ -56,6 +56,7 @@
         android:visibility="gone"/>
 
     <LinearLayout
+        android:id="@+id/floor_switcher_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="17dp"
@@ -90,4 +91,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp" />
+
+    <include
+        android:id="@+id/walk_time_view"
+        layout="@layout/walk_time_view"/>
+
 </RelativeLayout>
+

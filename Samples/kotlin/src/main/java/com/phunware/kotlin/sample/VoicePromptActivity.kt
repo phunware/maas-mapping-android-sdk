@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.location.Location
 import android.os.Bundle
+import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
@@ -25,17 +27,21 @@ import com.phunware.location_core.PwLocationProvider
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.bluedot.LocationManager
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
 import com.phunware.mapping.model.*
 import java.lang.ref.WeakReference
+import java.text.SimpleDateFormat
 import java.util.ArrayList
+import java.util.Calendar
 import java.util.Locale
 
 class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
-        Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener, TextToSpeech.OnInitListener {
+    Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
+    LocationManager.LocationListener, TextToSpeech.OnInitListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: MapFragment
@@ -43,6 +49,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
     private lateinit var content: RelativeLayout
+    private lateinit var floorSpinnerView: LinearLayout
 
     // Navigation Views
     private lateinit var fab: FloatingActionButton
@@ -63,32 +70,52 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private var tts: TextToSpeech? = null
     private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
 
+    //Walk Time Views
+    private lateinit var walkTimeView: RelativeLayout
+    private lateinit var walkTimeTextview: TextView
+    private lateinit var arrivalTimeTextview: TextView
+    private lateinit var exitRouteButton: Button
+
+    private val gpsPositionList: MutableList<Location> = ArrayList()
+    private val averageWalkSpeed = 0.7 //units in meters per second
+    private var calculatedWalkSpeed = 0.0
+    private val dateFormatter = SimpleDateFormat("h:mm a")
+    private var routingFromCurrentLocation = false
+    private var isManaged = false
+    private var currentManeuverIndex = -1
+    private val handler = Handler()
+    private val timeUpdater = Runnable { updateWalkTime() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.voice_prompt)
         content = findViewById(R.id.content)
+        floorSpinnerView = findViewById(R.id.floor_switcher_layout)
 
-        //Initialize Text-To-Speech
-        tts = TextToSpeech(this, this)
+        //Initialize WalkTime Views
+        walkTimeView = findViewById(R.id.walk_time_view)
+        walkTimeTextview = findViewById(R.id.walk_time_textview)
+        arrivalTimeTextview = findViewById(R.id.arrival_time_textview)
+        exitRouteButton = findViewById(R.id.button_exit_route)
+        exitRouteButton.setOnClickListener(exitNavListener)
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
+        fab.hide()
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
-        voice = findViewById(R.id.voice)
-        voice.setOnClickListener(voiceListener)
-        voiceStatusTextView = findViewById(R.id.voice_status)
-
-        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
-        voiceEnabled = sharedPref.getBoolean("voice", false)
 
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
         floorSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View,
+                position: Int,
+                id: Long
+            ) {
                 val floor = floorSpinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
                     currentBuilding.selectFloor(floor.level)
@@ -97,6 +124,15 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
+
+        //Initialize Text-To-Speech
+        tts = TextToSpeech(this, this)
+
+        val sharedPref = this.getPreferences(Context.MODE_PRIVATE)
+        voice = findViewById(R.id.voice)
+        voice.setOnClickListener(voiceListener)
+        voiceStatusTextView = findViewById(R.id.voice_status)
+        voiceEnabled = sharedPref.getBoolean("voice", false)
 
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
@@ -148,49 +184,51 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
         phunwareMap.googleMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(
-                this@VoicePromptActivity, R.raw.map_style))
+            this@VoicePromptActivity, R.raw.map_style))
 
         mapManager.setPhunwareMap(phunwareMap)
         mapManager.addBuilding(buildingId.toLong(),
-                object : Callback<Building> {
-                    override fun onSuccess(building: Building) {
-                        Log.d(TAG, "Building loaded successfully")
-                        currentBuilding = building
+            object : Callback<Building> {
+                override fun onSuccess(building: Building) {
+                    Log.d(TAG, "Building loaded successfully")
+                    currentBuilding = building
 
-                        // Populate floor spinner
-                        floorSpinnerAdapter.clear()
-                        floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+                    // Populate floor spinner
+                    floorSpinnerAdapter.clear()
+                    floorSpinnerAdapter.addAll(building.buildingOptions.floors)
 
-                        // Add a listener to monitor floor switches
-                        mapManager.addFloorChangedListener(this@VoicePromptActivity)
+                    // Add a listener to monitor floor switches
+                    mapManager.addFloorChangedListener(this@VoicePromptActivity)
 
-                        // Initialize a location provider
-                        setManagedLocationProvider(building)
+                    // Initialize a location provider
+                    setManagedLocationProvider(building)
 
-                        // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
-                        building.selectFloor(initialFloor.level)
+                    // Set building to initial floor value
+                    val initialFloor = building.initialFloor()
+                    building.selectFloor(initialFloor.level)
 
-                        // Animate the camera to the building at an appropriate zoom level
-                        val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                    // Animate the camera to the building at an appropriate zoom level
+                    val cameraUpdate = CameraUpdateFactory
+                        .newLatLngBounds(initialFloor.bounds, 4)
+                    phunwareMap.googleMap.animateCamera(cameraUpdate)
 
-                        // Enabled fab for routing
-                        showFab(true)
-                    }
+                    // Enabled fab for routing
+                    showFab(true)
+                }
 
-                    override fun onFailure(throwable: Throwable) {
-                        Log.d(TAG, "Error when loading building -- " + throwable.message)
-                        showFab(false)
-                    }
-                })
+                override fun onFailure(throwable: Throwable) {
+                    Log.d(TAG, "Error when loading building -- " + throwable.message)
+                    showFab(false)
+                }
+            })
     }
 
     /**
      * Navigator.OnManeuverChangedListener
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        this.currentManeuverIndex = position
+
         // Update the selected floor when the maneuver floor changes
         val maneuver = navigator.maneuvers[position]
         val selectedPosition = floorSpinner.selectedItemPosition
@@ -200,6 +238,9 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 floorSpinner.setSelection(i)
             }
         }
+
+        //Make call to update walk time
+        updateWalkTime()
 
         if (voiceEnabled) {
             val pair = navOverlay.getManeuverPair()
@@ -242,13 +283,79 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     /**
+     * LocationListener
+     */
+    override fun onLocationUpdate(p0: Location?) {
+        if (!isManaged) {
+            mapManager.myLocationMode = PhunwareMapManager.MODE_FOLLOW_ME
+            isManaged = true
+        }
+
+        if (p0 != null) {
+            gpsPositionList.add(p0)
+            while (gpsPositionList.count() > 5) {
+                gpsPositionList.removeAt(0)
+            }
+
+            val firstLocation = gpsPositionList.first()
+            val lastLocation = gpsPositionList.last()
+            val distanceCovered = firstLocation.distanceTo(lastLocation)
+            calculatedWalkSpeed =
+                distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
+        }
+    }
+
+    /**
      * Private Methods
      */
+    private fun updateWalkTime() {
+        var distance = 0.0
+        for (i in currentManeuverIndex until navigator!!.maneuvers.count()) {
+            val maneuver = navigator!!.maneuvers[i]
+            distance += maneuver.distance
+        }
+
+        val estimateTimeInSeconds: Double
+        if (routingFromCurrentLocation) {
+            if (calculatedWalkSpeed >= averageWalkSpeed) {
+                estimateTimeInSeconds = (distance / calculatedWalkSpeed)
+            } else {
+                estimateTimeInSeconds = (distance / averageWalkSpeed)
+            }
+        } else {
+            estimateTimeInSeconds = (distance / averageWalkSpeed)
+        }
+
+        if (estimateTimeInSeconds < 60) {
+            walkTimeTextview.setText(R.string.demo_walk_time_less_than_one_minute)
+        } else {
+            val numMinutes: Int = (estimateTimeInSeconds / 60.0).toInt()
+            val numMinutesString: String
+            if (numMinutes == 1) {
+                numMinutesString =
+                    resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
+            } else {
+                numMinutesString =
+                    resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
+            }
+            walkTimeTextview.text = numMinutesString
+        }
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
+        val formattedArrivalTime: String = dateFormatter.format(calendar.time)
+        val formattedArrivalTimeText =
+            String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
+        arrivalTimeTextview.text = formattedArrivalTimeText
+        handler.removeCallbacks(timeUpdater)
+        handler.postDelayed(timeUpdater, UPDATE_DELAY)
+    }
+
     private fun setManagedLocationProvider(building: Building) {
         val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
         builder.application(application)
-                .context(WeakReference(application))
-                .buildingId(building.id.toString())
+            .context(WeakReference(application))
+            .buildingId(building.id.toString())
         val factory = builder.build()
         val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
         mapManager.setLocationProvider(managedProvider, building)
@@ -266,11 +373,11 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             s.playTogether(anims)
             s.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    if (show) fab.visibility = View.VISIBLE
+                    if (show) fab.show()
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    if (!show) fab.visibility = View.GONE
+                    if (!show) fab.hide()
                 }
             })
             s.start()
@@ -286,13 +393,13 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         initDialogUI(dialogView)
 
         builder.setView(dialogView)
-                .setTitle("Select a Route")
-                .setMessage("Choose two points to route between")
-                .setCancelable(false)
-                .setPositiveButton("Route", { _, _ -> getRoutes() })
-                .setNegativeButton("Cancel", { _, _ ->
-                    // Do Nothing - Close Dialog
-                })
+            .setTitle("Select a Route")
+            .setMessage("Choose two points to route between")
+            .setCancelable(false)
+            .setPositiveButton("Route", { _, _ -> getRoutes() })
+            .setNegativeButton("Cancel", { _, _ ->
+                // Do Nothing - Close Dialog
+            })
 
         val d = builder.create()
         d.show()
@@ -309,8 +416,8 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val points = ArrayList<PointOptions>()
 
         currentBuilding.floorOptions
-                .filter { it != null && it.poiOptions != null }
-                .forEach { points.addAll(it.poiOptions) }
+            .filter { it != null && it.poiOptions != null }
+            .forEach { points.addAll(it.poiOptions) }
 
 
         var hasCurrentLocation = false
@@ -319,15 +426,15 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val currentLocation = LatLng(myLocation.latitude, myLocation.longitude)
             var currentFloorId = mapManager.currentBuilding.selectedFloor.id
             if (myLocation.extras != null && myLocation.extras
-                            .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
+                    .containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
                 currentFloorId = myLocation.extras
-                        .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
+                    .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
             }
             points.add(0, PointOptions()
-                    .id(VoicePromptActivity.ITEM_ID_LOCATION.toLong())
-                    .location(currentLocation)
-                    .level(currentFloorId)
-                    .name(getString(R.string.current_location)))
+                .id(VoicePromptActivity.ITEM_ID_LOCATION.toLong())
+                .location(currentLocation)
+                .level(currentFloorId)
+                .name(getString(R.string.current_location)))
             hasCurrentLocation = true
         }
 
@@ -357,7 +464,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             if (route == null) {
                 PwLog.e(VoicePromptActivity.TAG, "Couldn't find route.")
                 Snackbar.make(content, R.string.no_route,
-                        Snackbar.LENGTH_SHORT).show()
+                    Snackbar.LENGTH_SHORT).show()
             } else {
                 startNavigating(route)
             }
@@ -380,12 +487,14 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             navigator!!.stop()
         }
         navigator = mapManager.navigate(route)
+        mapManager.addLocationUpdateListener(this)
         navigator!!.addOnManeuverChangedListener(this)
 
         navOverlay.setNavigator(navigator!!)
         navOverlayContainer.visibility = View.VISIBLE
-        fab.setImageResource(R.drawable.ic_clear_white)
-        fab.setOnClickListener(exitNavListener)
+        fab.hide()
+        floorSpinnerView.visibility = View.GONE
+        walkTimeView.visibility = View.VISIBLE
 
         if (voiceEnabled) {
             voice.setImageResource(R.drawable.ic_unmuted)
@@ -406,12 +515,14 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             navigator!!.stop()
             navigator = null
         }
+        mapManager.removeLocationUpdateListener(this)
         navOverlayContainer.visibility = View.GONE
         voice.visibility = View.GONE
         voiceStatusTextView.visibility = View.GONE
-        fab.setImageResource(R.drawable.ic_navigation)
-        fab.setOnClickListener(selectRouteListener)
-    }
+        fab.show()
+        walkTimeView.visibility = View.GONE
+        routingFromCurrentLocation = false
+        handler.removeCallbacks(timeUpdater)    }
 
     private fun toggleVoice() {
         voiceEnabled = !voiceEnabled
@@ -441,6 +552,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     companion object {
         private val TAG = VoicePromptActivity::class.java.simpleName
         private val ITEM_ID_LOCATION = -2
+        private const val UPDATE_DELAY = 5000L
     }
 
 }
