@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         map:cameraTargetLat="@integer/building_latitude"
         map:cameraTargetLng="@integer/building_longitude"
-        map:cameraZoom="15.0" />
+        map:cameraZoom="16.0" />
 
     <LinearLayout
         android:layout_width="wrap_content"
