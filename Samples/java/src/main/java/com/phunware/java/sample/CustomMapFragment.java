@@ -33,12 +33,14 @@ public class CustomMapFragment extends MapFragment {
             .zoom(zoomLevel)
             .build();
 
-        // "MapOptions" is the argument key that Google is using right now when you use their MapFragment directly.
-        // This is an implementation detail of the Google Maps library that is subject to change without notice
         Bundle args = new Bundle();
-        args.putParcelable("MapOptions", options.camera(cameraOptions));
+        args.putParcelable(MAP_OPTIONS_KEY, options.camera(cameraOptions));
 
         mf.setArguments(args);
         return mf;
     }
+
+    // "MapOptions" is the argument key that Google is using right now when you use their MapFragment directly.
+    // This is an implementation detail of the Google Maps library that is subject to change without notice
+    private static final String MAP_OPTIONS_KEY = "MapOptions";
 }

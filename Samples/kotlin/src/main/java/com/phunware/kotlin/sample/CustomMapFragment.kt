@@ -37,13 +37,15 @@ class CustomMapFragment : MapFragment() {
                         .target(buildingLatLng)
                         .zoom(zoomLevel)
                         .build()
-                    // "MapOptions" is the argument key that Google is using right now when you use their MapFragment directly.
-                    // This is an implementation detail of the Google Maps library that is subject to change without notice
-                    putParcelable("MapOptions", options.camera(cameraOptions))
+                    putParcelable(MAP_OPTIONS_KEY, options.camera(cameraOptions))
                 }
             }
 
         }
+
+        // "MapOptions" is the argument key that Google is using right now when you use their MapFragment directly.
+        // This is an implementation detail of the Google Maps library that is subject to change without notice
+        private const val MAP_OPTIONS_KEY = "MapOptions"
     }
 
 }
