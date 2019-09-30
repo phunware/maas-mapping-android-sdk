@@ -25,6 +25,8 @@ Note: For text-to-speech, we use text-to-speech API from `android.speech.tts.Tex
 
 ```
 override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        this.currentManeuverIndex = position
+
         // Update the selected floor when the maneuver floor changes
         val maneuver = navigator.maneuvers[position]
         val selectedPosition = floorSpinner.selectedItemPosition
@@ -32,31 +34,20 @@ override fun onManeuverChanged(navigator: Navigator, position: Int) {
             val floor = floorSpinnerAdapter.getItem(i)
             if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
                 floorSpinner.setSelection(i)
+                break
             }
         }
 
-        //if voice is enabled 
+        // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
-            val pair = navOverlay.getManeuverPair()
-            var text = displayHelper.stringForDirection(this, pair.mainManeuver)
-
-            val turnManeuver  = pair.turnManeuver
-            var turnable : Boolean  = false
-            if(turnManeuver != null) {
-                turnable = turnManeuver.isTurnManeuver
-            }
-
-            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable) {
-                text += " then "
-                text += displayHelper.stringForDirection(this, turnManeuver)
-            }
-            else {
-                text += " to arrive at the destination."
-            }
+            val text = getTextForPosition(navigator, position)
             textToVoice(text)
         }
-    }
+}
 ```
+
+**Step 3: Play the voice instructions on each maneuver change by calling `textToVoice(getTextForPosition(navigator, position))`**
+
 `pair` (`NavigationOverlayView.getManeuverPair()`) is the object that contains the current maneuver and the next turn maneuver (`val turnManeuver  = pair.turnManeuver`). Check if the `turnManeuver` is an actual turn, i.e. `turnManeuver.isTurnManeuver == true`, then add the text to speech for that turn.
 
 `ManeuverDisplayHelper.stringForDirection()` is a helper method that receives a `String` and play the speech of that `String`     
