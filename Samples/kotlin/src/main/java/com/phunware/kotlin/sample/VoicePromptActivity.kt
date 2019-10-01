@@ -54,6 +54,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private lateinit var accessible: CheckBox
     private lateinit var voice: ImageButton
     private lateinit var voiceStatusTextView: TextView
+    private var currentManeuverPosition: Int? = null
 
     private var selectRouteListener: View.OnClickListener = View.OnClickListener { showRoutingDialog() }
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
@@ -73,7 +74,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
+        fab.hide()
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
@@ -189,8 +190,15 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     /**
      * Navigator.OnManeuverChangedListener
+     *
+     * Updates the current maneuver index.
+     * Updates the selected floor when the maneuver floor changes.
+     * Plays the text that is associated with the maneuver position
+     *
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        this.currentManeuverPosition = position
+
         // Update the selected floor when the maneuver floor changes
         val maneuver = navigator.maneuvers[position]
         val selectedPosition = floorSpinner.selectedItemPosition
@@ -198,27 +206,13 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val floor = floorSpinnerAdapter.getItem(i)
             if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
                 floorSpinner.setSelection(i)
+                break
             }
         }
 
+        // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
-            val pair = navOverlay.getManeuverPair()
-            var text = displayHelper.stringForDirection(this, pair.mainManeuver)
-
-            val turnManeuver  = pair.turnManeuver
-            var turnable : Boolean  = false
-            if(turnManeuver != null) {
-                turnable = turnManeuver.isTurnManeuver
-            }
-
-            if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable) {
-                text += getString(R.string.demo_voice_prompt_then)
-                text += displayHelper.stringForDirection(this, turnManeuver)
-            }
-            else {
-                text += getString(R.string.demo_voice_prompt_arrive_at_destination)
-            }
-            textToVoice(text)
+            textToVoice(getTextForPosition(navigator, position))
         }
     }
 
@@ -266,11 +260,11 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             s.playTogether(anims)
             s.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    if (show) fab.visibility = View.VISIBLE
+                    if (show) fab.show()
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    if (!show) fab.visibility = View.GONE
+                    if (!show) fab.hide()
                 }
             })
             s.start()
@@ -379,6 +373,7 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (navigator != null) {
             navigator!!.stop()
         }
+
         navigator = mapManager.navigate(route)
         navigator!!.addOnManeuverChangedListener(this)
 
@@ -419,6 +414,11 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (voiceEnabled) {
             voice.setImageResource(R.drawable.ic_unmuted)
             voiceStatusTextView.setText(R.string.demo_voice_prompt_unmuted)
+            navigator?.let {navigator ->
+                currentManeuverPosition?.apply {
+                    textToVoice(getTextForPosition(navigator, this))
+                }
+            }
         } else {
             voice.setImageResource(R.drawable.ic_muted)
             voiceStatusTextView.setText(R.string.demo_voice_prompt_muted)
@@ -432,6 +432,27 @@ class VoicePromptActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             putBoolean("voice", enabled)
             commit()
         }
+    }
+
+    private fun getTextForPosition(navigator: Navigator, position: Int): String {
+        val pair = navOverlay.getManeuverPair()
+        var text = displayHelper.stringForDirection(this, pair.mainManeuver)
+
+        val turnManeuver  = pair.turnManeuver
+        var turnable = false
+        if(turnManeuver != null) {
+            turnable = turnManeuver.isTurnManeuver
+        }
+
+        if(turnManeuver != null && position < navigator.maneuvers.size - 1 && turnable) {
+            text += " ${getString(R.string.demo_voice_prompt_then)} "
+            text += displayHelper.stringForDirection(this, turnManeuver)
+        }
+        else {
+            text += " ${getString(R.string.demo_voice_prompt_arrive_at_destination)}"
+        }
+
+        return text
     }
 
     private fun textToVoice(text: String) {
