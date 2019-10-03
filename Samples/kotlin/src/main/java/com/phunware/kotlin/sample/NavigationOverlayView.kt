@@ -29,6 +29,9 @@ from Phunware, Inc. */
 import android.content.Context
 import android.support.v4.view.PagerAdapter
 import android.support.v4.view.ViewPager
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
+import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -80,6 +83,10 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             i += 2
         }
 
+        maneuvers.forEach {
+            println("===================================== ${it.direction.name}")
+        }
+
         adapter = ManeuverPagerAdapter(navigator)
         setAdapter(adapter)
         adapter.setManeuvers(pairs)
@@ -103,7 +110,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         PwLog.e("NavigationOverlayView", "Off route")
     }
 
-    public class ManeuverPair {
+    class ManeuverPair {
         internal var mainPos: Int = 0
         internal var turnPos: Int = 0
         internal var mainManeuver: RouteManeuverOptions? = null
@@ -126,43 +133,47 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val context = container.context
-            val v = LayoutInflater.from(context)
-                    .inflate(R.layout.item_maneuver, container, false)
-
-            val direction = v.findViewById<ImageView>(R.id.direction)
-            val maneuver = v.findViewById<TextView>(R.id.maneuver)
-            val nextManeuver = v.findViewById<TextView>(R.id.next_maneuver)
-            val nextDirection = v.findViewById<ImageView>(R.id.next_direction)
-
+            val v = LayoutInflater.from(context).inflate(R.layout.item_maneuver, container, false)
+            val nextDirectionIcon = v.findViewById<ImageView>(R.id.next_direction_icon)
+            val nextDirectionText = v.findViewById<TextView>(R.id.next_direction_text)
             val m = maneuvers[position]
+
             if (m.mainManeuver != null) {
-                direction.setImageResource(displayHelper.getImageResourceForDirection(context,
-                        m.mainManeuver!!))
-                maneuver.text = displayHelper.stringForDirection(context, m.mainManeuver)
 
-                if (m.turnManeuver == null) {
-                    nextManeuver.visibility = View.GONE
-                    nextDirection.visibility = View.GONE
-                    v.findViewById<TextView>(R.id.next).visibility = View.GONE
+                if (position < maneuvers.size - 1 ) {
+                    nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.turnManeuver!!))
+
+                    val textDirection = displayHelper.stringForDirection(context, m.turnManeuver)
+                    val textDistance = displayHelper.distanceForDirection(context, m.mainManeuver, " in")
+
+                    val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
+                    val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
+
+                    val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                    val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+
+                    nextDirectionText.text = styledText
+
                 } else {
-                    v.findViewById<TextView>(R.id.next).visibility = View.VISIBLE
-                    nextManeuver.visibility = View.VISIBLE
-                    nextDirection.visibility = View.VISIBLE
-                    nextDirection.setImageResource(displayHelper
-                            .getImageResourceForDirection(context, m.turnManeuver!!))
-                    nextManeuver.text = displayHelper.stringForDirection(
-                            context, m.turnManeuver)
-                }
+                    nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.mainManeuver!!))
 
-                if (position == maneuvers.size - 1) {
-                    v.findViewById<TextView>(R.id.next).visibility = View.GONE
                     val pointCount = navigator.route.points.size
                     val finalPoint = navigator.route.points[pointCount - 1]
                     val customLocation = context.getString(R.string.custom_location_title)
-                    val arrive = context.getString(R.string.to_arrive,
-                            if (finalPoint.name == null) customLocation else finalPoint.name)
-                    nextManeuver.visibility = View.VISIBLE
-                    nextManeuver.text = arrive
+
+                    val textDirection = displayHelper.stringForDirection(context, m.mainManeuver)
+                    val textDistance = """
+                        ${displayHelper.distanceForDirection(context, m.mainManeuver, " for") }
+                        ${context.getString(R.string.to_arrive, if (finalPoint.name == null) customLocation else finalPoint.name)}
+                    """.trimIndent()
+
+                    val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
+                    val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
+
+                    val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                    val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+
+                    nextDirectionText.text = styledText
                 }
 
                 container.addView(v)
@@ -180,5 +191,11 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
     fun getManeuverPair() : ManeuverPair {
         return adapter.getItem(currentItem)
+    }
+}
+
+fun String.toSpannableText(context: Context, styleResourceId: Int): SpannableString {
+    return SpannableString(this).apply {
+        setSpan(TextAppearanceSpan(context, styleResourceId), 0, this.length, 0)
     }
 }

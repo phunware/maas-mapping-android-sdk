@@ -41,7 +41,7 @@ internal class ManeuverDisplayHelper {
         val directionString = StringBuilder()
         when (maneuver.direction) {
             RouteManeuverOptions.Direction.FLOOR_CHANGE ->
-                directionString.append(floorChangeDescriptionForManeuver(context, maneuver))
+                directionString.append(floorChangeDescriptionForManeuver(context, maneuver)).append("\n")
             RouteManeuverOptions.Direction.BEAR_LEFT ->
                 directionString.append(context.getString(R.string.bear_left))
             RouteManeuverOptions.Direction.BEAR_RIGHT ->
@@ -51,12 +51,20 @@ internal class ManeuverDisplayHelper {
             RouteManeuverOptions.Direction.RIGHT ->
                 directionString.append(context.getString(R.string.turn_right))
             RouteManeuverOptions.Direction.STRAIGHT ->
-                directionString.append(String.format(Locale.US,
-                    context.getString(R.string.continue_straight_distance),
-                    getStringDistanceInFeet(maneuver.distance)))
+                directionString.append(context.getString(R.string.continue_straight))
             else -> directionString.append(context.getString(R.string.unknown))
         }
         return directionString.toString()
+    }
+
+    /**
+     * Build a string in the form "in 27 feet" using the distance of the maneuver.
+     */
+    fun distanceForDirection(context: Context?, maneuver: RouteManeuverOptions?, prep: String): String {
+        if (context == null || maneuver == null || maneuver.direction == null) {
+            return ""
+        }
+        return String.format(Locale.US, context.getString(R.string.section_distance), prep, getStringDistanceInFeet(maneuver.distance))
     }
 
     /**
@@ -74,30 +82,30 @@ internal class ManeuverDisplayHelper {
     }
 
     fun getImageResourceForDirection(context: Context,
-                                     maneuver: RouteManeuverOptions): Int {
+        maneuver: RouteManeuverOptions): Int {
         var resource = 0
         when (maneuver.direction) {
-            RouteManeuverOptions.Direction.STRAIGHT -> resource = R.drawable.ic_arrow_straight
-            RouteManeuverOptions.Direction.LEFT -> resource = R.drawable.ic_arrow_left
-            RouteManeuverOptions.Direction.RIGHT -> resource = R.drawable.ic_arrow_right
-            RouteManeuverOptions.Direction.BEAR_LEFT -> resource = R.drawable.ic_arrow_bear_left
-            RouteManeuverOptions.Direction.BEAR_RIGHT -> resource = R.drawable.ic_arrow_bear_right
+            RouteManeuverOptions.Direction.STRAIGHT -> resource = R.drawable.ic_route_straight
+            RouteManeuverOptions.Direction.LEFT -> resource = R.drawable.ic_route_left
+            RouteManeuverOptions.Direction.RIGHT -> resource = R.drawable.ic_route_right
+            RouteManeuverOptions.Direction.BEAR_LEFT -> resource = R.drawable.ic_route_bear_left
+            RouteManeuverOptions.Direction.BEAR_RIGHT -> resource = R.drawable.ic_route_bear_right
             RouteManeuverOptions.Direction.FLOOR_CHANGE -> {
                 val changeDescription = floorChangeDescriptionForManeuver(context, maneuver)
                 if (changeDescription.toLowerCase()
                         .contains(context.getString(R.string.elevator))) {
                     resource = if (changeDescription.toLowerCase()
                             .contains(context.getString(R.string.down))) {
-                        R.drawable.ic_elevator_down
+                        R.drawable.ic_route_elevatordown
                     } else {
-                        R.drawable.ic_elevator_up
+                        R.drawable.ic_route_elevatorup
                     }
                 } else {
                     resource = if (changeDescription.toLowerCase()
                             .contains(context.getString(R.string.down))) {
-                        R.drawable.ic_stairs_down
+                        R.drawable.ic_route_stairsdown
                     } else {
-                        R.drawable.ic_stairs_up
+                        R.drawable.ic_route_stairsup
                     }
                 }
             }
@@ -110,7 +118,7 @@ internal class ManeuverDisplayHelper {
     }
 
     private fun floorChangeDescriptionForManeuver(context: Context,
-                                                  maneuver: RouteManeuverOptions): String {
+        maneuver: RouteManeuverOptions): String {
         val endPoint = maneuver.points[maneuver.points.size - 1]
         val endPointName = endPoint.name
         var methodOfChange = ""
@@ -132,7 +140,7 @@ internal class ManeuverDisplayHelper {
             else -> context.getString(R.string.to)
         }
         return String.format(Locale.US, context.getString(R.string.floor_change_message_format),
-                methodOfChange, directionMessage, endPoint.level)
+            methodOfChange, directionMessage, endPoint.level)
     }
 
     private fun directionForManeuver(maneuver: RouteManeuverOptions): FloorChangeDirection {
