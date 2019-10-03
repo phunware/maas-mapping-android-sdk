@@ -134,48 +134,46 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             val nextDirectionText = v.findViewById<TextView>(R.id.next_direction_text)
             val m = maneuvers[position]
 
-            if (m.mainManeuver != null) {
+            val mainManeuver = m.mainManeuver ?: return 0
 
-                if (position < maneuvers.size - 1 ) {
-                    nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.turnManeuver!!))
+            if (position < maneuvers.size - 1 && m.turnManeuver != null) {
+                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.turnManeuver!!))
 
-                    val textDirection = displayHelper.stringForDirection(context, m.turnManeuver)
-                    val textDistance = displayHelper.distanceForDirection(context, m.mainManeuver, " in")
+                val textDirection = displayHelper.stringForDirection(context, m.turnManeuver)
+                val textDistance = displayHelper.distanceForDirection(context, mainManeuver, " in")
 
-                    val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
-                    val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
+                val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
+                val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
 
-                    val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
-                    val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
 
-                    nextDirectionText.text = styledText
+                nextDirectionText.text = styledText
 
-                } else {
-                    nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.mainManeuver!!))
+            } else if (position == maneuvers.size - 1) {
+                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, mainManeuver))
 
-                    val pointCount = navigator.route.points.size
-                    val finalPoint = navigator.route.points[pointCount - 1]
-                    val customLocation = context.getString(R.string.custom_location_title)
+                val pointCount = navigator.route.points.size
+                val finalPoint = navigator.route.points[pointCount - 1]
+                val customLocation = context.getString(R.string.custom_location_title)
 
-                    val textDirection = displayHelper.stringForDirection(context, m.mainManeuver)
-                    val textDistance = """
-                        ${displayHelper.distanceForDirection(context, m.mainManeuver, " for") }
-                        ${context.getString(R.string.to_arrive, if (finalPoint.name == null) customLocation else finalPoint.name)}
-                    """.trimIndent()
+                val textDirection = displayHelper.stringForDirection(context, mainManeuver)
+                val textDistance = """
+                    ${displayHelper.distanceForDirection(context, mainManeuver, " for") }
+                    ${context.getString(R.string.to_arrive, if (finalPoint.name == null) customLocation else finalPoint.name)}
+                """.trimIndent()
 
-                    val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
-                    val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
+                val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
+                val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
 
-                    val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
-                    val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
 
-                    nextDirectionText.text = styledText
-                }
-
-                container.addView(v)
-                return v
+                nextDirectionText.text = styledText
             }
-            return 0
+
+            container.addView(v)
+            return v
         }
 
         override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
