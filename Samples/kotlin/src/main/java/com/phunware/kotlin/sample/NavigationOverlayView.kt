@@ -83,10 +83,6 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             i += 2
         }
 
-        maneuvers.forEach {
-            println("===================================== ${it.direction.name}")
-        }
-
         adapter = ManeuverPagerAdapter(navigator)
         setAdapter(adapter)
         adapter.setManeuvers(pairs)

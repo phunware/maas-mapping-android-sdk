@@ -58,7 +58,7 @@ internal class ManeuverDisplayHelper {
     }
 
     /**
-     * Build a string in the form "in 27 feet" using the distance of the maneuver.
+     * Build a string in the form "in 27 feet" or "for 27 feet" using the distance of the maneuver.
      */
     fun distanceForDirection(context: Context?, maneuver: RouteManeuverOptions?, prep: String): String {
         if (context == null || maneuver == null || maneuver.direction == null) {
