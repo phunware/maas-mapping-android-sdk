@@ -78,6 +78,7 @@
     <string name="direction">direction</string>
     <string name="next_direction">next direction</string>
     <string name="building_not_loaded">Building not loaded.</string>
+    <string name="section_distance">"%s %s feet"</string>
 
     <string name="demo_location_sharing_title">Location Sharing</string>
     <string name="demo_location_sharing_description">Easily share your location with other users</string>

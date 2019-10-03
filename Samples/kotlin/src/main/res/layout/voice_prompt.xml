@@ -11,44 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/nav_overlay_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_margin="16dp"
-        android:visibility="gone">
-
-        <com.phunware.kotlin.sample.NavigationOverlayView
-            android:id="@+id/nav_overlay"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="top"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/nav_shadow"
-            />
-
-        <ImageView
-            android:id="@+id/nav_dropdown_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/nav_shadow"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/ic_expand_more_24px" />
-
-        <View
-            android:id="@+id/nav_shadow"
-            android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:background="@drawable/shadow_bottom"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            />
-    </android.support.constraint.ConstraintLayout>
+    <include layout="@layout/navigation_overlay"/>
 
     <ImageButton
         android:id="@+id/voice"
