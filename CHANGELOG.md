@@ -1,6 +1,10 @@
 # Mapping SDK Changelog
+## 3.9.7 (Friday, Oct 11th, 2019)
+#### Bug fixes / Performance enhancements
+* Fixed an issue with floor switching when curent location is available
+
 ## 3.9.6 (Wednesday, Sep 25th, 2019)
-#### Bug Fixes
+#### Bug fixes / Performance enhancements
 * Updating to Location 3.7.4
 
 ## 3.9.5 (Wednesday, Sep 19th, 2019)
