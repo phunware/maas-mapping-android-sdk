@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.annotation.SuppressLint
 import android.location.Location
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
@@ -12,7 +13,12 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.ImageButton
+import android.widget.RelativeLayout
+import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -25,15 +31,19 @@ import com.phunware.location_core.PwLocationProvider
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.bluedot.LocationManager
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
+import com.phunware.mapping.model.Building
+import com.phunware.mapping.model.FloorOptions
+import com.phunware.mapping.model.PointOptions
+import com.phunware.mapping.model.RouteManeuverOptions
+import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
-import com.phunware.mapping.bluedot.LocationManager
-import com.phunware.mapping.model.*
-import java.util.*
-import kotlin.collections.ArrayList
+import java.util.Timer
+import java.util.TimerTask
 import kotlin.math.min
 
 class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -61,9 +71,16 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
     private var dontShowOffRouteAgain: Boolean = false
     private var modalVisible: Boolean = false
-    private val offRouteDistanceThreshold = 10.0 //distance in meters
-    private val offRouteTimeThreshold: Long = 5000 //time in milliseconds
     private var offRouteTimer: Timer? = null
+    private var previousTimeDialogDismissed = 0L
+
+    companion object {
+        private val TAG = OffRouteActivity::class.java.simpleName
+        private const val ITEM_ID_LOCATION = -2
+        private const val offRouteDistanceThreshold = 10.0 //distance in meters
+        private const val offRouteTimeThreshold: Long = 5000 //time in milliseconds
+        private const val timeBetweenDialogPromptThreshold = 10000 //time in milliseconds
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +89,6 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
         fab.setOnClickListener(selectRouteListener)
         navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
@@ -194,14 +210,14 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * LocationListener - reports the post route snapping blue dot location.
      */
     override fun onLocationUpdate(p0: Location?) {
-        if (!modalVisible && !dontShowOffRouteAgain) {
+        if (!modalVisible && !dontShowOffRouteAgain && checkTimeBetweenShowingDialog()) {
             if (p0 != null) {
                 var minDistanceInMeters = Double.MAX_VALUE
                 for (maneuver: RouteManeuverOptions in navigator!!.maneuvers) {
                     for (i in 0..maneuver.points.size - 2) {
                         val ptA = maneuver.points[i]
                         val ptB = maneuver.points[i + 1]
-                        minDistanceInMeters = min(minDistanceInMeters, PolyUtil.distanceToLine(LatLng(p0!!.latitude, p0!!.longitude), ptA.location, ptB.location))
+                        minDistanceInMeters = min(minDistanceInMeters, PolyUtil.distanceToLine(LatLng(p0.latitude, p0.longitude), ptA.location, ptB.location))
                     }
                 }
 
@@ -234,8 +250,13 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * OffRouteDialogFragment.OffRouteDialogListener
      */
     override fun onDismiss(dontShowAgain: Boolean) {
+        previousTimeDialogDismissed = System.currentTimeMillis()
         modalVisible = false
         dontShowOffRouteAgain = dontShowAgain
+    }
+
+    private fun checkTimeBetweenShowingDialog(): Boolean {
+        return System.currentTimeMillis() - previousTimeDialogDismissed > timeBetweenDialogPromptThreshold
     }
 
     override fun onReroute() {
@@ -248,7 +269,7 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (router != null) {
             val route = router.shortestRoute()
             if (route == null) {
-                PwLog.e(OffRouteActivity.TAG, "Couldn't find route.")
+                PwLog.e(TAG, "Couldn't find route.")
                 Snackbar.make(content, R.string.no_route,
                         Snackbar.LENGTH_SHORT).show()
             } else {
@@ -279,6 +300,7 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager.isMyLocationEnabled = true
     }
 
+    @SuppressLint("RestrictedApi")
     private fun showFab(show: Boolean) {
         runOnUiThread {
             val start = (if (show) 0 else 1).toFloat()
@@ -313,10 +335,10 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 .setTitle("Select a Route")
                 .setMessage("Choose two points to route between")
                 .setCancelable(false)
-                .setPositiveButton("Route", { _, _ -> getRoutes() })
-                .setNegativeButton("Cancel", { _, _ ->
+                .setPositiveButton("Route") { _, _ -> getRoutes() }
+                .setNegativeButton("Cancel") { _, _ ->
                     // Do Nothing - Close Dialog
-                })
+                }
 
         val d = builder.create()
         d.show()
@@ -348,7 +370,7 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
             }
             points.add(0, PointOptions()
-                    .id(OffRouteActivity.ITEM_ID_LOCATION.toLong())
+                    .id(ITEM_ID_LOCATION.toLong())
                     .location(currentLocation)
                     .level(currentFloorId)
                     .name(getString(R.string.current_location)))
@@ -368,18 +390,18 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val endId = endPicker.selectedItemId
         val isAccessible = accessible.isChecked
 
-        var router: Router
-        if (startId.compareTo(ITEM_ID_LOCATION) == 0) {
+        val router: Router
+        router = if (startId.compareTo(ITEM_ID_LOCATION) == 0) {
             val currentLocation = LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
-            router = mapManager.findRoutes(currentLocation, endId, mapManager.currentBuilding.selectedFloor.id, isAccessible)
+            mapManager.findRoutes(currentLocation, endId, mapManager.currentBuilding.selectedFloor.id, isAccessible)
         } else {
-            router = mapManager.findRoutes(startId, endId, isAccessible)
+            mapManager.findRoutes(startId, endId, isAccessible)
         }
 
         if (router != null) {
             val route = router.shortestRoute()
             if (route == null) {
-                PwLog.e(OffRouteActivity.TAG, "Couldn't find route.")
+                PwLog.e(TAG, "Couldn't find route.")
                 Snackbar.make(content, R.string.no_route,
                         Snackbar.LENGTH_SHORT).show()
             } else {
@@ -425,11 +447,6 @@ class OffRouteActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         dontShowOffRouteAgain = false
         modalVisible = false
-    }
-
-    companion object {
-        private val TAG = OffRouteActivity::class.java.simpleName
-        private val ITEM_ID_LOCATION = -2
     }
 
 }
