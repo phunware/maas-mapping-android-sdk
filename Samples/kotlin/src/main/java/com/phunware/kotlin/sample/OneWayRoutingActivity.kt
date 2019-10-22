@@ -31,13 +31,18 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.CheckBox
+import android.widget.ImageButton
+import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -46,9 +51,9 @@ import com.phunware.core.PwLog
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.location_core.PwLocationProvider
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.SupportMapFragment
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
@@ -57,14 +62,14 @@ import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 import com.phunware.mapping.model.RouteOptions
 import java.lang.ref.WeakReference
-import java.util.*
+import java.util.ArrayList
 
 class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Navigator.OnManeuverChangedListener, Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
-    private lateinit var content: RelativeLayout
+    private lateinit var content: ConstraintLayout
     private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
 
@@ -83,7 +88,7 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.routing)
+        setContentView(R.layout.activity_routing)
         content = findViewById(R.id.content)
 
         // Initialize views for routing
@@ -112,7 +117,7 @@ class OneWayRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
 
         mapFragment.getPhunwareMapAsync(this)
     }
