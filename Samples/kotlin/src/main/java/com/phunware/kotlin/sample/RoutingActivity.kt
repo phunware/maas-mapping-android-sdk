@@ -39,6 +39,7 @@ import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -87,6 +88,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     var navigator: Navigator? = null // public so that other samples that extend this activity can access
     lateinit var navOverlay: NavigationOverlayView // public so that other samples that extend this activity can access
     private lateinit var navOverlayContainer: View
+    private lateinit var routeSummaryFragment: RouteSummaryFragment
+
     private lateinit var navDropdownArrow: ImageView
 
     private val gpsPositionList: MutableList<Location> = ArrayList()
@@ -101,6 +104,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         floorSpinnerView = findViewById(R.id.floor_switcher_layout)
 
         navDropdownArrow = findViewById(R.id.nav_dropdown_arrow)
+        navDropdownArrow.setOnClickListener {
+            routeSummaryFragment.show()
+        }
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
@@ -134,6 +140,11 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                     override fun onNothingSelected(parent: AdapterView<*>) {}
                 }
 
+        routeSummaryFragment = supportFragmentManager.findFragmentById(R.id.routeSummaryFragment) as RouteSummaryFragment
+
+        // Route Summary should be hidden initially.
+        supportFragmentManager.beginTransaction().hide(routeSummaryFragment).commit()
+
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
@@ -152,11 +163,20 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     override fun onBackPressed() {
-        if (navOverlayContainer.visibility == View.VISIBLE) {
+        if (!routeSummaryFragment.isHidden) {
+            routeSummaryFragment.hide()
+        } else if (navOverlayContainer.visibility == View.VISIBLE) {
             stopNavigating()
         } else {
             super.onBackPressed()
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == android.R.id.home) {
+            routeSummaryFragment.hide()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     /**
@@ -306,6 +326,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         floorSpinnerView.visibility = View.GONE
 
         navigator?.start()
+
+        routeSummaryFragment.setRoute(route)
     }
 
     open fun stopNavigating() {
