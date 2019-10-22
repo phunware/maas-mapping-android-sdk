@@ -32,7 +32,7 @@ import com.phunware.mapping.model.RouteManeuverOptions
 
 import java.util.Locale
 
-internal class ManeuverDisplayHelper {
+class ManeuverDisplayHelper {
 
     fun stringForDirection(context: Context?, maneuver: RouteManeuverOptions?): String {
         if (context == null || maneuver == null || maneuver.direction == null) {
