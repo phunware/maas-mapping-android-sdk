@@ -154,7 +154,7 @@ class VoicePromptActivity : WalkTimeActivity(), TextToSpeech.OnInitListener {
         val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
         with(sharedPref.edit()) {
             putBoolean(PREF_VOICE_ENABLED, enabled)
-            commit()
+            apply()
         }
     }
 

@@ -16,7 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/navigation_overlay" />
+    <include
+        android:id="@+id/nav_overlay_container"
+        layout="@layout/navigation_overlay" />
 
     <ImageButton
         android:id="@+id/voice"
@@ -85,6 +87,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_navigation" />
+
+    <fragment
+        android:id="@+id/routeSummaryFragment"
+        android:name="com.phunware.kotlin.sample.RouteSummaryFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/walk_time_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <RelativeLayout
         android:id="@+id/walk_time_view"

@@ -55,7 +55,7 @@
     <string name="turn_right">Turn Right</string>
     <string name="bear_left">Bear Left</string>
     <string name="bear_right">Bear Right</string>
-    <string name="continue_straight">Continue Straight for</string>
+    <string name="continue_straight">Continue Straight</string>
     <string name="continue_straight_distance" formatted="false">
         Continue Straight for %s feet</string>
     <string name="unknown">Unknown</string>
@@ -65,6 +65,7 @@
     <string name="to">to</string>
     <string name="next_maneuver">Next: </string>
     <string name="to_arrive"> to arrive at %1$s</string>
+    <string name="you_have_arrived">You have arrived </string>
     <string name="current_location">Current Location</string>
     <string name="custom_location_title">Custom Location</string>
     <string name="start_prompt">Select starting point…</string>
