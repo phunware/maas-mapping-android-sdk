@@ -16,7 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <include layout="@layout/navigation_overlay" />
+    <include
+        android:id="@+id/nav_overlay_container"
+        layout="@layout/navigation_overlay" />
 
     <ImageButton
         android:id="@+id/voice"

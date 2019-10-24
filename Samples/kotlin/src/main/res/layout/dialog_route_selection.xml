@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingEnd="16dp"
-    android:paddingStart="16dp">
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
 
     <Spinner
         android:id="@+id/start"
@@ -14,6 +14,7 @@
         android:minHeight="?attr/actionBarSize" />
 
     <ImageButton
+        android:contentDescription="@null"
         android:id="@+id/reverse"
         android:layout_width="36dp"
         android:layout_height="36dp"
