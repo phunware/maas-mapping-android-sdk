@@ -16,7 +16,7 @@ import com.phunware.mapping.OnPhunwareMapReadyCallback;
  */
 public class CustomMapFragment extends MapFragment {
 
-    public static MapFragment getInstance(AppCompatActivity activity, OnPhunwareMapReadyCallback callback) {
+    public static CustomMapFragment getInstance(AppCompatActivity activity, OnPhunwareMapReadyCallback callback) {
 
         TypedValue typedValue = new TypedValue();
         activity.getResources().getValue(R.integer.building_latitude, typedValue, true);
@@ -25,7 +25,7 @@ public class CustomMapFragment extends MapFragment {
         double lng = typedValue.getFloat();
         float zoomLevel = 16f;
 
-        MapFragment mf =  new CustomMapFragment();
+        CustomMapFragment mf =  new CustomMapFragment();
         mf.getPhunwareMapAsync(callback);
         GoogleMapOptions options = new GoogleMapOptions();
         CameraPosition cameraOptions = new Builder()
