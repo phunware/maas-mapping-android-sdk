@@ -96,6 +96,7 @@
     <string name="demo_voice_prompt_then">&#032;then&#032;</string>
     <string name="demo_voice_prompt_arrive_at_destination">&#032;to arrive at the destination.</string>
     <string name="demo_voice_prompt_preferences_key">demo_voice_prompt_preferences_key</string>
+    <string name="demo_voice_prompt_prep_for">for</string>
 
     <string name="demo_walk_time_title">Walk Time Calculations</string>
     <string name="demo_arrival_time_title">Arrival Time %1$s</string>
