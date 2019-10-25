@@ -13,16 +13,16 @@
 
     <!-- Demos -->
     <string name="demo_load_building_title">Load Building</string>
-    <string name="demo_load_building_description">Loads a building on a Google Map</string>
+    <string name="demo_load_building_description">Load and display map</string>
 
     <string name="demo_load_building_no_map_title">Load Building without map</string>
     <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
 
     <string name="demo_bluedot_title">Bluedot Location</string>
-    <string name="demo_bluedot_description">Show your location on the map using Phunware APIs</string>
+    <string name="demo_bluedot_description">Display current location on map</string>
 
     <string name="demo_location_modes_title">Location Modes</string>
-    <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
+    <string name="demo_location_modes_description">Different ways for the camera to follow the blue dot</string>
     <string name="location_modes_instructions">Click the fab on the bottom right to toggle location modes. The progression goes from Normal to Locate Me to Follow Me.</string>
 
     <string name="demo_location_mode_managed_compass">Location Mode - Managed Compass</string>
@@ -32,19 +32,19 @@
         The progression goes from Normal to Locate Me to Follow Me. In Follow Me mode Managed Compass is enabled
     </string>
 
-    <string name="demo_custom_poi_title">Create Custom POIs</string>
-    <string name="demo_custom_poi_description">Create custom markers on the map</string>
+    <string name="demo_custom_poi_title">Create Custom Point of Interest</string>
+    <string name="demo_custom_poi_description">Add a point of interest to your building programmatically</string>
     <string name="custom_poi_instructions">Press and hold on the map to add a custom POI marker</string>
     <string name="custom_poi_dialog_title">Create Custom POI</string>
     <string name="custom_poi_dialog_message">Enter a name for this POI</string>
     <string name="custom_poi_pin_drop_error">Can\'t drop pin outside the building bounds</string>
 
-    <string name="demo_search_poi_title">Search For POIs</string>
-    <string name="demo_search_poi_description">Easily search for and locate POIs on the map</string>
+    <string name="demo_search_poi_title">Search For Points of Interest</string>
+    <string name="demo_search_poi_description">Search points of interest by name</string>
     <string name="search">Search</string>
 
-    <string name="demo_routing_title">Routing</string>
-    <string name="demo_routing_description">Create routes and navigate between POIs</string>
+    <string name="demo_routing_title">Route to Point of Interest</string>
+    <string name="demo_routing_description">Route to point of interest when current location is acquired</string>
 
     <string name="demo_one_way_routing_title">One Way Routing</string>
     <string name="demo_one_way_routing_description">Demonstrates how to enable one way routing</string>
@@ -82,31 +82,31 @@
     <string name="section_distance">"%s %s feet"</string>
 
     <string name="demo_location_sharing_title">Location Sharing</string>
-    <string name="demo_location_sharing_description">Easily share your location with other users</string>
+    <string name="demo_location_sharing_description">View device locations in your building and share your own</string>
     <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
     <string name="action_set_device_info">Set User Info</string>
     <string name="set_user_info_dialog_device_name">Device Name</string>
     <string name="set_user_info_dialog_device_type">Device Type</string>
     <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
 
-    <string name="demo_voice_prompt_title">Voice Prompt</string>
-    <string name="demo_voice_prompt_description">Enable voice prompts during turn-by-turn routing</string>
+    <string name="demo_voice_prompt_title">Voiced Route Instructions</string>
+    <string name="demo_voice_prompt_description">Read route instructions aloud to the user</string>
     <string name="demo_voice_prompt_muted">Muted</string>
     <string name="demo_voice_prompt_unmuted">Unmuted</string>
     <string name="demo_voice_prompt_then">&#032;then&#032;</string>
     <string name="demo_voice_prompt_arrive_at_destination">&#032;to arrive at the destination.</string>
     <string name="demo_voice_prompt_preferences_key">demo_voice_prompt_preferences_key</string>
 
-    <string name="demo_walk_time_title">Walk Time</string>
+    <string name="demo_walk_time_title">Walk Time Calculations</string>
     <string name="demo_arrival_time_title">Arrival Time %1$s</string>
-    <string name="demo_walk_time_description">Show the estimated time to route completion</string>
+    <string name="demo_walk_time_description">Show actual walk time</string>
     <string name="demo_walk_time_exit">Exit</string>
     <string name="demo_walk_time_less_than_one_minute">&lt; 1 minute</string>
     <string name="demo_walk_time_one_minute">%1$d minute</string>
     <string name="demo_walk_time_multiple_minutes">%1$d minutes</string>
 
-    <string name="demo_off_route_title">Off Route</string>
-    <string name="demo_off_route_description">Alerts the user when they have gone off route</string>
+    <string name="demo_off_route_title">Off Route Scenario</string>
+    <string name="demo_off_route_description">Shows an alert when the user goes too far off route</string>
     <string name="demo_off_route_dialog_title">You are no longer\non Route</string>
     <string name="demo_off_route_dialog_message">Please return to the route or re-route from your current location.</string>
     <string name="demo_off_route_dialog_dismiss">DISMISS</string>
