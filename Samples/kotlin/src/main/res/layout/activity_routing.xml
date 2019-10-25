@@ -29,6 +29,7 @@
         android:background="@drawable/rounded_button"
         android:contentDescription="@null"
         android:visibility="gone"
+        android:elevation="6dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nav_overlay_container"
         app:srcCompat="@drawable/ic_muted" />
@@ -38,14 +39,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/voice"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="4dp"
         android:gravity="center"
         android:text="@string/demo_voice_prompt_muted"
+        android:textSize="12sp"
         android:textColor="#000000"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/voice"
+        app:layout_constraintStart_toStartOf="@id/voice"
         app:layout_constraintTop_toBottomOf="@+id/voice" />
 
     <LinearLayout
