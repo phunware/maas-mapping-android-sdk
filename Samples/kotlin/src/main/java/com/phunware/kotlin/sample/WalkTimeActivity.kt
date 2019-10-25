@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Locale
+import kotlin.math.ceil
 
 open class WalkTimeActivity : RoutingActivity() {
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
@@ -113,28 +114,28 @@ open class WalkTimeActivity : RoutingActivity() {
             distance += maneuver.distance
         }
 
-        val estimateTimeInSeconds: Double
-        if (routingFromCurrentLocation) {
-            if (calculatedWalkSpeed >= averageWalkSpeed) {
-                estimateTimeInSeconds = (distance / calculatedWalkSpeed)
-            } else {
-                estimateTimeInSeconds = (distance / averageWalkSpeed)
-            }
+        val estimateTimeInSeconds = if (routingFromCurrentLocation &&
+                calculatedWalkSpeed >= averageWalkSpeed) {
+            distance / calculatedWalkSpeed
         } else {
-            estimateTimeInSeconds = (distance / averageWalkSpeed)
+            distance / averageWalkSpeed
         }
 
         if (estimateTimeInSeconds < 60) {
             walkTimeTextview.setText(R.string.demo_walk_time_less_than_one_minute)
         } else {
-            val numMinutes: Int = (estimateTimeInSeconds / 60.0).toInt()
-            val numMinutesString: String
-            if (numMinutes == 1) {
-                numMinutesString =
-                        resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
+            val numMinutesTemp = estimateTimeInSeconds / 60.0
+            // Provide slop of 1 to 1.2 minutes where eta will be set at 1 minute and not rounded up
+            val numMinutes: Int = if (numMinutesTemp >= 1.0 && numMinutesTemp < 1.2) {
+                1
             } else {
-                numMinutesString =
-                        resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
+                ceil(estimateTimeInSeconds / 60.0).toInt()
+            }
+            val numMinutesString: String
+            numMinutesString = if (numMinutes == 1) {
+                resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
+            } else {
+                resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
             }
             walkTimeTextview.text = numMinutesString
         }

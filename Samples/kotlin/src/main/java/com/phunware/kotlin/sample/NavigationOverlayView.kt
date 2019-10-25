@@ -47,6 +47,45 @@ import java.util.ArrayList
 
 class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs), Navigator.OnManeuverChangedListener {
 
+    companion object {
+        /**
+         * Helper method to render a maneuverPair.  This is used by the [NavigationOverlayView] and
+         * the [RouteSummaryFragment].
+         */
+        fun renderManeuver(maneuverPair: ManeuverPair,
+                           nextDirectionIcon: ImageView,
+                           nextDirectionText: TextView,
+                           displayHelper: ManeuverDisplayHelper) {
+            if (maneuverPair.turnManeuver != null) {
+                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(nextDirectionIcon.context, maneuverPair.turnManeuver!!))
+
+                val textDirection = displayHelper.stringForDirection(nextDirectionText.context, maneuverPair.turnManeuver)
+                val textDistance = displayHelper.distanceForDirection(nextDirectionText.context, maneuverPair.mainManeuver, " in")
+
+                val spannableTextDirection = textDirection.toSpannableText(nextDirectionText.context, R.style.DirectionTextAppearance)
+                val spannableTextDistance = textDistance.toSpannableText(nextDirectionText.context, R.style.DistanceTextAppearance)
+
+                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+
+                nextDirectionText.text = styledText
+            } else {
+                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(nextDirectionText.context, maneuverPair.mainManeuver!!))
+
+                val textDirection = displayHelper.stringForDirection(nextDirectionText.context, maneuverPair.mainManeuver)
+                val textDistance = displayHelper.distanceForDirection(nextDirectionText.context, maneuverPair.mainManeuver, " for")
+
+                val spannableTextDirection = textDirection.toSpannableText(nextDirectionText.context, R.style.DirectionTextAppearance)
+                val spannableTextDistance = textDistance.toSpannableText(nextDirectionText.context, R.style.DistanceTextAppearance)
+
+                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
+                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
+
+                nextDirectionText.text = styledText
+            }
+        }
+    }
+
     private lateinit var navigator: Navigator
     private lateinit var adapter: ManeuverPagerAdapter
 
@@ -132,45 +171,15 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             val v = LayoutInflater.from(context).inflate(R.layout.item_maneuver, container, false)
             val nextDirectionIcon = v.findViewById<ImageView>(R.id.next_direction_icon)
             val nextDirectionText = v.findViewById<TextView>(R.id.next_direction_text)
-            val m = maneuvers[position]
 
-            val mainManeuver = m.mainManeuver ?: return 0
+            val currentManeuverPair = maneuvers[position]
 
-            if (position < maneuvers.size - 1 && m.turnManeuver != null) {
-                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, m.turnManeuver!!))
-
-                val textDirection = displayHelper.stringForDirection(context, m.turnManeuver)
-                val textDistance = displayHelper.distanceForDirection(context, mainManeuver, " in")
-
-                val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
-                val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
-
-                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
-                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
-
-                nextDirectionText.text = styledText
-
-            } else if (position == maneuvers.size - 1) {
-                nextDirectionIcon.setImageResource(displayHelper.getImageResourceForDirection(context, mainManeuver))
-
-                val pointCount = navigator.route.points.size
-                val finalPoint = navigator.route.points[pointCount - 1]
-                val customLocation = context.getString(R.string.custom_location_title)
-
-                val textDirection = displayHelper.stringForDirection(context, mainManeuver)
-                val textDistance = """
-                    ${displayHelper.distanceForDirection(context, mainManeuver, " for") }
-                    ${context.getString(R.string.to_arrive, if (finalPoint.name == null) customLocation else finalPoint.name)}
-                """.trimIndent()
-
-                val spannableTextDirection = textDirection.toSpannableText(context, R.style.DirectionTextAppearance)
-                val spannableTextDistance = textDistance.toSpannableText(context, R.style.DistanceTextAppearance)
-
-                val spannableBuilder = SpannableStringBuilder().append(spannableTextDirection).append(spannableTextDistance)
-                val styledText = spannableBuilder.subSequence(0, spannableBuilder.length)
-
-                nextDirectionText.text = styledText
-            }
+            renderManeuver(
+                    maneuverPair = currentManeuverPair,
+                    nextDirectionText = nextDirectionText,
+                    nextDirectionIcon = nextDirectionIcon,
+                    displayHelper = displayHelper
+            )
 
             container.addView(v)
             return v
@@ -183,7 +192,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         override fun isViewFromObject(view: View, `object`: Any): Boolean = view == `object`
     }
 
-    fun getManeuverPair() : ManeuverPair {
+    fun getManeuverPair(): ManeuverPair {
         return adapter.getItem(currentItem)
     }
 }
