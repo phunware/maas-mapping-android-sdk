@@ -107,7 +107,7 @@
 
     <string name="demo_off_route_title">Off Route Scenario</string>
     <string name="demo_off_route_description">Shows an alert when the user goes too far off route</string>
-    <string name="demo_off_route_dialog_title">You are no longer\non Route</string>
+    <string name="demo_off_route_dialog_title">You Are No Longer\nOn Route</string>
     <string name="demo_off_route_dialog_message">Please return to the route or re-route from your current location.</string>
     <string name="demo_off_route_dialog_dismiss">DISMISS</string>
     <string name="demo_off_route_dialog_reroute">RE-ROUTE</string>
@@ -124,5 +124,6 @@
     <!-- App permissions -->
     <string name="permission_snackbar_message">Location permission is required to use the app</string>
     <string name="action_settings">Settings</string>
+    <string name="content_desc_off_route_image">Off Route Image</string>
 
 </resources>
