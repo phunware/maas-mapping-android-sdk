@@ -75,7 +75,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         private val TAG = RoutingActivity::class.java.simpleName
     }
 
-    private lateinit var mapManager: PhunwareMapManager
+    lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var currentBuilding: Building
     private lateinit var floorSpinner: Spinner
