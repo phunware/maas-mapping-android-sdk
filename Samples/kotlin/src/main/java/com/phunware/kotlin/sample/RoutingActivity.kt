@@ -43,7 +43,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -87,10 +86,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private lateinit var fab: FloatingActionButton
     var navigator: Navigator? = null // public so that other samples that extend this activity can access
     lateinit var navOverlay: NavigationOverlayView // public so that other samples that extend this activity can access
-    private lateinit var navOverlayContainer: View
     private lateinit var routeSummaryFragment: RouteSummaryFragment
-
-    private lateinit var navDropdownArrow: ImageView
 
     private val gpsPositionList: MutableList<Location> = ArrayList()
     private var routingFromCurrentLocation = false
@@ -103,10 +99,6 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         content = findViewById(R.id.content)
         floorSpinnerView = findViewById(R.id.floor_switcher_layout)
 
-        navDropdownArrow = findViewById(R.id.nav_dropdown_arrow)
-        navDropdownArrow.setOnClickListener {
-            routeSummaryFragment.show()
-        }
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
@@ -117,8 +109,10 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                     currentLocation = mapManager.currentLocation
             ).show(supportFragmentManager, "frag_routing_dialog")
         }
-        navOverlayContainer = findViewById(R.id.nav_overlay_container)
         navOverlay = findViewById(R.id.nav_overlay)
+        navOverlay.setOnClickListener {
+            routeSummaryFragment.show()
+        }
 
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
@@ -165,7 +159,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onBackPressed() {
         if (!routeSummaryFragment.isHidden) {
             routeSummaryFragment.hide()
-        } else if (navOverlayContainer.visibility == View.VISIBLE) {
+        } else if (navOverlay.visibility == View.VISIBLE) {
             stopNavigating()
         } else {
             super.onBackPressed()
@@ -321,7 +315,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             navOverlay.setNavigator(it)
         }
 
-        navOverlayContainer.visibility = View.VISIBLE
+        navOverlay.visibility = View.VISIBLE
         fab.hide()
         floorSpinnerView.visibility = View.GONE
 
@@ -335,7 +329,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navigator = null
 
         mapManager.removeLocationUpdateListener(this)
-        navOverlayContainer.visibility = View.GONE
+        navOverlay.visibility = View.GONE
         floorSpinnerView.visibility = View.VISIBLE
         fab.show()
         routingFromCurrentLocation = false
