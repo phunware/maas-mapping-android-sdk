@@ -11,20 +11,24 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
 
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,7 +36,7 @@
         <activity
             android:name=".building.LoadBuildingActivity"
             android:label="@string/demo_load_building_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".building.LoadBuildingWithoutMapActivity"
@@ -41,12 +45,12 @@
         <activity
             android:name=".location.BluedotLocationActivity"
             android:label="@string/demo_bluedot_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".location.LocationModesActivity"
             android:label="@string/demo_location_modes_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".location.LocationModeManagedCompassActivity"
@@ -55,17 +59,17 @@
         <activity
             android:name=".poi.CustomPOIActivity"
             android:label="@string/demo_custom_poi_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".poi.SearchPoiActivity"
             android:label="@string/demo_search_poi_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".routing.RoutingActivity"
             android:label="@string/demo_routing_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".routing.OneWayRoutingActivity"
@@ -74,22 +78,22 @@
         <activity
             android:name=".location.LocationSharingActivity"
             android:label="@string/demo_location_sharing_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".routing.VoicePromptActivity"
             android:label="@string/demo_voice_prompt_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".routing.WalkTimeActivity"
             android:label="@string/demo_walk_time_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".routing.OffRouteActivity"
             android:label="@string/demo_off_route_title"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
 
         <!-- Google Maps Key -->
         <meta-data
