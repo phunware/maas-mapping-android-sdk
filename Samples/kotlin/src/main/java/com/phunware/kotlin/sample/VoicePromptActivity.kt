@@ -161,6 +161,9 @@ class VoicePromptActivity : WalkTimeActivity(), TextToSpeech.OnInitListener {
     private fun getTextForPosition(navigator: Navigator, position: Int): String {
         val pair = navOverlay.getManeuverPair()
         var text = displayHelper.stringForDirection(this, pair.mainManeuver)
+        text += " ${displayHelper.distanceForDirection(this, pair.mainManeuver,
+                getString(R.string.demo_voice_prompt_prep_for))}"
+
 
         val turnManeuver = pair.turnManeuver
         var turnable = false
