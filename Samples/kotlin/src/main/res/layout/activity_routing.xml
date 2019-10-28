@@ -21,9 +21,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <include
-            android:id="@+id/nav_overlay_container"
-            layout="@layout/navigation_overlay" />
+        <com.phunware.kotlin.sample.NavigationOverlayView
+            android:id="@+id/nav_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_gravity="top"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/voice"
@@ -36,7 +42,7 @@
             android:elevation="6dp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/nav_overlay_container"
+            app:layout_constraintTop_toBottomOf="@+id/nav_overlay"
             app:srcCompat="@drawable/ic_muted" />
 
         <TextView

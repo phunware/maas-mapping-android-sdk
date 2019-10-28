@@ -40,6 +40,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import com.phunware.core.PwLog
+import com.phunware.kotlin.sample.util.extensions.toPx
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteManeuverOptions
 
@@ -89,11 +90,26 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
     private lateinit var navigator: Navigator
     private lateinit var adapter: ManeuverPagerAdapter
 
+    /**
+     * Since this custom view extends a ViewPager, we need to handle "click listening" on our own.
+     */
+    private var clickListener: OnClickListener? = null
+
+    init {
+        // set the viewpager to show multiple pages at once, so maneuver steps peak in from the side
+        offscreenPageLimit = 6
+        pageMargin = (-40).toPx()
+    }
+
     private val pageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
             val pair = adapter.getItem(position)
             navigator.setCurrentManeuver(pair.mainPos)
         }
+    }
+
+    override fun setOnClickListener(listener: OnClickListener?) {
+        clickListener = listener
     }
 
     fun setNavigator(navigator: Navigator) {
@@ -122,7 +138,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             i += 2
         }
 
-        adapter = ManeuverPagerAdapter(navigator)
+        adapter = ManeuverPagerAdapter(clickListener)
         setAdapter(adapter)
         adapter.setManeuvers(pairs)
         addOnPageChangeListener(pageChangeListener)
@@ -152,7 +168,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         internal var turnManeuver: RouteManeuverOptions? = null
     }
 
-    private class ManeuverPagerAdapter internal constructor(private val navigator: Navigator) : PagerAdapter() {
+    private class ManeuverPagerAdapter internal constructor(private val clickListener: OnClickListener?) : PagerAdapter() {
         private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
         private val maneuvers = ArrayList<ManeuverPair>()
 
@@ -173,6 +189,10 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
             val nextDirectionText = v.findViewById<TextView>(R.id.next_direction_text)
 
             val currentManeuverPair = maneuvers[position]
+
+            v.setOnClickListener {
+                clickListener?.onClick(v)
+            }
 
             renderManeuver(
                     maneuverPair = currentManeuverPair,

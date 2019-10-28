@@ -1,4 +1,4 @@
-package com.phunware.kotlin.sample
+package com.phunware.kotlin.sample.util.extensions
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -25,15 +25,6 @@ Except as contained in this notice, the name of Phunware, Inc. shall
 not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
+import android.content.res.Resources
 
-import com.phunware.mapping.PhunwareMap
-
-class OneWayRoutingActivity : RoutingActivity() {
-
-    override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
-        mapManager.enableOnewayRouting(true)
-
-        super.onPhunwareMapReady(phunwareMap)
-
-    }
-}
+fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
