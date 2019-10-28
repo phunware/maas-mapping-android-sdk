@@ -28,9 +28,9 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
+import android.support.constraint.ConstraintLayout
 import android.view.View
 import android.widget.Button
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteOptions
@@ -44,7 +44,7 @@ open class WalkTimeActivity : RoutingActivity() {
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
 
     //Walk Time Views
-    private lateinit var walkTimeView: RelativeLayout
+    private lateinit var walkTimeView: ConstraintLayout
     private lateinit var walkTimeTextview: TextView
     private lateinit var arrivalTimeTextview: TextView
     private lateinit var exitRouteButton: Button
