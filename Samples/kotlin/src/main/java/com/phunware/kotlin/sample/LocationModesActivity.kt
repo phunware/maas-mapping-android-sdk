@@ -44,6 +44,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
+import com.phunware.kotlin.sample.utils.extensions.accentColor
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
@@ -222,13 +223,13 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_compass))
                 locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this, R.color.colorAccent))
+                        ContextCompat.getColor(this,  accentColor()))
             }
             mode.equals(PREF_LOCATION_LOCATE, ignoreCase = true) -> {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_my_location))
                 locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this, R.color.colorAccent))
+                        ContextCompat.getColor(this,  accentColor()))
             }
             else -> {
                 locationModeFab.setImageDrawable(
