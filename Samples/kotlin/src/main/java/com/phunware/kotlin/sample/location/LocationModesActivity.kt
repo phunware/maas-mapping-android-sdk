@@ -83,7 +83,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.location_modes)
+        setContentView(R.layout.activity_location_modes)
         content = findViewById(R.id.content)
 
         floorSpinner = findViewById(R.id.floorSpinner)

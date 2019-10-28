@@ -83,7 +83,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.location_mode_managed)
+        setContentView(R.layout.activity_location_mode_managed)
         content = findViewById(R.id.content)
 
         floorSpinner = findViewById(R.id.floorSpinner)

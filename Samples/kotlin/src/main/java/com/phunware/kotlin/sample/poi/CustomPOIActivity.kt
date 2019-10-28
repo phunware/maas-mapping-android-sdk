@@ -58,7 +58,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.custom_poi)
+        setContentView(R.layout.activity_custom_poi)
 
         val floorSpinner = findViewById<Spinner>(R.id.floorSpinner)
         spinnerAdapter = FloorAdapter(this)

@@ -45,7 +45,7 @@ internal class FloorAdapter(context: Context) : ArrayAdapter<FloorOptions>(conte
         val holder: ViewHolder
         if (v == null) {
             v = LayoutInflater.from(
-                    context).inflate(R.layout.floor_spinner_row, parent, false)
+                    context).inflate(R.layout.item_floor_spinner_row, parent, false)
             holder = ViewHolder()
             holder.text = v!!.findViewById(android.R.id.text1)
             v.tag = holder

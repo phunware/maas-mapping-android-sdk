@@ -41,7 +41,7 @@ internal class DemoAdapter(private val demos: List<Demo>, private val listener: 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.demo_row, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.item_demo_row, parent, false)
         return ViewHolder(v, listener)
     }
 

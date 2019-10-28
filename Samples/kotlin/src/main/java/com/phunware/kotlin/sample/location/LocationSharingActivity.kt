@@ -90,7 +90,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.location_sharing)
+        setContentView(R.layout.activity_location_sharing)
 
         PwLog.setShowLog(true)
 

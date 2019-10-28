@@ -53,7 +53,7 @@ class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.load_building)
+        setContentView(R.layout.activity_load_building)
 
         val floorSpinner = findViewById<Spinner>(R.id.floorSpinner)
         spinnerAdapter = FloorAdapter(this)

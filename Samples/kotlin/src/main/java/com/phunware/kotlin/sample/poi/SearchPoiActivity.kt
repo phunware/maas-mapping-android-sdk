@@ -74,7 +74,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.search_poi)
+        setContentView(R.layout.activity_search_poi)
 
         fab = findViewById(R.id.fab)
         fab.visibility = View.GONE

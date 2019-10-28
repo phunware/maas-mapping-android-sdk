@@ -34,12 +34,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
-import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.R
+import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
@@ -49,7 +48,6 @@ import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
-
 import java.lang.ref.WeakReference
 
 class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -64,7 +62,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.bluedot_location)
+        setContentView(R.layout.activity_bluedot_location)
         content = findViewById(R.id.content)
 
         floorSpinner = findViewById(R.id.floorSpinner)
