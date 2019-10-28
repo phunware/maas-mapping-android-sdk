@@ -110,7 +110,6 @@
             android:layout_height="110dp"
             android:background="@color/white"
             android:elevation="12dp"
-            android:outlineProvider="paddedBounds"
             android:visibility="gone"
             app:behavior_hideable="false"
             app:behavior_peekHeight="110dp"
