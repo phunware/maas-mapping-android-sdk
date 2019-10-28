@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.location.util;
 
 /* Copyright (C) 2018 Phunware, Inc.
 

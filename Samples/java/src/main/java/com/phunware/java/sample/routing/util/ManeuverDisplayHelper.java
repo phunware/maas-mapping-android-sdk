@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.routing.util;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -29,15 +29,16 @@ from Phunware, Inc. */
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.phunware.java.sample.R;
 import com.phunware.mapping.model.PointOptions;
 import com.phunware.mapping.model.RouteManeuverOptions;
 
 import java.util.Locale;
 
-class ManeuverDisplayHelper {
+public class ManeuverDisplayHelper {
     private static final double NUM_FEET_PER_METER = 3.28084;
 
-    String stringForDirection(Context context, RouteManeuverOptions maneuver)
+    public String stringForDirection(Context context, RouteManeuverOptions maneuver)
     {
         if (context == null || maneuver == null || maneuver.getDirection() == null) {
             return "";
@@ -85,7 +86,7 @@ class ManeuverDisplayHelper {
         return String.valueOf((int) res);
     }
 
-    int getImageResourceForDirection(@NonNull Context context,
+    public int getImageResourceForDirection(@NonNull Context context,
                                      RouteManeuverOptions maneuver) {
         int resource = 0;
         switch (maneuver.getDirection()) {

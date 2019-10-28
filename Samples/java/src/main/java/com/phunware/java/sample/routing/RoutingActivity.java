@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.routing;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -34,7 +34,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -56,6 +55,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.core.PwLog;
+import com.phunware.java.sample.location.LocationModesActivity;
+import com.phunware.java.sample.R;
+import com.phunware.java.sample.routing.adapter.BuildingAdapter;
+import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
 import com.phunware.location_core.PwLocationProvider;

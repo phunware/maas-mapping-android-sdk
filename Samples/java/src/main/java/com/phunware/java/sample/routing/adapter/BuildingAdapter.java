@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.routing.adapter;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -39,10 +39,10 @@ import com.phunware.mapping.model.PointOptions;
 import java.util.ArrayList;
 import java.util.List;
 
-class BuildingAdapter extends ArrayAdapter<PointOptions> {
+public class BuildingAdapter extends ArrayAdapter<PointOptions> {
     private final String prompt;
 
-    BuildingAdapter(Context context, List<PointOptions> pointList, String prompt) {
+    public BuildingAdapter(Context context, List<PointOptions> pointList, String prompt) {
         super(context, 0, new ArrayList<PointOptions>());
         addAll(pointList);
         this.prompt = prompt;

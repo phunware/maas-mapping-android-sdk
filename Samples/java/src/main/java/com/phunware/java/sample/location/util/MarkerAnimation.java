@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.location.util;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -35,13 +35,13 @@ import android.util.Property;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 
-class MarkerAnimation {
+public class MarkerAnimation {
 
     private MarkerAnimation() {
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
-    static void animateMarkerTo(Marker marker,
+    public static void animateMarkerTo(Marker marker,
                                 LatLng finalPosition,
                                 final LatLngInterpolator latLngInterpolator) {
         TypeEvaluator<LatLng> typeEvaluator = new TypeEvaluator<LatLng>() {

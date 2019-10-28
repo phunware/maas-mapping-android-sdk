@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.config;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -28,12 +28,12 @@ from Phunware, Inc. */
 
 import android.support.v7.app.AppCompatActivity;
 
-class Demo {
+public class Demo {
     private String title;
     private String description;
     private final Class<? extends AppCompatActivity> activityClass;
 
-    Demo(String title, String description,
+    public Demo(String title, String description,
          Class<? extends AppCompatActivity> activityClass) {
         this.title = title;
         this.description = description;
@@ -48,7 +48,7 @@ class Demo {
         return description;
     }
 
-    Class<? extends AppCompatActivity> getActivityClass() {
+    public Class<? extends AppCompatActivity> getActivityClass() {
         return activityClass;
     }
 }

@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.config;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -29,13 +29,22 @@ from Phunware, Inc. */
 import android.content.Context;
 import android.content.res.Resources;
 
+import com.phunware.java.sample.location.LocationSharingActivity;
+import com.phunware.java.sample.R;
+import com.phunware.java.sample.poi.SearchPoiActivity;
+import com.phunware.java.sample.location.BluedotLocationActivity;
+import com.phunware.java.sample.building.LoadBuildingActivity;
+import com.phunware.java.sample.location.LocationModesActivity;
+import com.phunware.java.sample.poi.CustomPOIActivity;
+import com.phunware.java.sample.routing.RoutingActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-class DemoDetailsList {
+public class DemoDetailsList {
     private List<Demo> demos = new ArrayList<>();
 
-    DemoDetailsList(Context context) {
+    public DemoDetailsList(Context context) {
         Resources resources = context.getResources();
 
         demos.add(new Demo(resources.getString(R.string.demo_load_building_title),
@@ -67,7 +76,7 @@ class DemoDetailsList {
                 LocationSharingActivity.class));
     }
 
-    List<Demo> getDemos() {
+    public List<Demo> getDemos() {
         return demos;
     }
 }

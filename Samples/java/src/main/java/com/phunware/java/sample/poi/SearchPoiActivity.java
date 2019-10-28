@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.poi;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -56,6 +56,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
+import com.phunware.java.sample.R;
+import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;

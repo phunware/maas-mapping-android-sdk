@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.routing;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -37,8 +37,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.phunware.core.PwLog;
+import com.phunware.java.sample.R;
+import com.phunware.java.sample.routing.util.ManeuverDisplayHelper;
 import com.phunware.mapping.manager.Navigator;
-import com.phunware.mapping.model.BuildingOptions;
 import com.phunware.mapping.model.PointOptions;
 import com.phunware.mapping.model.RouteManeuverOptions;
 

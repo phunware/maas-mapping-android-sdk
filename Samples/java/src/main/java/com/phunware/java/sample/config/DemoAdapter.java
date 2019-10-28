@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.config;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -33,17 +33,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.phunware.java.sample.R;
+
 import java.util.List;
 
-class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
+public class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
     private List<Demo> demos;
     private DemoOnClickListener listener;
 
-    interface DemoOnClickListener {
+    public interface DemoOnClickListener {
         void onItemClicked(String title);
     }
 
-    DemoAdapter(List<Demo> demos, DemoOnClickListener listener) {
+    public DemoAdapter(List<Demo> demos, DemoOnClickListener listener) {
         this.demos = demos;
         this.listener = listener;
     }
@@ -66,7 +68,7 @@ class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
         return demos.size();
     }
 
-    Demo getItem(String title) {
+    public Demo getItem(String title) {
         if (!TextUtils.isEmpty(title)) {
             for (Demo demo : demos) {
                 if (demo.getTitle().equals(title)) {
@@ -77,7 +79,7 @@ class DemoAdapter extends RecyclerView.Adapter<DemoAdapter.ViewHolder> {
         return null;
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView title;
         TextView description;
         DemoOnClickListener listener;

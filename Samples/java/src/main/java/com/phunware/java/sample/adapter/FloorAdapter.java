@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.adapter;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -34,13 +34,14 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.phunware.java.sample.R;
 import com.phunware.mapping.model.FloorOptions;
 
 import java.util.ArrayList;
 
-class FloorAdapter extends ArrayAdapter<FloorOptions> {
+public class FloorAdapter extends ArrayAdapter<FloorOptions> {
 
-    FloorAdapter(Context context) {
+    public FloorAdapter(Context context) {
         super(context, 0, new ArrayList<FloorOptions>());
     }
 

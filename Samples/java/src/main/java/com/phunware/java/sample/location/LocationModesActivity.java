@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.location;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -45,6 +45,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.core.PwLog;
+import com.phunware.java.sample.R;
+import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
 import com.phunware.mapping.MapFragment;
@@ -250,12 +252,12 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_compass));
                 locationModeFab.setImageTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(this, R.color.colorAccent)));
+                        ContextCompat.getColor(this, R.color.azure)));
             } else if (mode.equalsIgnoreCase(PREF_LOCATION_LOCATE)) {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_my_location));
                 locationModeFab.setImageTintList(ColorStateList.valueOf(
-                        ContextCompat.getColor(this, R.color.colorAccent)));
+                        ContextCompat.getColor(this, R.color.azure)));
             } else {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_my_location));

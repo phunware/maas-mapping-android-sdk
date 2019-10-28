@@ -1,4 +1,4 @@
-package com.phunware.java.sample;
+package com.phunware.java.sample.location.util;
 
 /* Copyright (C) 2018 Phunware, Inc.
 
@@ -30,9 +30,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.v4.content.ContextCompat;
+
+import com.phunware.java.sample.R;
 
 import java.util.Random;
 
