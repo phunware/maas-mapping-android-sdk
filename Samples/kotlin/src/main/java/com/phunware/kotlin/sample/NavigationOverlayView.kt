@@ -40,7 +40,7 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import com.phunware.core.PwLog
-import com.phunware.kotlin.sample.util.toPx
+import com.phunware.kotlin.sample.util.extensions.toPx
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteManeuverOptions
 
@@ -108,8 +108,8 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
     }
 
-    override fun setOnClickListener(l: OnClickListener?) {
-        clickListener = l
+    override fun setOnClickListener(listener: OnClickListener?) {
+        clickListener = listener
     }
 
     fun setNavigator(navigator: Navigator) {

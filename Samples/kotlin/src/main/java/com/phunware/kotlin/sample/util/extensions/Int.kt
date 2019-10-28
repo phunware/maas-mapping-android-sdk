@@ -1,4 +1,4 @@
-package com.phunware.kotlin.sample.util
+package com.phunware.kotlin.sample.util.extensions
 
 /* Copyright (C) 2018 Phunware, Inc.
 

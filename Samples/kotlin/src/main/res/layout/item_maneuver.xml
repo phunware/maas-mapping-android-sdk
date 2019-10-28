@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         android:elevation="12dp"
         android:innerRadius="0dp"
-        android:shape="ring"
         android:thicknessRatio="1.9"
         app:cardBackgroundColor="@android:color/background_light"
         app:cardCornerRadius="8dp"
