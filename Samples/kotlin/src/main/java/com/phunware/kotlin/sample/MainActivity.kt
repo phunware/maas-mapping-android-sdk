@@ -37,7 +37,9 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.widget.RelativeLayout
-import com.phunware.core.PwCoreSession
+import com.phunware.kotlin.sample.config.Demo
+import com.phunware.kotlin.sample.config.DemoAdapter
+import com.phunware.kotlin.sample.config.DemoDetailsList
 
 class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     private lateinit var demoAdapter: DemoAdapter

@@ -30,64 +30,64 @@
         </activity>
 
         <activity
-            android:name=".LoadBuildingActivity"
+            android:name=".building.LoadBuildingActivity"
             android:label="@string/demo_load_building_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".LoadBuildingWithoutMapActivity"
+            android:name=".building.LoadBuildingWithoutMapActivity"
             android:label="@string/demo_load_building_no_map_title" />
 
         <activity
-            android:name=".BluedotLocationActivity"
+            android:name=".location.BluedotLocationActivity"
             android:label="@string/demo_bluedot_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".LocationModesActivity"
+            android:name=".location.LocationModesActivity"
             android:label="@string/demo_location_modes_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".LocationModeManagedCompassActivity"
+            android:name=".location.LocationModeManagedCompassActivity"
             android:label="@string/demo_location_mode_managed_compass" />
 
         <activity
-            android:name=".CustomPOIActivity"
+            android:name=".poi.CustomPOIActivity"
             android:label="@string/demo_custom_poi_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".SearchPoiActivity"
+            android:name=".poi.SearchPoiActivity"
             android:label="@string/demo_search_poi_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".RoutingActivity"
+            android:name=".routing.RoutingActivity"
             android:label="@string/demo_routing_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".OneWayRoutingActivity"
+            android:name=".routing.OneWayRoutingActivity"
             android:label="@string/demo_one_way_routing_title" />
 
         <activity
-            android:name=".LocationSharingActivity"
+            android:name=".location.LocationSharingActivity"
             android:label="@string/demo_location_sharing_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".VoicePromptActivity"
+            android:name=".routing.VoicePromptActivity"
             android:label="@string/demo_voice_prompt_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".WalkTimeActivity"
+            android:name=".routing.WalkTimeActivity"
             android:label="@string/demo_walk_time_title"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name=".OffRouteActivity"
+            android:name=".routing.OffRouteActivity"
             android:label="@string/demo_off_route_title"
             android:screenOrientation="portrait"/>
 
