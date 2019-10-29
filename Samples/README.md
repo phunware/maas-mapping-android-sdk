@@ -81,17 +81,17 @@ Show your current location in a building as well as others in the same building.
 Open this sample two or more devices (iOS or Android) to view other user's locations. Note that the samples must be configured to point at the same building and must both be open simultaneously to work properly. You can click the `SET USER INFO` button in the top right corner to create a friendly name and device type that other users will see.
 
 ### Voice Prompt
-Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/VoicePromptActivity.kt)
+Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/VoicePrompt.md))
 
 Read route instruction aloud to the user as they swipe through the route instructions or as they traverse them with indoor location.
 
 ### Walk Time
-Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/WalkTimeActivity.kt)
+Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/WalkTime.md))
 
 Display walk time at the bottom of map.
 
 ### Off Route
-Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/OffRouteActivity.kt)
+Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/OffRouteAlerts.md))
 
 Monitor the users location updates and alert the user if they deviated from the route using a predetermined distance and time threshold.
 
