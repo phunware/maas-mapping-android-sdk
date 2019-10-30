@@ -9,8 +9,8 @@
 - Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId`in strings.xml and integers.xml.
 
 ### Sample Code
-- [OffRouteActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteActivity.kt)
-- [OffRouteDialogFragment.kt](kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteDialogFragment.kt)
+- [OffRouteActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/OffRouteActivity.kt)
+- [OffRouteDialogFragment.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/fragment/OffRouteDialogFragment.kt)
 
 **Step 1: Copy the following files to your project**
 
@@ -21,14 +21,16 @@
 
 ```
 override fun onLocationUpdate(p0: Location?) {
-        if (!modalVisible && !dontShowOffRouteAgain) {
+        super.onLocationUpdate(p0)
+
+        if (!modalVisible && !dontShowOffRouteAgain && checkTimeBetweenShowingDialog()) {
             if (p0 != null) {
                 var minDistanceInMeters = Double.MAX_VALUE
                 for (maneuver: RouteManeuverOptions in navigator!!.maneuvers) {
                     for (i in 0..maneuver.points.size - 2) {
                         val ptA = maneuver.points[i]
                         val ptB = maneuver.points[i + 1]
-                        minDistanceInMeters = min(minDistanceInMeters, PolyUtil.distanceToLine(LatLng(p0!!.latitude, p0!!.longitude), ptA.location, ptB.location))
+                        minDistanceInMeters = min(minDistanceInMeters, PolyUtil.distanceToLine(LatLng(p0.latitude, p0.longitude), ptA.location, ptB.location))
                     }
                 }
 
@@ -68,6 +70,14 @@ private fun showModal() {
             val offRouteDialog = OffRouteDialogFragment()
             offRouteDialog.show(supportFragmentManager, "")
         }
+    }
+```
+
+To avoid spamming your users with the modal if they were to stay off route for an extended period of time, utilize helper function  checkTimeBetweenShowingDialog() to suspend/resume off routing detection logic. This checks if the difference in time from when the user previously dismissed the dialog to the current time is greater than the threshold field set as `timeBetweenDialogPromptThreshold` (Default: 10 seconds)
+
+```
+private fun checkTimeBetweenShowingDialog(): Boolean {
+        return System.currentTimeMillis() - previousTimeDialogDismissed > timeBetweenDialogPromptThreshold
     }
 ```
 

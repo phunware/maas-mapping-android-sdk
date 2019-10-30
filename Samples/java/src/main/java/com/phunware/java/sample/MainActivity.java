@@ -40,6 +40,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.phunware.java.sample.config.Demo;
+import com.phunware.java.sample.config.DemoAdapter;
+import com.phunware.java.sample.config.DemoDetailsList;
+
 public class MainActivity extends AppCompatActivity implements DemoAdapter.DemoOnClickListener {
     private static final int REQUEST_PERMISSION_LOCATION_FINE = 1;
     private DemoAdapter demoAdapter;

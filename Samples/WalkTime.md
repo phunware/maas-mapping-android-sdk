@@ -8,7 +8,7 @@
 - Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingIdentifier` in `strings.xml` and `integers.xml`
 
 ### Sample Code
-- [WalkTimeActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/WalkTimeActivity.kt)
+- [WalkTimeActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/WalkTimeActivity.kt)
 
 **Step 1: Copy the following files to your project**
 
@@ -19,6 +19,8 @@ Save a list of reported locations into a queue (FIFO) and calculate the distance
 
 ```
 override fun onLocationUpdate(p0: Location?) {
+        super.onLocationUpdate(p0)
+
         if (p0 != null) {
             gpsPositionList.add(p0)
             while (gpsPositionList.count() > 5) {
@@ -28,7 +30,8 @@ override fun onLocationUpdate(p0: Location?) {
             val firstLocation = gpsPositionList.first()
             val lastLocation = gpsPositionList.last()
             val distanceCovered = firstLocation.distanceTo(lastLocation)
-            calculatedWalkSpeed = distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
+            calculatedWalkSpeed =
+                    distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
         }
     }
 ```
@@ -38,19 +41,12 @@ override fun onLocationUpdate(p0: Location?) {
 When the user changes the maneuver, the walk time will be updated for the new maneuver.
 ```
 override fun onManeuverChanged(navigator: Navigator, position: Int) {
-           // Update the selected floor when the maneuver floor changes
-           val maneuver = navigator.maneuvers[position]
-           val selectedPosition = floorSpinner.selectedItemPosition
-           for (i in 0 until floorSpinnerAdapter.count) {
-               val floor = floorSpinnerAdapter.getItem(i)
-               if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                   floorSpinner.setSelection(i)
-               }
-           }
-   
-           //Make call to update walk time
-           updateWalkTime(position)
-       }
+        super.onManeuverChanged(navigator, position)
+        this.currentManeuverIndex = position
+
+        //Make call to update walk time
+        updateWalkTime()
+    }
 ```
 
 **Step 4: The `updateWalkTime()` method calculates the time and updates the view.**
@@ -61,41 +57,46 @@ Change the logic in this method to suit your needs.
 ```
     private fun updateWalkTime(maneuverIndex: Int) {
             var distance = 0.0
-            for (i in maneuverIndex until navigator!!.maneuvers.count()) {
-                val maneuver = navigator!!.maneuvers[i]
-                distance += maneuver.distance
-            }
-    
-            val estimateTimeInSeconds: Double
-            if (routingFromCurrentLocation) {
-                if (calculatedWalkSpeed >= averageWalkSpeed) {
-                    estimateTimeInSeconds = (distance / calculatedWalkSpeed)
-                } else {
-                    estimateTimeInSeconds = (distance / averageWalkSpeed)
-                }
-            } else {
-                estimateTimeInSeconds = (distance / averageWalkSpeed)
-            }
-    
-            if (estimateTimeInSeconds < 60) {
-                walkTimeTextview.setText(R.string.demo_walk_time_less_than_one_minute)
-            } else {
-                val numMinutes: Int = (estimateTimeInSeconds / 60.0).toInt()
-                val numMinutesString: String
-                if (numMinutes == 1) {
-                    numMinutesString = resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
-                } else {
-                    numMinutesString = resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
-                }
-                walkTimeTextview.text = numMinutesString
-            }
-    
-            val calendar = Calendar.getInstance()
-            calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
-            val formattedArrivalTime : String = dateFormatter.format(calendar.time)
-            val formattedArrivalTimeText = String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
-            arrivalTimeTextview.text = formattedArrivalTimeText
+        for (i in currentManeuverIndex until navigator!!.maneuvers.count()) {
+            val maneuver = navigator!!.maneuvers[i]
+            distance += maneuver.distance
         }
+
+        val estimateTimeInSeconds = if (routingFromCurrentLocation &&
+                calculatedWalkSpeed >= averageWalkSpeed) {
+            distance / calculatedWalkSpeed
+        } else {
+            distance / averageWalkSpeed
+        }
+
+        if (estimateTimeInSeconds < 60) {
+            walkTimeTextview.setText(R.string.demo_walk_time_less_than_one_minute)
+        } else {
+            val numMinutesTemp = estimateTimeInSeconds / 60.0
+            // Provide slop of 1 to 1.2 minutes where eta will be set at 1 minute and not rounded up
+            val numMinutes: Int = if (numMinutesTemp >= 1.0 && numMinutesTemp < 1.2) {
+                1
+            } else {
+                ceil(estimateTimeInSeconds / 60.0).toInt()
+            }
+            val numMinutesString: String
+            numMinutesString = if (numMinutes == 1) {
+                resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
+            } else {
+                resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
+            }
+            walkTimeTextview.text = numMinutesString
+        }
+
+        val calendar = Calendar.getInstance()
+        calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
+        val formattedArrivalTime: String = dateFormatter.format(calendar.time)
+        val formattedArrivalTimeText =
+                String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
+        arrivalTimeTextview.text = formattedArrivalTimeText
+        handler.removeCallbacks(timeUpdater)
+        handler.postDelayed(timeUpdater, UPDATE_DELAY)
+    }
 ```
 
 # Privacy

@@ -12,12 +12,14 @@
     <string name="pw_signature_key"></string>
 
     <!-- Demos -->
+        <!-- Building -->
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Load and display map</string>
 
     <string name="demo_load_building_no_map_title">Load Building without map</string>
     <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
 
+        <!-- Location-->
     <string name="demo_bluedot_title">Bluedot Location</string>
     <string name="demo_bluedot_description">Display current location on map</string>
 
@@ -32,6 +34,15 @@
         The progression goes from Normal to Locate Me to Follow Me. In Follow Me mode Managed Compass is enabled
     </string>
 
+    <string name="demo_location_sharing_title">Location Sharing</string>
+    <string name="demo_location_sharing_description">View device locations in your building and share your own</string>
+    <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
+    <string name="action_set_device_info">Set User Info</string>
+    <string name="set_user_info_dialog_device_name">Device Name</string>
+    <string name="set_user_info_dialog_device_type">Device Type</string>
+    <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
+
+        <!-- POI -->
     <string name="demo_custom_poi_title">Create Custom Point of Interest</string>
     <string name="demo_custom_poi_description">Add a point of interest to your building programmatically</string>
     <string name="custom_poi_instructions">Press and hold on the map to add a custom POI marker</string>
@@ -43,6 +54,7 @@
     <string name="demo_search_poi_description">Search points of interest by name</string>
     <string name="search">Search</string>
 
+        <!-- Routing -->
     <string name="demo_routing_title">Route to Point of Interest</string>
     <string name="demo_routing_description">Route to point of interest when current location is acquired</string>
 
@@ -81,14 +93,6 @@
     <string name="building_not_loaded">Building not loaded.</string>
     <string name="section_distance">"%s %s feet"</string>
 
-    <string name="demo_location_sharing_title">Location Sharing</string>
-    <string name="demo_location_sharing_description">View device locations in your building and share your own</string>
-    <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
-    <string name="action_set_device_info">Set User Info</string>
-    <string name="set_user_info_dialog_device_name">Device Name</string>
-    <string name="set_user_info_dialog_device_type">Device Type</string>
-    <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
-
     <string name="demo_voice_prompt_title">Voiced Route Instructions</string>
     <string name="demo_voice_prompt_description">Read route instructions aloud to the user</string>
     <string name="demo_voice_prompt_muted">Muted</string>
@@ -126,5 +130,4 @@
     <string name="permission_snackbar_message">Location permission is required to use the app</string>
     <string name="action_settings">Settings</string>
     <string name="content_desc_off_route_image">Off Route Image</string>
-
 </resources>
