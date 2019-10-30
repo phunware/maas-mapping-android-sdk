@@ -26,7 +26,7 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.location.Location
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
 import com.phunware.core.PwLog

@@ -28,7 +28,7 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
-import android.support.constraint.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
