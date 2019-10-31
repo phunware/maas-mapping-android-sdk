@@ -106,9 +106,10 @@
     <string name="demo_arrival_time_title">Arrival Time %1$s</string>
     <string name="demo_walk_time_description">Show actual walk time</string>
     <string name="demo_walk_time_exit">Exit</string>
-    <string name="demo_walk_time_less_than_one_minute">&lt; 1 minute</string>
-    <string name="demo_walk_time_one_minute">%1$d minute</string>
-    <string name="demo_walk_time_multiple_minutes">%1$d minutes</string>
+    <plurals name="demo_walk_time_minutes">
+        <item quantity="one">%1$d minute.</item>
+        <item quantity="other">%1$d minutes.</item>
+    </plurals>
 
     <string name="demo_off_route_title">Off Route Scenario</string>
     <string name="demo_off_route_description">Shows an alert when the user goes too far off route</string>
