@@ -32,11 +32,11 @@ import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -53,6 +53,7 @@ import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.SupportMapFragment
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
@@ -100,7 +101,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
     }
 

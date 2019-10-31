@@ -33,11 +33,6 @@ import android.bluetooth.BluetoothAdapter
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
-import android.support.constraint.ConstraintLayout
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -45,17 +40,22 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.Fragment
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
-import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment.Companion.CURRENT_LOCATION_ITEM_ID
+import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.routing.fragment.RouteSummaryFragment
 import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment
+import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment.Companion.CURRENT_LOCATION_ITEM_ID
 import com.phunware.kotlin.sample.routing.view.NavigationOverlayView
-import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -153,7 +153,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapFragment.getPhunwareMapAsync(this)
     }
 
-    override fun onAttachFragment(fragment: Fragment?) {
+    override fun onAttachFragment(fragment: Fragment) {
         // Attach a callback for the [RoutingDialogFragment] so we don't have to manage
         // multiple [PhunwareMapManager]s
         if (fragment is RoutingDialogFragment) {

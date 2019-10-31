@@ -30,18 +30,17 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
-import android.support.design.widget.FloatingActionButton
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
@@ -58,7 +57,6 @@ import com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME
 import com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
-
 import java.lang.ref.WeakReference
 
 class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -274,7 +272,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
 
     private fun getSavedLocationMode(): String {
         val preferences = getSharedPreferences(PREFERENCE_NAME, 0)
-        return preferences.getString(PREF_LOCATION_MODE, PREF_LOCATION_NORMAL)
+        return preferences.getString(PREF_LOCATION_MODE, PREF_LOCATION_NORMAL) ?: ""
     }
 
     private fun setSavedLocationMode(mode: String) {

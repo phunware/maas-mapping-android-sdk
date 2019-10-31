@@ -27,7 +27,7 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
@@ -38,9 +38,9 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.SupportMapFragment
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
@@ -75,7 +75,7 @@ class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
-        val mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
     }
 
