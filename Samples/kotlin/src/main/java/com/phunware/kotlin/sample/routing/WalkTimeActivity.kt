@@ -28,10 +28,10 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
-import androidx.constraintlayout.widget.ConstraintLayout
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.phunware.kotlin.sample.R
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteOptions
@@ -122,24 +122,10 @@ open class WalkTimeActivity : RoutingActivity() {
             distance / averageWalkSpeed
         }
 
-        if (estimateTimeInSeconds < 60) {
-            walkTimeTextview.setText(R.string.demo_walk_time_less_than_one_minute)
-        } else {
-            val numMinutesTemp = estimateTimeInSeconds / 60.0
-            // Provide slop of 1 to 1.2 minutes where eta will be set at 1 minute and not rounded up
-            val numMinutes: Int = if (numMinutesTemp >= 1.0 && numMinutesTemp < 1.2) {
-                1
-            } else {
-                ceil(estimateTimeInSeconds / 60.0).toInt()
-            }
-            val numMinutesString: String
-            numMinutesString = if (numMinutes == 1) {
-                resources.getString(R.string.demo_walk_time_one_minute, numMinutes)
-            } else {
-                resources.getString(R.string.demo_walk_time_multiple_minutes, numMinutes)
-            }
-            walkTimeTextview.text = numMinutesString
-        }
+        val numMinutes: Int = if (estimateTimeInSeconds < 60) 1 else ceil(estimateTimeInSeconds / 60.0).toInt()
+
+        walkTimeTextview.text = resources.getQuantityString(
+                R.plurals.demo_walk_time_minutes, numMinutes, numMinutes)
 
         val calendar = Calendar.getInstance()
         calendar.add(Calendar.SECOND, estimateTimeInSeconds.toInt())
