@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/off_route"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_off_route_rounded_dialog"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:textColor="@color/azure"
+        android:textSize="22sp"
+        android:paddingStart="25dp"
+        android:paddingEnd="25dp"
+        android:paddingTop="28dp"
+        android:paddingBottom="14dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/demo_off_route_dialog_title"/>
+
+    <ImageView
+        android:id="@+id/offrouteImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/img_offroute"
+        android:contentDescription="@string/content_desc_off_route_image"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"/>
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-light"
+        android:textColor="@color/outer_space"
+        android:textSize="18sp"
+        android:paddingTop="14dp"
+        android:paddingStart="15dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="12dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:text="@string/demo_off_route_dialog_message"/>
+
+    <Button
+        android:id="@+id/dismissButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/demo_off_route_dialog_dismiss"
+        android:textColor="@color/azure"
+        android:background="@android:color/transparent"
+        android:layout_gravity="end"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/rerouteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/demo_off_route_dialog_reroute"
+        android:textColor="@color/azure"
+        android:background="@android:color/transparent"
+        android:layout_gravity="end"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"/>
+
+    <Button
+        android:id="@+id/dontShowAgainButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/demo_off_route_dialog_dont_show_again"
+        android:textColor="@color/azure"
+        android:background="@android:color/transparent"
+        android:layout_gravity="end"
+        android:paddingTop="8dp"
+        android:paddingBottom="10dp"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:fontFamily="sans-serif-medium"
+        android:textSize="18sp"/>
+
+</LinearLayout>

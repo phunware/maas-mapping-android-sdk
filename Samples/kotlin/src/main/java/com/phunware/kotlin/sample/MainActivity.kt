@@ -31,12 +31,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.widget.RelativeLayout
+import com.phunware.kotlin.sample.config.Demo
+import com.phunware.kotlin.sample.config.DemoAdapter
+import com.phunware.kotlin.sample.config.DemoDetailsList
 
 class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     private lateinit var demoAdapter: DemoAdapter
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main)
+        setContentView(R.layout.activity_main)
         content = findViewById(R.id.content)
 
         // Instantiate all demo info

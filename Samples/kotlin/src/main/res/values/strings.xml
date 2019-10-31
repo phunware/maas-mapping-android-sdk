@@ -3,8 +3,7 @@
 
     <!-- Google Maps API Key -->
     <!-- TODO: Before you run your application, you need a Google Maps API key. -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">
-    </string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
 
     <!-- Phunware Keys -->
     <!-- TODO: These keys must be added before using Phunware SDKs -->
@@ -13,17 +12,19 @@
     <string name="pw_signature_key"></string>
 
     <!-- Demos -->
+        <!-- Building -->
     <string name="demo_load_building_title">Load Building</string>
-    <string name="demo_load_building_description">Loads a building on a Google Map</string>
+    <string name="demo_load_building_description">Load and display map</string>
 
     <string name="demo_load_building_no_map_title">Load Building without map</string>
     <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
 
+        <!-- Location-->
     <string name="demo_bluedot_title">Bluedot Location</string>
-    <string name="demo_bluedot_description">Show your location on the map using Phunware APIs</string>
+    <string name="demo_bluedot_description">Display current location on map</string>
 
     <string name="demo_location_modes_title">Location Modes</string>
-    <string name="demo_location_modes_description">Experience the different behavior of each location mode</string>
+    <string name="demo_location_modes_description">Different ways for the camera to follow the blue dot</string>
     <string name="location_modes_instructions">Click the fab on the bottom right to toggle location modes. The progression goes from Normal to Locate Me to Follow Me.</string>
 
     <string name="demo_location_mode_managed_compass">Location Mode - Managed Compass</string>
@@ -33,19 +34,29 @@
         The progression goes from Normal to Locate Me to Follow Me. In Follow Me mode Managed Compass is enabled
     </string>
 
-    <string name="demo_custom_poi_title">Create Custom POIs</string>
-    <string name="demo_custom_poi_description">Create custom markers on the map</string>
+    <string name="demo_location_sharing_title">Location Sharing</string>
+    <string name="demo_location_sharing_description">View device locations in your building and share your own</string>
+    <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
+    <string name="action_set_device_info">Set User Info</string>
+    <string name="set_user_info_dialog_device_name">Device Name</string>
+    <string name="set_user_info_dialog_device_type">Device Type</string>
+    <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
+
+        <!-- POI -->
+    <string name="demo_custom_poi_title">Create Custom Point of Interest</string>
+    <string name="demo_custom_poi_description">Add a point of interest to your building programmatically</string>
     <string name="custom_poi_instructions">Press and hold on the map to add a custom POI marker</string>
     <string name="custom_poi_dialog_title">Create Custom POI</string>
     <string name="custom_poi_dialog_message">Enter a name for this POI</string>
     <string name="custom_poi_pin_drop_error">Can\'t drop pin outside the building bounds</string>
 
-    <string name="demo_search_poi_title">Search For POIs</string>
-    <string name="demo_search_poi_description">Easily search for and locate POIs on the map</string>
+    <string name="demo_search_poi_title">Search For Points of Interest</string>
+    <string name="demo_search_poi_description">Search points of interest by name</string>
     <string name="search">Search</string>
 
-    <string name="demo_routing_title">Routing</string>
-    <string name="demo_routing_description">Create routes and navigate between POIs</string>
+        <!-- Routing -->
+    <string name="demo_routing_title">Route to Point of Interest</string>
+    <string name="demo_routing_description">Route to point of interest when current location is acquired</string>
 
     <string name="demo_one_way_routing_title">One Way Routing</string>
     <string name="demo_one_way_routing_description">Demonstrates how to enable one way routing</string>
@@ -56,7 +67,7 @@
     <string name="turn_right">Turn Right</string>
     <string name="bear_left">Bear Left</string>
     <string name="bear_right">Bear Right</string>
-    <string name="continue_straight">Continue Straight for</string>
+    <string name="continue_straight">Continue Straight</string>
     <string name="continue_straight_distance" formatted="false">
         Continue Straight for %s feet</string>
     <string name="unknown">Unknown</string>
@@ -66,6 +77,7 @@
     <string name="to">to</string>
     <string name="next_maneuver">Next: </string>
     <string name="to_arrive"> to arrive at %1$s</string>
+    <string name="you_have_arrived">You have arrived </string>
     <string name="current_location">Current Location</string>
     <string name="custom_location_title">Custom Location</string>
     <string name="start_prompt">Select starting point…</string>
@@ -79,14 +91,33 @@
     <string name="direction">direction</string>
     <string name="next_direction">next direction</string>
     <string name="building_not_loaded">Building not loaded.</string>
+    <string name="section_distance">"%s %s feet"</string>
 
-    <string name="demo_location_sharing_title">Location Sharing</string>
-    <string name="demo_location_sharing_description">Easily share your location with other users</string>
-    <string name="location_sharing_instructions">Open this demo on another device to see its location. Update user info by clicking the button below</string>
-    <string name="action_set_device_info">Set User Info</string>
-    <string name="set_user_info_dialog_device_name">Device Name</string>
-    <string name="set_user_info_dialog_device_type">Device Type</string>
-    <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
+    <string name="demo_voice_prompt_title">Voiced Route Instructions</string>
+    <string name="demo_voice_prompt_description">Read route instructions aloud to the user</string>
+    <string name="demo_voice_prompt_muted">Muted</string>
+    <string name="demo_voice_prompt_unmuted">Unmuted</string>
+    <string name="demo_voice_prompt_then">&#032;then&#032;</string>
+    <string name="demo_voice_prompt_arrive_at_destination">&#032;to arrive at the destination.</string>
+    <string name="demo_voice_prompt_preferences_key">demo_voice_prompt_preferences_key</string>
+    <string name="demo_voice_prompt_prep_for">for</string>
+
+    <string name="demo_walk_time_title">Walk Time Calculations</string>
+    <string name="demo_arrival_time_title">Arrival Time %1$s</string>
+    <string name="demo_walk_time_description">Show actual walk time</string>
+    <string name="demo_walk_time_exit">Exit</string>
+    <plurals name="demo_walk_time_minutes">
+        <item quantity="one">%1$d minute.</item>
+        <item quantity="other">%1$d minutes.</item>
+    </plurals>
+
+    <string name="demo_off_route_title">Off Route Scenario</string>
+    <string name="demo_off_route_description">Shows an alert when the user goes too far off route</string>
+    <string name="demo_off_route_dialog_title">You Are No Longer\nOn Route</string>
+    <string name="demo_off_route_dialog_message">Please return to the route or re-route from your current location.</string>
+    <string name="demo_off_route_dialog_dismiss">DISMISS</string>
+    <string name="demo_off_route_dialog_reroute">RE-ROUTE</string>
+    <string name="demo_off_route_dialog_dont_show_again">DON\'T SHOW AGAIN</string>
 
     <!-- Buttons -->
     <string name="button_cancel">Cancel</string>
@@ -99,5 +130,5 @@
     <!-- App permissions -->
     <string name="permission_snackbar_message">Location permission is required to use the app</string>
     <string name="action_settings">Settings</string>
-
+    <string name="content_desc_off_route_image">Off Route Image</string>
 </resources>
