@@ -38,7 +38,7 @@ import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteOptions
 import java.util.Locale
 
-class VoicePromptActivity : WalkTimeActivity(), TextToSpeech.OnInitListener {
+class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     // Voice Views
     private lateinit var voice: ImageButton
