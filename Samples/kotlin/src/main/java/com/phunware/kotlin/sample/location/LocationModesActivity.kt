@@ -26,22 +26,22 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
-
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
@@ -58,7 +58,6 @@ import com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME
 import com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
-
 import java.lang.ref.WeakReference
 
 class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -181,14 +180,16 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     private fun setManagedLocationProvider(building: Building) {
-        val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
-        builder.application(application)
-                .context(WeakReference<Context>(application))
-                .buildingId(building.id.toString())
-        val factory = builder.build()
-        val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
-        mapManager.setLocationProvider(managedProvider, building)
-        mapManager.isMyLocationEnabled = true
+        if (BluetoothAdapter.getDefaultAdapter() != null) {
+            val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
+            builder.application(application)
+                    .context(WeakReference<Context>(application))
+                    .buildingId(building.id.toString())
+            val factory = builder.build()
+            val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
+            mapManager.setLocationProvider(managedProvider, building)
+            mapManager.isMyLocationEnabled = true
+        }
     }
 
     private fun onLocationModeFabClicked() {
@@ -224,14 +225,12 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             mode.equals(PREF_LOCATION_FOLLOW, ignoreCase = true) -> {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_compass))
-                locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this,  accentColor()))
+                locationModeFab.imageTintList = ColorStateList.valueOf(accentColor())
             }
             mode.equals(PREF_LOCATION_LOCATE, ignoreCase = true) -> {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_my_location))
-                locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this,  accentColor()))
+                locationModeFab.imageTintList = ColorStateList.valueOf(accentColor())
             }
             else -> {
                 locationModeFab.setImageDrawable(
@@ -242,7 +241,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
-    fun updateLocationModeBehavior() {
+    private fun updateLocationModeBehavior() {
         // Save current tracking mode and break tracking mode
         if (!isTrackingModeTimerRunning) {
             PwLog.d(TAG, "Breaking tracking mode while timer is running")

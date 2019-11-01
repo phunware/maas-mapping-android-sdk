@@ -223,14 +223,12 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
             mode.equals(PREF_LOCATION_FOLLOW, ignoreCase = true) -> {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_compass))
-                locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this, accentColor()))
+                locationModeFab.imageTintList = ColorStateList.valueOf(accentColor())
             }
             mode.equals(PREF_LOCATION_LOCATE, ignoreCase = true) -> {
                 locationModeFab.setImageDrawable(
                         ContextCompat.getDrawable(this, R.drawable.ic_my_location))
-                locationModeFab.imageTintList = ColorStateList.valueOf(
-                        ContextCompat.getColor(this, accentColor()))
+                locationModeFab.imageTintList = ColorStateList.valueOf(accentColor())
             }
             else -> {
                 locationModeFab.setImageDrawable(
