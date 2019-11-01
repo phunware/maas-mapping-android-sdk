@@ -344,7 +344,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * RoutingDialogListener
      */
     override fun onGetRoutes(startId: Long, endId: Long, isAccessible: Boolean) {
-        val router: Router
+        val router: Router?
+
         if (startId.compareTo(CURRENT_LOCATION_ITEM_ID) == 0) {
             val currentLocation =
                     LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
@@ -359,17 +360,16 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             router = mapManager.findRoutes(startId, endId, isAccessible)
         }
 
-        if (router != null) {
-            val route = router.shortestRoute()
-            if (route == null) {
-                PwLog.e(TAG, "Couldn't find route.")
-                Snackbar.make(
-                        content, R.string.no_route,
-                        Snackbar.LENGTH_SHORT
-                ).show()
-            } else {
-                startNavigating(route)
-            }
+        val route: RouteOptions? = router?.shortestRoute()
+
+        if (route == null) {
+            PwLog.e(TAG, "Couldn't find route.")
+            Snackbar.make(
+                    content, R.string.no_route,
+                    Snackbar.LENGTH_SHORT
+            ).show()
+        } else {
+            startNavigating(route)
         }
     }
 
