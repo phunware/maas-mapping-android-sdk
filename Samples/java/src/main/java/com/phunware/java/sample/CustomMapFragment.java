@@ -8,6 +8,8 @@ import com.google.android.gms.maps.model.CameraPosition.Builder;
 import com.google.android.gms.maps.model.LatLng;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
+import com.phunware.mapping.SupportMapFragment;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -15,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
  * Example of extending {@link MapFragment} to customise
  * the initial camera location and the zooming level of the map.
  */
-public class CustomMapFragment extends MapFragment {
+public class CustomMapFragment extends SupportMapFragment {
 
     public static CustomMapFragment getInstance(AppCompatActivity activity, OnPhunwareMapReadyCallback callback) {
 

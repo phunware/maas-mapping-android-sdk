@@ -65,6 +65,7 @@ import com.phunware.location_core.PwLocationProvider;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;
+import com.phunware.mapping.SupportMapFragment;
 import com.phunware.mapping.manager.Callback;
 import com.phunware.mapping.manager.Navigator;
 import com.phunware.mapping.manager.PhunwareMapManager;
@@ -148,7 +149,8 @@ public class RoutingActivity extends AppCompatActivity implements OnPhunwareMapR
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this);
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
 
         if (mapFragment != null) {
             mapFragment.getPhunwareMapAsync(this);

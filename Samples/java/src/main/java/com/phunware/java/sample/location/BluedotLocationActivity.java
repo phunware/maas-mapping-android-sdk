@@ -92,7 +92,7 @@ public class BluedotLocationActivity extends AppCompatActivity
         mapManager = PhunwareMapManager.create(this);
 
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
+            getSupportFragmentManager().beginTransaction()
                 .replace(R.id.map, CustomMapFragment.getInstance(this, this))
                 .commit();
         }

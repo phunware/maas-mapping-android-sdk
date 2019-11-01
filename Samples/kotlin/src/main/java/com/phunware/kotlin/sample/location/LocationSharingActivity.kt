@@ -32,8 +32,6 @@ import android.graphics.Canvas
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -44,6 +42,8 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -53,17 +53,17 @@ import com.google.maps.android.ui.IconGenerator
 import com.phunware.core.PwCoreSession
 import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
+import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.location.util.BitmapUtils
 import com.phunware.kotlin.sample.location.util.LatLngInterpolator
 import com.phunware.kotlin.sample.location.util.MarkerAnimation
 import com.phunware.kotlin.sample.location.util.PersonMarker
 import com.phunware.kotlin.sample.poi.CustomPOIActivity
-import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
+import com.phunware.mapping.SupportMapFragment
 import com.phunware.mapping.bluedot.SharedLocationCallback
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
@@ -78,7 +78,7 @@ import java.util.HashSet
 class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Building.OnFloorChangedListener, SharedLocationCallback {
 
     private lateinit var phunwareMap: PhunwareMap
-    private lateinit var mapFragment: MapFragment
+    private lateinit var mapFragment: SupportMapFragment
     private lateinit var mapManager: PhunwareMapManager
     private var currentBuilding: Building? = null
     private lateinit var floorSpinner: Spinner
@@ -108,7 +108,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this)
 
-        mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
 
     }

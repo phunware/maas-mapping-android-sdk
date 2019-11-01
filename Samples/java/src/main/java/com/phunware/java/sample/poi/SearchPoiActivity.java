@@ -61,6 +61,7 @@ import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;
+import com.phunware.mapping.SupportMapFragment;
 import com.phunware.mapping.manager.Callback;
 import com.phunware.mapping.manager.PhunwareMapManager;
 import com.phunware.mapping.model.Building;
@@ -120,7 +121,8 @@ public class SearchPoiActivity extends AppCompatActivity implements OnPhunwareMa
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getPhunwareMapAsync(this);
         }

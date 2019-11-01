@@ -34,8 +34,6 @@ import android.graphics.Canvas;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -58,17 +56,17 @@ import com.google.maps.android.ui.IconGenerator;
 import com.phunware.core.PwCoreSession;
 import com.phunware.core.PwLog;
 import com.phunware.java.sample.R;
+import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.java.sample.location.util.BitmapUtils;
 import com.phunware.java.sample.location.util.LatLngInterpolator;
 import com.phunware.java.sample.location.util.MarkerAnimation;
 import com.phunware.java.sample.location.util.PersonMarker;
 import com.phunware.java.sample.poi.CustomPOIActivity;
-import com.phunware.java.sample.adapter.FloorAdapter;
 import com.phunware.location.provider_managed.ManagedProviderFactory;
 import com.phunware.location.provider_managed.PwManagedLocationProvider;
-import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;
+import com.phunware.mapping.SupportMapFragment;
 import com.phunware.mapping.bluedot.SharedLocationCallback;
 import com.phunware.mapping.manager.Callback;
 import com.phunware.mapping.manager.PhunwareMapManager;
@@ -84,6 +82,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
 public class LocationSharingActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, SharedLocationCallback {
     private static final String TAG = CustomPOIActivity.class.getSimpleName();
@@ -92,7 +93,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
     public static final String PREF_DEVICE_TYPE = "device type";
 
     private PhunwareMap phunwareMap;
-    private MapFragment mapFragment;
+    private SupportMapFragment mapFragment;
     private PhunwareMapManager mapManager;
     private Building currentBuilding;
     private Spinner floorSpinner;
@@ -128,7 +129,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this);
 
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getPhunwareMapAsync(this);
         }

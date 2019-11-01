@@ -27,13 +27,13 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.RelativeLayout
 import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
@@ -87,7 +87,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager = PhunwareMapManager.create(this)
 
         if (savedInstanceState == null) {
-            fragmentManager.beginTransaction()
+            supportFragmentManager.beginTransaction()
                 .replace(R.id.map, newInstance(this, this))
                 .commit()
         }

@@ -28,8 +28,6 @@ from Phunware, Inc. */
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -48,15 +46,18 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 import com.phunware.core.PwCoreSession;
 import com.phunware.java.sample.R;
 import com.phunware.java.sample.adapter.FloorAdapter;
-import com.phunware.mapping.MapFragment;
 import com.phunware.mapping.OnPhunwareMapReadyCallback;
 import com.phunware.mapping.PhunwareMap;
+import com.phunware.mapping.SupportMapFragment;
 import com.phunware.mapping.manager.Callback;
 import com.phunware.mapping.manager.PhunwareMapManager;
 import com.phunware.mapping.model.Building;
 import com.phunware.mapping.model.Floor;
 import com.phunware.mapping.model.FloorOptions;
 import com.phunware.mapping.model.PointOptions;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class CustomPOIActivity extends AppCompatActivity implements OnPhunwareMapReadyCallback {
     private static final String TAG = CustomPOIActivity.class.getSimpleName();
@@ -94,7 +95,8 @@ public class CustomPOIActivity extends AppCompatActivity implements OnPhunwareMa
         // Register the Phunware API keys
         PwCoreSession.getInstance().registerKeys(this);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getPhunwareMapAsync(this);
         }
