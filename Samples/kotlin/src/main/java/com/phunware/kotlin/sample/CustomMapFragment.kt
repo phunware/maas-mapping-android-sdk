@@ -1,19 +1,20 @@
 package com.phunware.kotlin.sample
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.TypedValue
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.GoogleMapOptions
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
+import com.phunware.mapping.SupportMapFragment
 
 /**
  * Example of extending [MapFragment] to customise
  * the initial camera location and the zooming level of the map.
  */
-class CustomMapFragment : MapFragment() {
+class CustomMapFragment : SupportMapFragment() {
 
     companion object {
         fun newInstance(activity: AppCompatActivity, callback: OnPhunwareMapReadyCallback) : CustomMapFragment {

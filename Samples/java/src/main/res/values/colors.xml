@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#00BCD4</color>
+    <!--App Theme Colors-->
+    <color name="taupe">#ff363636</color>
+    <color name="mineShaft">#2B2B2B</color>
+    <color name="azure">#0080FF</color>
+
+    <!--Colors-->
     <color name="semi_transparent">#D0FFFFFF</color>
     <color name="white">#FFFFFF</color>
     <color name="inactive">#30FFFFFF</color>
-
     <color name="green">#3ADF00</color>
     <color name="orange">#FE9A2E</color>
     <color name="pink">#FF69B4</color>
