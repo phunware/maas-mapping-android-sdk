@@ -27,6 +27,7 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
@@ -51,6 +52,8 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
     private var tts: TextToSpeech? = null
     private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
 
+    private lateinit var handler: Handler
+
     private val sharedPref by lazy {
         getSharedPreferences("lbs_sample_voice", Context.MODE_PRIVATE)
     }
@@ -73,6 +76,16 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
         voice = findViewById(R.id.voice)
         voice.setOnClickListener(voiceListener)
         voiceStatusTextView = findViewById(R.id.voice_status)
+    }
+
+    public override fun onStart() {
+        super.onStart()
+        handler = Handler()
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        handler.removeCallbacksAndMessages(null)
     }
 
     public override fun onDestroy() {
@@ -117,8 +130,20 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
-            textToVoice(getTextForPosition(navigator, position))
+            Log.d("VoiceRepeatDebug", "Queued up TTS Handler Delay for position: $position")
+            startDelayForTTS(navigator, position)
         }
+    }
+
+    // If your route segments are close together, it may be necessary to debounce the text that you
+    // send to the text to speech engine to protect from rapid segment changes when routing as
+    // bluedot may drift between them quickly.
+    private fun startDelayForTTS(navigator: Navigator, position: Int) {
+        handler.removeCallbacksAndMessages(null)
+        handler.postDelayed({
+            Log.d("VoiceRepeatDebug", "Voicing TTS for position: $position")
+            textToVoice(getTextForPosition(navigator, position))
+        }, 300)
     }
 
     override fun onRouteSnapFailed() {
