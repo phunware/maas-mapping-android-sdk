@@ -48,9 +48,20 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     private var voiceListener: View.OnClickListener = View.OnClickListener { toggleVoice() }
 
-    private var voiceEnabled: Boolean = false
     private var tts: TextToSpeech? = null
     private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
+
+    private val sharedPref by lazy {
+        getSharedPreferences("lbs_sample_voice", Context.MODE_PRIVATE)
+    }
+
+    private var voiceEnabled: Boolean
+        get() {
+            return sharedPref.getBoolean(PREF_VOICE_ENABLED, true)
+        }
+        set(value) {
+            sharedPref.edit().putBoolean(PREF_VOICE_ENABLED, value).apply()
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,9 +73,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
         voice = findViewById(R.id.voice)
         voice.setOnClickListener(voiceListener)
         voiceStatusTextView = findViewById(R.id.voice_status)
-
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        voiceEnabled = sharedPref.getBoolean(PREF_VOICE_ENABLED, false)
     }
 
     public override fun onDestroy() {
@@ -136,7 +144,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     private fun toggleVoice() {
         voiceEnabled = !voiceEnabled
-        saveVoice(voiceEnabled)
         if (voiceEnabled) {
             voice.setImageResource(R.drawable.ic_unmuted)
             voiceStatusTextView.setText(R.string.demo_voice_prompt_unmuted)
@@ -149,14 +156,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
             voice.setImageResource(R.drawable.ic_muted)
             voiceStatusTextView.setText(R.string.demo_voice_prompt_muted)
             tts?.stop()
-        }
-    }
-
-    private fun saveVoice(enabled: Boolean) {
-        val sharedPref = getPreferences(Context.MODE_PRIVATE) ?: return
-        with(sharedPref.edit()) {
-            putBoolean(PREF_VOICE_ENABLED, enabled)
-            apply()
         }
     }
 
