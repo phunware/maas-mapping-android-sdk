@@ -111,11 +111,10 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
     }
 
     /**
-     * RoutingActivity.DispatchManeueverChanged
+     * RoutingActivity.dispatchManeueverChanged
      *
      */
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        super.onManeuverChanged(navigator, position)
+    override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: remove log statement before PR Merge
         Log.d("VoiceRepeatDebug", "OnDispatchedChanged called with position: $position")
         currentManeuverPosition = position
@@ -126,11 +125,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
             textToVoice(getTextForPosition(navigator, position))
         }
     }
-
-    override fun onRouteSnapFailed() {
-        // Do Nothing
-    }
-
 
     override fun startNavigating(route: RouteOptions) {
         super.startNavigating(route)
