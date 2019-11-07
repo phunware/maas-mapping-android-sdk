@@ -111,39 +111,20 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
     }
 
     /**
-     * Navigator.OnManeuverChangedListener
-     *
-     * Updates the current maneuver index.
-     * Updates the selected floor when the maneuver floor changes.
-     * Plays the text that is associated with the maneuver position
+     * RoutingActivity.DispatchManeueverChanged
      *
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         super.onManeuverChanged(navigator, position)
         //TODO: remove log statement before PR Merge
-        Log.d("VoiceRepeatDebug", "OnManueverChanged called with position: $position")
-        // Early return to avoid repeating voice instructions
-        if (currentManeuverPosition == position) {
-            return
-        }
+        Log.d("VoiceRepeatDebug", "OnDispatchedChanged called with position: $position")
         currentManeuverPosition = position
 
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
-            Log.d("VoiceRepeatDebug", "Queued up TTS Handler Delay for position: $position")
-            startDelayForTTS(navigator, position)
-        }
-    }
-
-    // If your route segments are close together, it may be necessary to debounce the text that you
-    // send to the text to speech engine to protect from rapid segment changes when routing as
-    // bluedot may drift between them quickly.
-    private fun startDelayForTTS(navigator: Navigator, position: Int) {
-        handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
             Log.d("VoiceRepeatDebug", "Voicing TTS for position: $position")
             textToVoice(getTextForPosition(navigator, position))
-        }, 300)
+        }
     }
 
     override fun onRouteSnapFailed() {

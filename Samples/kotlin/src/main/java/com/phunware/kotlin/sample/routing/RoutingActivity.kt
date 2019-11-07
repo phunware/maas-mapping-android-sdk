@@ -97,6 +97,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     private var routingFromCurrentLocation = false
     private var currentManeuverIndex = -1
     private val handler = Handler()
+    private var dwellTimer: Long = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -233,6 +234,16 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * Navigator.OnManeuverChangedListener
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
+        //TODO: Remove log statements before merge
+        Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
+        if (System.currentTimeMillis() - dwellTimer >= 2_000 && currentManeuverIndex != position) {
+            dwellTimer = System.currentTimeMillis()
+            dispatchManeuverChanged(navigator, position)
+        }
+    }
+
+    open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
+        navOverlay.dispatchManeuverChanged(navigator, position)
         currentManeuverIndex = position
 
         // Update the selected floor when the maneuver floor changes

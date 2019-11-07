@@ -27,8 +27,6 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import android.content.Context
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
@@ -38,17 +36,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-
-import com.phunware.core.PwLog
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.routing.util.ManeuverDisplayHelper
 import com.phunware.kotlin.sample.util.extensions.toPx
 import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteManeuverOptions
-
 import java.util.ArrayList
 
-class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs), Navigator.OnManeuverChangedListener {
+class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
 
     companion object {
         /**
@@ -116,7 +113,6 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
     fun setNavigator(navigator: Navigator) {
         this.navigator = navigator
-        navigator.addOnManeuverChangedListener(this)
 
         val pairs = ArrayList<ManeuverPair>()
         val maneuvers = this.navigator.maneuvers
@@ -149,7 +145,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
     }
 
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
+    fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         for (i in 0 until adapter.count) {
             val pair = adapter.getItem(i)
             if (pair.mainPos == position || pair.turnPos == position) {
@@ -157,10 +153,6 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
                 return
             }
         }
-    }
-
-    override fun onRouteSnapFailed() {
-        PwLog.e("NavigationOverlayView", "Off route")
     }
 
     class ManeuverPair {
