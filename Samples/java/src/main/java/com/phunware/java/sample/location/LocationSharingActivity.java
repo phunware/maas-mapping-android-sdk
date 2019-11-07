@@ -205,7 +205,7 @@ public class LocationSharingActivity extends AppCompatActivity implements OnPhun
 
     @Override
     public void onPhunwareMapReady(final PhunwareMap phunwareMap) {
-        // Retrieve buildingId from integers.xml
+        // Retrieve buildingId from maas_integers.xml
         int buildingId = getResources().getInteger(R.integer.buildingId);
         this.phunwareMap = phunwareMap;
 

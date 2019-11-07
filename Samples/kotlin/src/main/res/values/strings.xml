@@ -1,25 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">LBS Sample (Kotlin)</string>
 
-    <!-- Google Maps API Key -->
-    <!-- TODO: Before you run your application, you need a Google Maps API key. -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
-
-    <!-- Phunware Keys -->
-    <!-- TODO: These keys must be added before using Phunware SDKs -->
-    <string name="pw_app_id"></string>
-    <string name="pw_access_key"></string>
-    <string name="pw_signature_key"></string>
-
-    <!-- Demos -->
-        <!-- Building -->
+    <!-- Building -->
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Load and display map</string>
 
     <string name="demo_load_building_no_map_title">Load Building without map</string>
     <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
 
-        <!-- Location-->
+    <!-- Location-->
     <string name="demo_bluedot_title">Bluedot Location</string>
     <string name="demo_bluedot_description">Display current location on map</string>
 
@@ -42,7 +32,7 @@
     <string name="set_user_info_dialog_device_type">Device Type</string>
     <string name="set_user_info_dialog_message">Set a name and type that will be seen by other users</string>
 
-        <!-- POI -->
+    <!-- POI -->
     <string name="demo_custom_poi_title">Create Custom Point of Interest</string>
     <string name="demo_custom_poi_description">Add a point of interest to your building programmatically</string>
     <string name="custom_poi_instructions">Press and hold on the map to add a custom POI marker</string>
@@ -54,7 +44,7 @@
     <string name="demo_search_poi_description">Search points of interest by name</string>
     <string name="search">Search</string>
 
-        <!-- Routing -->
+    <!-- Routing -->
     <string name="demo_routing_title">Route to Point of Interest</string>
     <string name="demo_routing_description">Route to point of interest when current location is acquired</string>
 
