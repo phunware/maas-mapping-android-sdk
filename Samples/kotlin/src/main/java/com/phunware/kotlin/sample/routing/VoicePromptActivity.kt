@@ -107,8 +107,13 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         super.onManeuverChanged(navigator, position)
-
-        this.currentManeuverPosition = position
+        //TODO: remove log statement before PR Merge
+        Log.d("VoiceRepeatDebug", "OnManueverChanged called with position: $position")
+        // Early return to avoid repeating voice instructions
+        if (currentManeuverPosition == position) {
+            return
+        }
+        currentManeuverPosition = position
 
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
