@@ -95,7 +95,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private val gpsPositionList: MutableList<Location> = ArrayList()
     private var routingFromCurrentLocation = false
-    private var currentManeuverIndex = -1
+    private var maneuverPosition = -1
     private val handler = Handler()
     private var dwellTimer: Long = 0
 
@@ -236,7 +236,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: Remove log statements before merge
         Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
-        if (System.currentTimeMillis() - dwellTimer >= 2_000 && currentManeuverIndex != position) {
+        if (System.currentTimeMillis() - dwellTimer >= 2_000 && maneuverPosition != position) {
+            maneuverPosition = position
             dwellTimer = System.currentTimeMillis()
             dispatchManeuverChanged(navigator, position)
         }
@@ -244,7 +245,6 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         navOverlay.dispatchManeuverChanged(navigator, position)
-        currentManeuverIndex = position
 
         // Update the selected floor when the maneuver floor changes
         val maneuver = navigator.maneuvers[position]
