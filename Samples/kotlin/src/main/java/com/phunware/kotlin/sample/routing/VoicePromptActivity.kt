@@ -115,7 +115,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
      *
      */
     override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
-        super.dispatchManeuverChanged(navigator, position)
         //TODO: remove log statement before PR Merge
         Log.d("VoiceRepeatDebug", "dispatchedManeuverChanged called with position: $position")
 

@@ -239,22 +239,23 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (System.currentTimeMillis() - dwellTimer >= 2_000 && maneuverPosition != position) {
             maneuverPosition = position
             dwellTimer = System.currentTimeMillis()
+            navOverlay.dispatchManeuverChanged(navigator, position)
+
+            // Update the selected floor when the maneuver floor changes
+            val maneuver = navigator.maneuvers[position]
+            val selectedPosition = floorSpinner.selectedItemPosition
+            for (i in 0 until floorSpinnerAdapter.count) {
+                val floor = floorSpinnerAdapter.getItem(i)
+                if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                    floorSpinner.setSelection(i)
+                }
+            }
             dispatchManeuverChanged(navigator, position)
         }
     }
 
     open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
-        navOverlay.dispatchManeuverChanged(navigator, position)
-
-        // Update the selected floor when the maneuver floor changes
-        val maneuver = navigator.maneuvers[position]
-        val selectedPosition = floorSpinner.selectedItemPosition
-        for (i in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(i)
-            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                floorSpinner.setSelection(i)
-            }
-        }
+        
     }
 
     override fun onRouteSnapFailed() {
