@@ -115,9 +115,9 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
      *
      */
     override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
+        super.dispatchManeuverChanged(navigator, position)
         //TODO: remove log statement before PR Merge
-        Log.d("VoiceRepeatDebug", "OnDispatchedChanged called with position: $position")
-        currentManeuverPosition = position
+        Log.d("VoiceRepeatDebug", "dispatchedManeuverChanged called with position: $position")
 
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
