@@ -41,7 +41,6 @@ import androidx.viewpager.widget.ViewPager
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.routing.util.ManeuverDisplayHelper
 import com.phunware.kotlin.sample.util.extensions.toPx
-import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteManeuverOptions
 import java.util.ArrayList
 
@@ -86,13 +85,13 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
     }
 
-    private lateinit var navigator: Navigator
     private lateinit var adapter: ManeuverPagerAdapter
 
     /**
      * Since this custom view extends a ViewPager, we need to handle "click listening" on our own.
      */
     private var clickListener: OnClickListener? = null
+    private var onManeuverSelectedListener: OnManeuverSelectedListener? = null
 
     init {
         // set the viewpager to show multiple pages at once, so maneuver steps peak in from the side
@@ -100,10 +99,13 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         pageMargin = (-40).toPx()
     }
 
+    interface OnManeuverSelectedListener {
+        fun maneuverSelected(position: Int)
+    }
+
     private val pageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            val pair = adapter.getItem(position)
-            navigator.setCurrentManeuver(pair.mainPos)
+            onManeuverSelectedListener?.maneuverSelected(adapter.getItem(position).mainPos)
         }
     }
 
@@ -111,11 +113,12 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         clickListener = listener
     }
 
-    fun setNavigator(navigator: Navigator) {
-        this.navigator = navigator
+    fun setOnManeuverSelectedListener(listener: OnManeuverSelectedListener) {
+        onManeuverSelectedListener = listener
+    }
 
+    fun setManeuvers(maneuvers: List<RouteManeuverOptions>) {
         val pairs = ArrayList<ManeuverPair>()
-        val maneuvers = this.navigator.maneuvers
         var i = 0
         while (i < maneuvers.size) {
             val pair = ManeuverPair()
@@ -137,15 +140,13 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
 
         adapter = ManeuverPagerAdapter(clickListener)
+        addOnPageChangeListener(pageChangeListener)
         setAdapter(adapter)
         adapter.setManeuvers(pairs)
-        addOnPageChangeListener(pageChangeListener)
         currentItem = 0
-        navigator.setCurrentManeuver(0)
-
     }
 
-    fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
+    fun dispatchManeuverChanged(position: Int) {
         for (i in 0 until adapter.count) {
             val pair = adapter.getItem(i)
             if (pair.mainPos == position || pair.turnPos == position) {

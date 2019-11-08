@@ -32,7 +32,6 @@ import android.animation.ObjectAnimator
 import android.bluetooth.BluetoothAdapter
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -93,11 +92,11 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     lateinit var navOverlay: NavigationOverlayView // public so that other samples that extend this activity can access
     private lateinit var routeSummaryFragment: RouteSummaryFragment
 
-    private val gpsPositionList: MutableList<Location> = ArrayList()
     private var routingFromCurrentLocation = false
     private var maneuverPosition = -1
-    private val handler = Handler()
     private var dwellTimer: Long = 0
+
+    private var maneueverFromSwiping: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -119,6 +118,13 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navOverlay.setOnClickListener {
             routeSummaryFragment.show()
         }
+        navOverlay.setOnManeuverSelectedListener(object : NavigationOverlayView.OnManeuverSelectedListener {
+            override fun maneuverSelected(position: Int) {
+                maneueverFromSwiping = true
+                handleSelectionManeuverChange(position, navigator)
+                navigator?.setCurrentManeuver(position)
+            }
+        })
 
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
@@ -236,12 +242,17 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: Remove log statements before merge
         Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
-        if (System.currentTimeMillis() - dwellTimer >= 2_000 && maneuverPosition != position) {
-            maneuverPosition = position
-            dwellTimer = System.currentTimeMillis()
-            navOverlay.dispatchManeuverChanged(navigator, position)
+        if (!maneueverFromSwiping && System.currentTimeMillis() - dwellTimer >= 2_000) {
+            handleBlueDotManeuverChange(position, navigator)
+        }
+        maneueverFromSwiping = false
+    }
 
-            // Update the selected floor when the maneuver floor changes
+    private fun handleBlueDotManeuverChange(position: Int, navigator: Navigator?) {
+        maneuverPosition = position
+        dwellTimer = System.currentTimeMillis()
+        navOverlay.dispatchManeuverChanged(position)
+        if (navigator != null) {
             val maneuver = navigator.maneuvers[position]
             val selectedPosition = floorSpinner.selectedItemPosition
             for (i in 0 until floorSpinnerAdapter.count) {
@@ -254,8 +265,28 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
+    private fun handleSelectionManeuverChange(position: Int, navigator: Navigator?) {
+        if (maneuverPosition != position) {
+            maneuverPosition = position
+            dwellTimer = System.currentTimeMillis()
+
+            // Update the selected floor when the maneuver floor changes
+            if (navigator != null) {
+                val maneuver = navigator.maneuvers[position]
+                val selectedPosition = floorSpinner.selectedItemPosition
+                for (i in 0 until floorSpinnerAdapter.count) {
+                    val floor = floorSpinnerAdapter.getItem(i)
+                    if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                        floorSpinner.setSelection(i)
+                    }
+                }
+                dispatchManeuverChanged(navigator, position)
+            }
+        }
+    }
+
     open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
-        
+
     }
 
     override fun onRouteSnapFailed() {
@@ -329,7 +360,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager.addLocationUpdateListener(this)
         navigator?.let {
             it.addOnManeuverChangedListener(this)
-            navOverlay.setNavigator(it)
+            navOverlay.setManeuvers(it.maneuvers)
+            it.setCurrentManeuver(0)
         }
 
         navOverlay.visibility = View.VISIBLE
