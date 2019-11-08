@@ -31,6 +31,7 @@ import android.text.SpannableString
 import android.text.SpannableStringBuilder
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -85,6 +86,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
     }
 
+    private var nextPageSelectedIsFromBlueDot: Boolean = false
     private lateinit var adapter: ManeuverPagerAdapter
 
     /**
@@ -105,7 +107,11 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
 
     private val pageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
-            onManeuverSelectedListener?.maneuverSelected(adapter.getItem(position).mainPos)
+            Log.d("VoiceRepeatDebug", "onPageSelected, nextPageSelectedIsFromBlueDot: $nextPageSelectedIsFromBlueDot")
+            if (!nextPageSelectedIsFromBlueDot) {
+                onManeuverSelectedListener?.maneuverSelected(adapter.getItem(position).mainPos)
+            }
+            nextPageSelectedIsFromBlueDot = false
         }
     }
 
@@ -140,20 +146,24 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         }
 
         adapter = ManeuverPagerAdapter(clickListener)
-        addOnPageChangeListener(pageChangeListener)
         setAdapter(adapter)
         adapter.setManeuvers(pairs)
         currentItem = 0
+        addOnPageChangeListener(pageChangeListener)
     }
 
     fun clearPageChangeListeners() {
         clearOnPageChangeListeners()
     }
 
+
     fun dispatchManeuverChanged(position: Int) {
+        Log.d("VoiceRepeatDebug", "dispatchedManeuverChanged (NavOverlay) called with position: $position")
         for (i in 0 until adapter.count) {
             val pair = adapter.getItem(i)
             if (pair.mainPos == position || pair.turnPos == position) {
+                nextPageSelectedIsFromBlueDot = true
+                Log.d("VoiceRepeatDebug", "setCurrentItem (NavOverlay) with position: $position")
                 currentItem = i
                 return
             }
