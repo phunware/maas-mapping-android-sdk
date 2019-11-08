@@ -75,7 +75,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
         LocationManager.LocationListener, RoutingDialogFragment.RoutingDialogListener {
     companion object {
-        private val TAG = RoutingActivity::class.java.simpleName
+        private val TAG = "VoiceRepeatDebug"
     }
 
     lateinit var mapManager: PhunwareMapManager
@@ -120,8 +120,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
         navOverlay.setOnManeuverSelectedListener(object : NavigationOverlayView.OnManeuverSelectedListener {
             override fun maneuverSelected(position: Int) {
+                Log.d(TAG, "maneuverSelected: $position");
                 maneueverFromSwiping = true
-                handleSelectionManeuverChange(position, navigator)
                 navigator?.setCurrentManeuver(position)
             }
         })
@@ -242,18 +242,23 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: Remove log statements before merge
         Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
-        if (!maneueverFromSwiping
-                && System.currentTimeMillis() - dwellTimer >= 2_000
-                && maneuverPosition != position) {
-            handleBlueDotManeuverChange(position, navigator)
-            dwellTimer = System.currentTimeMillis()
+        if (maneuverPosition != position) {
+            maneuverPosition = position
+
+            if (!maneueverFromSwiping) {
+                if (System.currentTimeMillis() - dwellTimer >= 2_000) {
+                    handleBlueDotManeuverChange(position, navigator)
+                    dwellTimer = System.currentTimeMillis()
+                }
+            } else {
+                handleSelectionManeuverChange(position, navigator)
+            }
+            maneueverFromSwiping = false
         }
-        maneueverFromSwiping = false
     }
 
     private fun handleBlueDotManeuverChange(position: Int, navigator: Navigator?) {
         Log.d("VoiceRepeatDebug", "handleBlueDotManeuverChange")
-        maneuverPosition = position
         navOverlay.dispatchManeuverChanged(position)
         if (navigator != null) {
             val maneuver = navigator.maneuvers[position]
