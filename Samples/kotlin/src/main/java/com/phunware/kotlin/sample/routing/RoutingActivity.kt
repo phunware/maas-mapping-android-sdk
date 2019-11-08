@@ -242,15 +242,18 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: Remove log statements before merge
         Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
-        if (!maneueverFromSwiping && System.currentTimeMillis() - dwellTimer >= 2_000) {
+        if (!maneueverFromSwiping
+                && System.currentTimeMillis() - dwellTimer >= 2_000
+                && maneuverPosition != position) {
             handleBlueDotManeuverChange(position, navigator)
+            dwellTimer = System.currentTimeMillis()
         }
         maneueverFromSwiping = false
     }
 
     private fun handleBlueDotManeuverChange(position: Int, navigator: Navigator?) {
+        Log.d("VoiceRepeatDebug", "handleBlueDotManeuverChange")
         maneuverPosition = position
-        dwellTimer = System.currentTimeMillis()
         navOverlay.dispatchManeuverChanged(position)
         if (navigator != null) {
             val maneuver = navigator.maneuvers[position]
@@ -266,22 +269,20 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     private fun handleSelectionManeuverChange(position: Int, navigator: Navigator?) {
-        if (maneuverPosition != position) {
-            maneuverPosition = position
-            dwellTimer = System.currentTimeMillis()
+        Log.d("VoiceRepeatDebug", "handleSelectionManeuverChange")
+        maneuverPosition = position
 
-            // Update the selected floor when the maneuver floor changes
-            if (navigator != null) {
-                val maneuver = navigator.maneuvers[position]
-                val selectedPosition = floorSpinner.selectedItemPosition
-                for (i in 0 until floorSpinnerAdapter.count) {
-                    val floor = floorSpinnerAdapter.getItem(i)
-                    if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                        floorSpinner.setSelection(i)
-                    }
+        // Update the selected floor when the maneuver floor changes
+        if (navigator != null) {
+            val maneuver = navigator.maneuvers[position]
+            val selectedPosition = floorSpinner.selectedItemPosition
+            for (i in 0 until floorSpinnerAdapter.count) {
+                val floor = floorSpinnerAdapter.getItem(i)
+                if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                    floorSpinner.setSelection(i)
                 }
-                dispatchManeuverChanged(navigator, position)
             }
+            dispatchManeuverChanged(navigator, position)
         }
     }
 
