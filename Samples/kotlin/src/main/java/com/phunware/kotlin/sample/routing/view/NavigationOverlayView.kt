@@ -146,6 +146,10 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         currentItem = 0
     }
 
+    fun clearPageChangeListeners() {
+        clearOnPageChangeListeners()
+    }
+
     fun dispatchManeuverChanged(position: Int) {
         for (i in 0 until adapter.count) {
             val pair = adapter.getItem(i)

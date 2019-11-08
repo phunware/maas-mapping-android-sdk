@@ -383,7 +383,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navigator?.stop()
         navigator = null
 
+        maneuverPosition = -1
         mapManager.removeLocationUpdateListener(this)
+        navOverlay.clearPageChangeListeners()
         navOverlay.visibility = View.GONE
         floorSpinnerView.visibility = View.VISIBLE
         fab.show()
