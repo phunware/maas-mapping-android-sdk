@@ -94,9 +94,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private var routingFromCurrentLocation = false
     private var maneuverPosition = -1
-    private var dwellTimer: Long = 0
 
-    private var maneueverFromSwiping: Boolean = false
+    private var maneuverFromSwiping: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -120,8 +119,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
         navOverlay.setOnManeuverSelectedListener(object : NavigationOverlayView.OnManeuverSelectedListener {
             override fun maneuverSelected(position: Int) {
-                Log.d(TAG, "maneuverSelected: $position")
-                maneueverFromSwiping = true
+                // maneuverFromSwiping: set flag to signal that the next onManeuverChanged callback
+                // was from a pager swipe, and therefore the pager does not need to be updated.
+                maneuverFromSwiping = true
                 navigator?.setCurrentManeuver(position)
             }
         })
@@ -238,56 +238,37 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     /**
      * Navigator.OnManeuverChangedListener
+     *
+     * maneuverPosition: Added logic gate to avoid repeats from sensitive bluedot
+     * maneuverFromSwiping: Avoid updating navOverlay for maneuver changes that originate from the
+     * pager.
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        //TODO: Remove log statements before merge
-        Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position || maneuverPosition currently: $maneuverPosition")
-        if (maneuverPosition != position && System.currentTimeMillis() - dwellTimer >= 3_000) {
+        if (maneuverPosition != position) {
+
+            if (!maneuverFromSwiping) navOverlay.dispatchManeuverChanged(position)
+            handleManeuverChange(position, navigator)
             maneuverPosition = position
-            dwellTimer = System.currentTimeMillis()
-            if (!maneueverFromSwiping) {
-                handleBlueDotManeuverChange(position, navigator)
-
-            } else {
-                handleSelectionManeuverChange(position, navigator)
-            }
-            maneueverFromSwiping = false
+            maneuverFromSwiping = false
         }
     }
 
-    private fun handleBlueDotManeuverChange(position: Int, navigator: Navigator?) {
-        Log.d("VoiceRepeatDebug", "handleBlueDotManeuverChange")
-        navOverlay.dispatchManeuverChanged(position)
-        if (navigator != null) {
-            val maneuver = navigator.maneuvers[position]
-            val selectedPosition = floorSpinner.selectedItemPosition
-            for (i in 0 until floorSpinnerAdapter.count) {
-                val floor = floorSpinnerAdapter.getItem(i)
-                if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                    floorSpinner.setSelection(i)
-                }
+    private fun handleManeuverChange(position: Int, navigator: Navigator) {
+        val maneuver = navigator.maneuvers[position]
+        val selectedPosition = floorSpinner.selectedItemPosition
+        for (i in 0 until floorSpinnerAdapter.count) {
+            val floor = floorSpinnerAdapter.getItem(i)
+            if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
+                floorSpinner.setSelection(i)
             }
-            dispatchManeuverChanged(navigator, position)
         }
+        dispatchManeuverChanged(navigator, position)
     }
-
-    private fun handleSelectionManeuverChange(position: Int, navigator: Navigator?) {
-        Log.d("VoiceRepeatDebug", "handleSelectionManeuverChange")
-
-        // Update the selected floor when the maneuver floor changes
-        if (navigator != null) {
-            val maneuver = navigator.maneuvers[position]
-            val selectedPosition = floorSpinner.selectedItemPosition
-            for (i in 0 until floorSpinnerAdapter.count) {
-                val floor = floorSpinnerAdapter.getItem(i)
-                if (selectedPosition != i && floor != null && floor.id == maneuver.floorId) {
-                    floorSpinner.setSelection(i)
-                }
-            }
-            dispatchManeuverChanged(navigator, position)
-        }
-    }
-
+    /**
+     * dispatchManeuverChanged
+     *
+     * Open function to be overridden by child Activities to handle valid maneuver changes.
+     */
     open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
 
     }
