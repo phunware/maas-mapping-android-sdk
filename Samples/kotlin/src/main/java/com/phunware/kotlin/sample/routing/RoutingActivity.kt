@@ -120,7 +120,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
         navOverlay.setOnManeuverSelectedListener(object : NavigationOverlayView.OnManeuverSelectedListener {
             override fun maneuverSelected(position: Int) {
-                Log.d(TAG, "maneuverSelected: $position");
+                Log.d(TAG, "maneuverSelected: $position")
                 maneueverFromSwiping = true
                 navigator?.setCurrentManeuver(position)
             }
@@ -241,15 +241,13 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         //TODO: Remove log statements before merge
-        Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position")
-        if (maneuverPosition != position) {
+        Log.d("VoiceRepeatDebug", "OnManeuverChanged (RoutingActivity) called with position: $position || maneuverPosition currently: $maneuverPosition")
+        if (maneuverPosition != position && System.currentTimeMillis() - dwellTimer >= 3_000) {
             maneuverPosition = position
-
+            dwellTimer = System.currentTimeMillis()
             if (!maneueverFromSwiping) {
-                if (System.currentTimeMillis() - dwellTimer >= 2_000) {
-                    handleBlueDotManeuverChange(position, navigator)
-                    dwellTimer = System.currentTimeMillis()
-                }
+                handleBlueDotManeuverChange(position, navigator)
+
             } else {
                 handleSelectionManeuverChange(position, navigator)
             }
@@ -275,7 +273,6 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private fun handleSelectionManeuverChange(position: Int, navigator: Navigator?) {
         Log.d("VoiceRepeatDebug", "handleSelectionManeuverChange")
-        maneuverPosition = position
 
         // Update the selected floor when the maneuver floor changes
         if (navigator != null) {
