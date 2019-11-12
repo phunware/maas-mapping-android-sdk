@@ -75,7 +75,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
         LocationManager.LocationListener, RoutingDialogFragment.RoutingDialogListener {
     companion object {
-        private val TAG = "VoiceRepeatDebug"
+        private val TAG = RoutingActivity::class.java.simpleName
     }
 
     lateinit var mapManager: PhunwareMapManager

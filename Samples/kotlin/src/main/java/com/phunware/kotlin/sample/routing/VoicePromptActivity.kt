@@ -118,7 +118,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
     override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
-            Log.d("VoiceRepeatDebug", "Voicing TTS for position: $position")
             textToVoice(getTextForPosition(navigator, position))
         }
     }
