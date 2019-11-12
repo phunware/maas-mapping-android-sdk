@@ -71,18 +71,15 @@ open class WalkTimeActivity : RoutingActivity() {
     }
 
     /**
-     * Navigator.OnManeuverChangedListener
+     * RoutingActivity.dispatchManeuverChanged
+     *
+     *  Handle valid maneuver change from RoutingActivity.
      */
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        super.onManeuverChanged(navigator, position)
+    override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         this.currentManeuverIndex = position
 
         //Make call to update walk time
         updateWalkTime()
-    }
-
-    override fun onRouteSnapFailed() {
-        // Do Nothing
     }
 
     /**

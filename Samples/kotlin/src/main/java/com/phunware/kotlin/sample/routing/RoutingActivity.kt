@@ -32,7 +32,6 @@ import android.animation.ObjectAnimator
 import android.bluetooth.BluetoothAdapter
 import android.location.Location
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -93,10 +92,10 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     lateinit var navOverlay: NavigationOverlayView // public so that other samples that extend this activity can access
     private lateinit var routeSummaryFragment: RouteSummaryFragment
 
-    private val gpsPositionList: MutableList<Location> = ArrayList()
     private var routingFromCurrentLocation = false
-    private var currentManeuverIndex = -1
-    private val handler = Handler()
+    private var maneuverPosition = -1
+
+    private var maneuverFromSwiping: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -118,6 +117,14 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navOverlay.setOnClickListener {
             routeSummaryFragment.show()
         }
+        navOverlay.setOnManeuverSelectedListener(object : NavigationOverlayView.OnManeuverSelectedListener {
+            override fun maneuverSelected(position: Int) {
+                // maneuverFromSwiping: set flag to signal that the next onManeuverChanged callback
+                // was from a pager swipe, and therefore the pager does not need to be updated.
+                maneuverFromSwiping = true
+                navigator?.setCurrentManeuver(position)
+            }
+        })
 
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
@@ -231,11 +238,22 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     /**
      * Navigator.OnManeuverChangedListener
+     *
+     * maneuverPosition: Added logic gate to avoid repeats from sensitive bluedot
+     * maneuverFromSwiping: Avoid updating navOverlay for maneuver changes that originate from the
+     * pager.
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        currentManeuverIndex = position
+        if (maneuverPosition != position) {
 
-        // Update the selected floor when the maneuver floor changes
+            if (!maneuverFromSwiping) navOverlay.dispatchManeuverChanged(position)
+            handleManeuverChange(position, navigator)
+            maneuverPosition = position
+            maneuverFromSwiping = false
+        }
+    }
+
+    private fun handleManeuverChange(position: Int, navigator: Navigator) {
         val maneuver = navigator.maneuvers[position]
         val selectedPosition = floorSpinner.selectedItemPosition
         for (i in 0 until floorSpinnerAdapter.count) {
@@ -244,6 +262,15 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 floorSpinner.setSelection(i)
             }
         }
+        dispatchManeuverChanged(navigator, position)
+    }
+    /**
+     * dispatchManeuverChanged
+     *
+     * Open function to be overridden by child Activities to handle valid maneuver changes.
+     */
+    open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
+
     }
 
     override fun onRouteSnapFailed() {
@@ -317,7 +344,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager.addLocationUpdateListener(this)
         navigator?.let {
             it.addOnManeuverChangedListener(this)
-            navOverlay.setNavigator(it)
+            navOverlay.setManeuvers(it.maneuvers)
+            it.setCurrentManeuver(0)
         }
 
         navOverlay.visibility = View.VISIBLE
@@ -333,7 +361,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         navigator?.stop()
         navigator = null
 
+        maneuverPosition = -1
         mapManager.removeLocationUpdateListener(this)
+        navOverlay.clearPageChangeListeners()
         navOverlay.visibility = View.GONE
         floorSpinnerView.visibility = View.VISIBLE
         fab.show()

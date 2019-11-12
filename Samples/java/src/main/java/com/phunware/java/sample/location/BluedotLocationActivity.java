@@ -100,7 +100,7 @@ public class BluedotLocationActivity extends AppCompatActivity
 
     @Override
     public void onPhunwareMapReady(final PhunwareMap phunwareMap) {
-        // Retrieve buildingId from integers.xml
+        // Retrieve buildingId from maas_integers.xml
         int buildingId = getResources().getInteger(R.integer.buildingId);
 
         phunwareMap.getGoogleMap().getUiSettings().setMapToolbarEnabled(false);

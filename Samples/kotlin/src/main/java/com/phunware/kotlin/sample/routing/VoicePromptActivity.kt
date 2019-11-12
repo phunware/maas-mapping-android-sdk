@@ -27,6 +27,7 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
@@ -50,6 +51,8 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
     private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
+
+    private lateinit var handler: Handler
 
     private val sharedPref by lazy {
         getSharedPreferences("lbs_sample_voice", Context.MODE_PRIVATE)
@@ -75,6 +78,16 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
         voiceStatusTextView = findViewById(R.id.voice_status)
     }
 
+    public override fun onStart() {
+        super.onStart()
+        handler = Handler()
+    }
+
+    public override fun onStop() {
+        super.onStop()
+        handler.removeCallbacksAndMessages(null)
+    }
+
     public override fun onDestroy() {
         tts?.stop()
         tts?.shutdown()
@@ -98,28 +111,16 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
     }
 
     /**
-     * Navigator.OnManeuverChangedListener
+     * RoutingActivity.dispatchManeuverChanged
      *
-     * Updates the current maneuver index.
-     * Updates the selected floor when the maneuver floor changes.
-     * Plays the text that is associated with the maneuver position
-     *
+     *  Handle valid maneuver change from RoutingActivity.
      */
-    override fun onManeuverChanged(navigator: Navigator, position: Int) {
-        super.onManeuverChanged(navigator, position)
-
-        this.currentManeuverPosition = position
-
+    override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         // Play the text that is associated with the maneuver position
         if (voiceEnabled) {
             textToVoice(getTextForPosition(navigator, position))
         }
     }
-
-    override fun onRouteSnapFailed() {
-        // Do Nothing
-    }
-
 
     override fun startNavigating(route: RouteOptions) {
         super.startNavigating(route)

@@ -1,0 +1,12 @@
+<resources>
+    <!-- Google Maps API Key -->
+    <!-- TODO: Before you run your application, you need a Google Maps API key. -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false"></string>
+
+    <!-- Phunware Keys -->
+    <!-- TODO: These keys must be added before using Phunware SDKs -->
+    <string name="pw_app_id"></string>
+    <string name="pw_access_key"></string>
+    <string name="pw_signature_key"></string>
+    <!-- Demos -->
+</resources>

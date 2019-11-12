@@ -31,9 +31,6 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.os.Handler;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -43,6 +40,7 @@ import android.widget.Spinner;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.phunware.core.PwCoreSession;
 import com.phunware.core.PwLog;
 import com.phunware.java.sample.R;
@@ -58,6 +56,9 @@ import com.phunware.mapping.model.Building;
 import com.phunware.mapping.model.FloorOptions;
 
 import java.lang.ref.WeakReference;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import static com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME;
 import static com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME;
@@ -167,7 +168,7 @@ public class LocationModesActivity extends AppCompatActivity implements OnPhunwa
 
     @Override
     public void onPhunwareMapReady(final PhunwareMap phunwareMap) {
-        // Retrieve buildingId from integers.xml
+        // Retrieve buildingId from maas_integers.xml
         int buildingId = getResources().getInteger(R.integer.buildingId);
 
         phunwareMap.getGoogleMap().getUiSettings().setMapToolbarEnabled(false);
