@@ -117,6 +117,8 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
      */
     override fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
         // Play the text that is associated with the maneuver position
+        currentManeuverPosition = position
+
         if (voiceEnabled) {
             textToVoice(getTextForPosition(navigator, position))
         }
