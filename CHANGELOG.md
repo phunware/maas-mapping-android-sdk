@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.8 (Friday, Nov 15th, 2019)
+#### Bug fixes / Performance enhancements
+* Optimizations in map loading time
+
 ## 3.9.7 (Friday, Oct 11th, 2019)
 #### Bug fixes / Performance enhancements
 * Fixed an issue with floor switching when curent location is available
