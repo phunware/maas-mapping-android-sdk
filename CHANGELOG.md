@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.9 (Monday, Nov 25th, 2019)
+#### Bug fixes / Performance enhancements
+* Improved error handling
+
 ## 3.9.8 (Friday, Nov 15th, 2019)
 #### Bug fixes / Performance enhancements
 * Optimizations in map loading time
