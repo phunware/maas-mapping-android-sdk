@@ -1,6 +1,6 @@
 # MaaS Mapping SDK for Android
 
-**Version 3.9.8**
+**Version 3.9.9**
 ________________
 
 
