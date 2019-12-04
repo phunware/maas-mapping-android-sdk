@@ -51,6 +51,9 @@
     <string name="demo_one_way_routing_title">One Way Routing</string>
     <string name="demo_one_way_routing_description">Demonstrates how to enable one way routing</string>
 
+    <string name="demo_landmark_routing_title">Landmark Routing</string>
+    <string name="demo_landmark_routing_description">Demonstrates how to enable landmarks while routing</string>
+
     <string name="navigation">Navigation</string>
     <string name="no_route">Couldn\'t find a route matching your search.</string>
     <string name="turn_left">Turn Left</string>
@@ -65,6 +68,9 @@
     <string name="up_to_level">up to level</string>
     <string name="down_to_level">down to level</string>
     <string name="to">to</string>
+    <string name="walk_straight_distance">Walk %s feet towards %s </string>
+    <string name="after">after</string>
+    <string name="at">at</string>
     <string name="next_maneuver">Next: </string>
     <string name="to_arrive"> to arrive at %1$s</string>
     <string name="you_have_arrived">You have arrived </string>

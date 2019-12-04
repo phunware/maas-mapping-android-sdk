@@ -86,6 +86,10 @@
             android:label="@string/demo_one_way_routing_title" />
 
         <activity
+            android:name=".routing.LandmarkRoutingActivity"
+            android:label="@string/demo_landmark_routing_title" />
+
+        <activity
             android:name="location.LocationModeManagedCompassActivity"
             android:label="@string/demo_location_mode_managed_compass" />
 
