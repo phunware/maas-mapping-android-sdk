@@ -74,6 +74,14 @@ Route between two POIs or from your current location to a POI (if you have a blu
 #### Usage:
 Click the floating action button in the bottom right corner to open up a routing dialog that allows you to select a start and end point for your route. If you have acquired a bluedot, the start field will be automatically populated with your current location. Click `ROUTE` to display the path between the selected points (if one exists)
 
+### Landmark Routing
+Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/LandmarkRoutingActivity.kt)
+
+Route between two POIs or from your current location to a POI while using landmarks in navigation instructions . Note that for this sample to work, you will need to setup landmarks in the MaaS portal as described here (https://pw-lbs.phunware.com/docs/landmark-based-routing).
+
+#### Usage:
+Click the floating action button in the bottom right corner to open up a routing dialog that allows you to select a start and end point for your route. If you have acquired a bluedot, the start field will be automatically populated with your current location. Click `ROUTE` to display the path between the selected points (if one exists)
+
 ### Location Sharing
 Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/location/LocationSharingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/LocationSharingActivity.kt)
 

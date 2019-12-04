@@ -41,6 +41,7 @@ import com.phunware.kotlin.sample.routing.OneWayRoutingActivity
 import com.phunware.kotlin.sample.routing.RoutingActivity
 import com.phunware.kotlin.sample.routing.VoicePromptActivity
 import com.phunware.kotlin.sample.routing.WalkTimeActivity
+import com.phunware.kotlin.sample.routing.LandmarkRoutingActivity
 import java.util.ArrayList
 
 internal class DemoDetailsList(context: Context) {
@@ -84,6 +85,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_one_way_routing_title),
                 resources.getString(R.string.demo_one_way_routing_description),
                 OneWayRoutingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_landmark_routing_title),
+            resources.getString(R.string.demo_landmark_routing_description),
+            LandmarkRoutingActivity::class.java))
 
         demos.add(Demo(resources.getString(R.string.demo_location_sharing_title),
                 resources.getString(R.string.demo_location_sharing_description),

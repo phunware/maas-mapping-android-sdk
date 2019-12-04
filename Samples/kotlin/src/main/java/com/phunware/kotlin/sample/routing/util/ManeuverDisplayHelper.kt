@@ -28,6 +28,7 @@ from Phunware, Inc. */
 
 import android.content.Context
 import com.phunware.kotlin.sample.R
+import com.phunware.mapping.model.LandmarkManeuverOptions
 
 import com.phunware.mapping.model.RouteManeuverOptions
 
@@ -39,20 +40,49 @@ class ManeuverDisplayHelper {
         if (context == null || maneuver == null || maneuver.direction == null) {
             return ""
         }
+
+        var landmarkStringTurn = ""
+        var landmarkStringMain = ""
+        if (maneuver.landmarks.isNotEmpty()) {
+            val landmark = maneuver.landmarks[maneuver.landmarks.size - 1]
+            if (landmark.position === LandmarkManeuverOptions.POSITION.AFTER) {
+                landmarkStringTurn = SPACE + context.getString(R.string.after) + SPACE
+            } else if (landmark.position === LandmarkManeuverOptions.POSITION.AT) {
+                landmarkStringTurn = SPACE + context.getString(R.string.at) + SPACE
+            }
+            landmarkStringTurn += landmark.name
+            landmarkStringMain += landmark.name
+        }
         val directionString = StringBuilder()
         when (maneuver.direction) {
             RouteManeuverOptions.Direction.FLOOR_CHANGE ->
                 directionString.append(floorChangeDescriptionForManeuver(context, maneuver)).append("\n")
-            RouteManeuverOptions.Direction.BEAR_LEFT ->
+            RouteManeuverOptions.Direction.BEAR_LEFT -> {
                 directionString.append(context.getString(R.string.bear_left))
-            RouteManeuverOptions.Direction.BEAR_RIGHT ->
+                directionString.append(landmarkStringTurn)
+            }
+            RouteManeuverOptions.Direction.BEAR_RIGHT -> {
                 directionString.append(context.getString(R.string.bear_right))
-            RouteManeuverOptions.Direction.LEFT ->
+                directionString.append(landmarkStringTurn)
+            }
+            RouteManeuverOptions.Direction.LEFT -> {
                 directionString.append(context.getString(R.string.turn_left))
-            RouteManeuverOptions.Direction.RIGHT ->
+                directionString.append(landmarkStringTurn)
+            }
+            RouteManeuverOptions.Direction.RIGHT -> {
                 directionString.append(context.getString(R.string.turn_right))
+                directionString.append(landmarkStringTurn)
+            }
             RouteManeuverOptions.Direction.STRAIGHT ->
-                directionString.append(context.getString(R.string.continue_straight))
+                if (landmarkStringMain.isEmpty()) {
+                    directionString.append(
+                        context.getString(R.string.continue_straight)
+                    )
+                } else {
+                    directionString.append(
+                        context.getString(R.string.continue_straight)
+                    )
+                }
             else -> directionString.append(context.getString(R.string.unknown))
         }
         return directionString.toString()
@@ -162,6 +192,7 @@ class ManeuverDisplayHelper {
     }
 
     companion object {
-        private val NUM_FEET_PER_METER = 3.28084
+        private const val NUM_FEET_PER_METER = 3.28084
+        private const val SPACE = " "
     }
 }
