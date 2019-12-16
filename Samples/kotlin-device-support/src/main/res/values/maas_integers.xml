@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TODO: Change this buildingId to match the building on MaaS -->
+    <integer name="buildingId"></integer>
+    <!-- TODO: Change this building Lat/Lng to match the building on MaaS -->
+    <!-- Use from within an xml layout file (example building coordinates: Phunware Inc., Austin, TX) -->
+    <item name="building_latitude" type="integer" format="float">30.360292</item>
+    <item name="building_longitude" type="integer" format="float">-97.742193</item>
+</resources>
