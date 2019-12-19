@@ -48,7 +48,11 @@ class ManeuverDisplayHelper {
             if (landmark.position === LandmarkManeuverOptions.POSITION.AFTER) {
                 landmarkStringTurn = SPACE + context.getString(R.string.after) + SPACE
             } else if (landmark.position === LandmarkManeuverOptions.POSITION.AT) {
-                landmarkStringTurn = SPACE + context.getString(R.string.at) + SPACE
+                if(landmark.type == LandmarkManeuverOptions.TYPE.ASSOCIATED_LANDMARK){
+                    landmarkStringTurn = SPACE + context.getString(R.string.near) + SPACE
+                } else {
+                    landmarkStringTurn = SPACE + context.getString(R.string.at) + SPACE
+                }
             }
             landmarkStringTurn += landmark.name
             landmarkStringMain += landmark.name
