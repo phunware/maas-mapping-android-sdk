@@ -1,4 +1,9 @@
 # Mapping SDK Changelog
+## 3.9.10 (Friday, Jan 3rd, 2020)
+#### Bug fixes / Performance enhancements
+* Improved routing experience with smooth transitions for turn by turn cards
+* Improved route snapping
+
 ## 3.9.9 (Monday, Nov 25th, 2019)
 #### Bug fixes / Performance enhancements
 * Improved error handling
