@@ -34,8 +34,8 @@ configurations.all {
 }
 
 ext {
-    pwLocationSdkVersion = '3.7.5'
-    pwMappingSdkVersion = '3.9.9'
+    pwLocationSdkVersion = '3.7.6'
+    pwMappingSdkVersion = '3.9.10'
 
     versionCode = 1
     versionName = "1.0"
