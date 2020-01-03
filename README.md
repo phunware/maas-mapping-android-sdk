@@ -1,6 +1,6 @@
 # MaaS Mapping SDK for Android
 
-**Version 3.9.9**
+**Version 3.9.10**
 ________________
 
 
@@ -11,7 +11,7 @@ PWMapKit is a comprehensive indoor mapping and wayfinding SDK that allows easy i
 
 
 ### Build requirements
-* Android SDK 4.0.3+ (API level 15) or above
+* Android SDK 4.3+ (API level 18) or above
 
 ### Documentation
 
