@@ -50,7 +50,6 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.SupportMapFragment
