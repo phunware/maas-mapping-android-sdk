@@ -77,16 +77,18 @@ class ManeuverDisplayHelper {
                 directionString.append(context.getString(R.string.turn_right))
                 directionString.append(landmarkStringTurn)
             }
-            RouteManeuverOptions.Direction.STRAIGHT ->
-                if (landmarkStringMain.isEmpty()) {
+            RouteManeuverOptions.Direction.STRAIGHT -> {
+                val distance = getDistanceInFeet(maneuver.distance)
+                if (landmarkStringMain.isEmpty() ||
+                    (distance <= LANDMARK_DISTANCE) ) {
                     directionString.append(
-                        context.getString(R.string.continue_straight)
-                    )
+                        context.getString(R.string.continue_straight))
                 } else {
-                    directionString.append(
-                        context.getString(R.string.continue_straight)
-                    )
+                    directionString.append(String.format(Locale.US,
+                        context.getString(R.string.walk_straight_distance_past_poi),
+                        landmarkStringMain));
                 }
+            }
             else -> directionString.append(context.getString(R.string.unknown))
         }
         return directionString.toString()
@@ -102,6 +104,14 @@ class ManeuverDisplayHelper {
         return String.format(Locale.US, context.getString(R.string.section_distance), prep, getStringDistanceInFeet(maneuver.distance))
     }
 
+    private fun getDistanceInFeet(distance: Double): Double {
+        if (distance < 0) {
+            return -1.0
+        }
+        val distInFeet = distance * NUM_FEET_PER_METER
+        return Math.ceil(distInFeet)
+    }
+
     /**
      * Converts the distance from meters to feet
      * @param distance Double distance in meters
@@ -109,11 +119,10 @@ class ManeuverDisplayHelper {
      */
     private fun getStringDistanceInFeet(distance: Double): String {
         if (distance < 0) {
-            return ""
+            return "";
+        } else {
+            return getDistanceInFeet(distance).toInt().toString();
         }
-        var res = distance * NUM_FEET_PER_METER
-        res = Math.ceil(res)
-        return res.toInt().toString()
     }
 
     fun getImageResourceForDirection(context: Context,
@@ -198,5 +207,6 @@ class ManeuverDisplayHelper {
     companion object {
         private const val NUM_FEET_PER_METER = 3.28084
         private const val SPACE = " "
+        private const val LANDMARK_DISTANCE = 50 //50 feet
     }
 }
