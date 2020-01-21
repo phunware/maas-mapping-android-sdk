@@ -71,6 +71,7 @@
     <string name="walk_straight_distance">Walk %s feet towards %s </string>
     <string name="after">after</string>
     <string name="at">at</string>
+    <string name="near">near</string>
     <string name="next_maneuver">Next: </string>
     <string name="to_arrive"> to arrive at %1$s</string>
     <string name="you_have_arrived">You have arrived </string>
