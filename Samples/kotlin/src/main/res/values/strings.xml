@@ -63,6 +63,7 @@
     <string name="continue_straight">Continue Straight</string>
     <string name="continue_straight_distance" formatted="false">
         Continue Straight for %s feet</string>
+    <string name="walk_straight_distance_past_poi">Continue straight, past %s </string>
     <string name="unknown">Unknown</string>
     <string name="floor_change_message_format" formatted="false">Take the %s %s %d</string>
     <string name="up_to_level">up to level</string>
