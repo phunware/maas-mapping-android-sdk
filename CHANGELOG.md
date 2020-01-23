@@ -1,4 +1,8 @@
 # Mapping SDK Changelog
+## 3.9.11 (Thursday, Jan 23rd, 2020)
+#### Bug fixes / Performance enhancements
+* Added landmarks to last maneuver in a route
+
 ## 3.9.10 (Friday, Jan 3rd, 2020)
 #### Bug fixes / Performance enhancements
 * Improved routing experience with smooth transitions for turn by turn cards
