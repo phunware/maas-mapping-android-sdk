@@ -28,6 +28,7 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -42,6 +43,12 @@ import java.util.Locale
 import kotlin.math.ceil
 
 open class WalkTimeActivity : RoutingActivity() {
+    companion object {
+        private const val UPDATE_DELAY = 5000L
+        private const val AVERAGE_WALK_SPEED = 0.7 //units in meters per second
+        private const val POSITION_UPDATE_TICK_TIME = .515 // seconds
+    }
+
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
 
     //Walk Time Views
@@ -51,7 +58,8 @@ open class WalkTimeActivity : RoutingActivity() {
     private lateinit var exitRouteButton: Button
 
     private val gpsPositionList: MutableList<Location> = ArrayList()
-    private val averageWalkSpeed = 0.7 //units in meters per second
+    private val walkspeedList: MutableList<Double> = ArrayList()
+
     private var calculatedWalkSpeed = 0.0
     private val dateFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
     private var currentManeuverIndex = -1
@@ -98,8 +106,17 @@ open class WalkTimeActivity : RoutingActivity() {
             val firstLocation = gpsPositionList.first()
             val lastLocation = gpsPositionList.last()
             val distanceCovered = firstLocation.distanceTo(lastLocation)
+
+            walkspeedList.add((distanceCovered / 2.5))
+            while (walkspeedList.count() > 15) {
+                walkspeedList.removeAt(0)
+            }
+            if (walkspeedList.count() < 15) return
+            Log.d("DUSTINw", "walkspeedList: $walkspeedList")
+
             calculatedWalkSpeed =
-                    distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
+                    walkspeedList.sum() / 15 //Get location updates about every half second and we cache the last 5
+            Log.d("DUSTINw", "calculatedWalkSpeed: $calculatedWalkSpeed")
         }
     }
 
@@ -121,12 +138,20 @@ open class WalkTimeActivity : RoutingActivity() {
             }
         }
 
-        val estimateTimeInSeconds = if (calculatedWalkSpeed >= averageWalkSpeed) {
+        Log.d("DUSTIN", "calculatedWalkSpeed: $calculatedWalkSpeed")
+
+        //TODO: try if (gpsLocationList.size == 5)
+
+        val estimateTimeInSeconds = if (calculatedWalkSpeed >= AVERAGE_WALK_SPEED) {
+            Log.d("DUSTIN", "Using calculated walkspeed: ${distance / calculatedWalkSpeed} secs")
             distance / calculatedWalkSpeed
         } else {
-            distance / averageWalkSpeed
+            Log.d("DUSTIN", "Using average walkspeed: ${distance / AVERAGE_WALK_SPEED} secs")
+            distance / AVERAGE_WALK_SPEED
         }
+        Log.d("DUSTIN", "minutes in double: ${estimateTimeInSeconds / 60.0}")
         val numMinutes: Int = if (estimateTimeInSeconds < 60) 1 else ceil(estimateTimeInSeconds / 60.0).toInt()
+        Log.d("DUSTIN", "minutes in after round up: ${numMinutes}")
         walkTimeTextview.text = resources.getQuantityString(
                 R.plurals.demo_walk_time_minutes, numMinutes, numMinutes)
 
@@ -143,6 +168,7 @@ open class WalkTimeActivity : RoutingActivity() {
 
 
     override fun startNavigating(route: RouteOptions) {
+        gpsPositionList.clear()
         super.startNavigating(route)
 
         walkTimeView.visibility = View.VISIBLE
@@ -153,9 +179,5 @@ open class WalkTimeActivity : RoutingActivity() {
 
         walkTimeView.visibility = View.GONE
         handler.removeCallbacks(timeUpdater)
-    }
-
-    companion object {
-        private const val UPDATE_DELAY = 5000L
     }
 }
