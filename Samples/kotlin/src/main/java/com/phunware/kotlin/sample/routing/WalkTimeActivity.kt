@@ -28,7 +28,6 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -112,11 +111,8 @@ open class WalkTimeActivity : RoutingActivity() {
                 walkspeedList.removeAt(0)
             }
             if (walkspeedList.count() < 15) return
-            Log.d("DUSTINw", "walkspeedList: $walkspeedList")
-
             calculatedWalkSpeed =
                     walkspeedList.sum() / 15 //Get location updates about every half second and we cache the last 5
-            Log.d("DUSTINw", "calculatedWalkSpeed: $calculatedWalkSpeed")
         }
     }
 
@@ -138,20 +134,12 @@ open class WalkTimeActivity : RoutingActivity() {
             }
         }
 
-        Log.d("DUSTIN", "calculatedWalkSpeed: $calculatedWalkSpeed")
-
-        //TODO: try if (gpsLocationList.size == 5)
-
         val estimateTimeInSeconds = if (calculatedWalkSpeed >= AVERAGE_WALK_SPEED) {
-            Log.d("DUSTIN", "Using calculated walkspeed: ${distance / calculatedWalkSpeed} secs")
             distance / calculatedWalkSpeed
         } else {
-            Log.d("DUSTIN", "Using average walkspeed: ${distance / AVERAGE_WALK_SPEED} secs")
             distance / AVERAGE_WALK_SPEED
         }
-        Log.d("DUSTIN", "minutes in double: ${estimateTimeInSeconds / 60.0}")
         val numMinutes: Int = if (estimateTimeInSeconds < 60) 1 else ceil(estimateTimeInSeconds / 60.0).toInt()
-        Log.d("DUSTIN", "minutes in after round up: ${numMinutes}")
         walkTimeTextview.text = resources.getQuantityString(
                 R.plurals.demo_walk_time_minutes, numMinutes, numMinutes)
 
