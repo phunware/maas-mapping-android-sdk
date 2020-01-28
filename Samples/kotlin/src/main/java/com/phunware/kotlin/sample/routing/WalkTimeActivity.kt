@@ -45,7 +45,6 @@ open class WalkTimeActivity : RoutingActivity() {
     companion object {
         private const val UPDATE_DELAY = 5000L
         private const val AVERAGE_WALK_SPEED = 0.7 //units in meters per second
-        private const val POSITION_UPDATE_TICK_TIME = .515 // seconds
     }
 
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
@@ -153,7 +152,6 @@ open class WalkTimeActivity : RoutingActivity() {
         handler.removeCallbacks(timeUpdater)
         handler.postDelayed(timeUpdater, UPDATE_DELAY)
     }
-
 
     override fun startNavigating(route: RouteOptions) {
         gpsPositionList.clear()
