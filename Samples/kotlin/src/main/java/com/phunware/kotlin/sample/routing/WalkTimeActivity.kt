@@ -42,6 +42,11 @@ import java.util.Locale
 import kotlin.math.ceil
 
 open class WalkTimeActivity : RoutingActivity() {
+    companion object {
+        private const val UPDATE_DELAY = 5000L
+        private const val AVERAGE_WALK_SPEED = 0.7 //units in meters per second
+    }
+
     private var exitNavListener: View.OnClickListener = View.OnClickListener { stopNavigating() }
 
     //Walk Time Views
@@ -51,13 +56,14 @@ open class WalkTimeActivity : RoutingActivity() {
     private lateinit var exitRouteButton: Button
 
     private val gpsPositionList: MutableList<Location> = ArrayList()
-    private val averageWalkSpeed = 0.7 //units in meters per second
+    private val walkspeedList: MutableList<Double> = ArrayList()
+
     private var calculatedWalkSpeed = 0.0
     private val dateFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
-    private var routingFromCurrentLocation = false
     private var currentManeuverIndex = -1
     private val handler = Handler()
     private val timeUpdater = Runnable { updateWalkTime() }
+    private var userLastReportedLocation: Location? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,6 +95,7 @@ open class WalkTimeActivity : RoutingActivity() {
         super.onLocationUpdate(p0)
 
         if (p0 != null) {
+            userLastReportedLocation = p0
             gpsPositionList.add(p0)
             while (gpsPositionList.count() > 5) {
                 gpsPositionList.removeAt(0)
@@ -97,8 +104,14 @@ open class WalkTimeActivity : RoutingActivity() {
             val firstLocation = gpsPositionList.first()
             val lastLocation = gpsPositionList.last()
             val distanceCovered = firstLocation.distanceTo(lastLocation)
+
+            walkspeedList.add((distanceCovered / 2.5))
+            while (walkspeedList.count() > 15) {
+                walkspeedList.removeAt(0)
+            }
+            if (walkspeedList.count() < 15) return
             calculatedWalkSpeed =
-                    distanceCovered / 2.5 //Get location updates about every half second and we cache the last 5
+                    walkspeedList.sum() / 15 //Get location updates about every half second and we cache the last 5
         }
     }
 
@@ -109,18 +122,23 @@ open class WalkTimeActivity : RoutingActivity() {
         var distance = 0.0
         for (i in currentManeuverIndex until navigator!!.maneuvers.count()) {
             val maneuver = navigator!!.maneuvers[i]
-            distance += maneuver.distance
+            if (i == currentManeuverIndex && userLastReportedLocation != null) {
+                val results = floatArrayOf(0f)
+                val maneuverEndPoint = maneuver.points[maneuver.points.size - 1]
+                Location.distanceBetween(userLastReportedLocation!!.latitude, userLastReportedLocation!!.longitude,
+                        maneuverEndPoint.location.latitude, maneuverEndPoint.location.longitude, results)
+                distance += results[0]
+            } else {
+                distance += maneuver.distance
+            }
         }
 
-        val estimateTimeInSeconds = if (routingFromCurrentLocation &&
-                calculatedWalkSpeed >= averageWalkSpeed) {
+        val estimateTimeInSeconds = if (calculatedWalkSpeed >= AVERAGE_WALK_SPEED) {
             distance / calculatedWalkSpeed
         } else {
-            distance / averageWalkSpeed
+            distance / AVERAGE_WALK_SPEED
         }
-
         val numMinutes: Int = if (estimateTimeInSeconds < 60) 1 else ceil(estimateTimeInSeconds / 60.0).toInt()
-
         walkTimeTextview.text = resources.getQuantityString(
                 R.plurals.demo_walk_time_minutes, numMinutes, numMinutes)
 
@@ -130,12 +148,13 @@ open class WalkTimeActivity : RoutingActivity() {
         val formattedArrivalTimeText =
                 String.format(getString(R.string.demo_arrival_time_title), formattedArrivalTime)
         arrivalTimeTextview.text = formattedArrivalTimeText
+
         handler.removeCallbacks(timeUpdater)
         handler.postDelayed(timeUpdater, UPDATE_DELAY)
     }
 
-
     override fun startNavigating(route: RouteOptions) {
+        gpsPositionList.clear()
         super.startNavigating(route)
 
         walkTimeView.visibility = View.VISIBLE
@@ -146,9 +165,5 @@ open class WalkTimeActivity : RoutingActivity() {
 
         walkTimeView.visibility = View.GONE
         handler.removeCallbacks(timeUpdater)
-    }
-
-    companion object {
-        private const val UPDATE_DELAY = 5000L
     }
 }
