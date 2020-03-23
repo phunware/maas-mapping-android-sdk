@@ -41,6 +41,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".building.CustomPoiImageActivity"
+            android:label="@string/demo_load_building_title"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".building.LoadBuildingWithoutMapActivity"
             android:label="@string/demo_load_building_no_map_title" />
 
