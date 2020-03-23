@@ -8,9 +8,12 @@ import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.model.IconProvider
 import com.phunware.mapping.model.PointOptions
 
+
 class CustomPoiImageActivity: LoadBuildingActivity() {
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
+
+        // Set the icon provider callback to provide custom images for POIs
         mapManager.setIconProvider(object: IconProvider {
             override fun getImage(pointOptions: PointOptions): Bitmap? {
                 val drawable =
