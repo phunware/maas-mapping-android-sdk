@@ -42,7 +42,7 @@
 
         <activity
             android:name=".building.CustomPoiImageActivity"
-            android:label="@string/demo_load_building_title"
+            android:label="@string/demo_custom_poi_image_title"
             android:screenOrientation="portrait" />
 
         <activity
