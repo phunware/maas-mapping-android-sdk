@@ -8,7 +8,6 @@ import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.model.IconProvider
 import com.phunware.mapping.model.PointOptions
 
-
 class CustomPoiImageActivity: LoadBuildingActivity() {
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
@@ -23,5 +22,10 @@ class CustomPoiImageActivity: LoadBuildingActivity() {
         })
 
         super.onPhunwareMapReady(phunwareMap)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.setIconProvider(null)
     }
 }
