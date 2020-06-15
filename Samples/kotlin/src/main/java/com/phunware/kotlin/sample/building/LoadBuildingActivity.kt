@@ -46,8 +46,9 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 
-class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
-    private lateinit var mapManager: PhunwareMapManager
+open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+    lateinit var mapManager: PhunwareMapManager
+        private set
     private lateinit var currentBuilding: Building
     private lateinit var spinnerAdapter: ArrayAdapter<FloorOptions>
 

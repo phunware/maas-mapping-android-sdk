@@ -6,6 +6,9 @@
     <string name="demo_load_building_title">Load Building</string>
     <string name="demo_load_building_description">Load and display map</string>
 
+    <string name="demo_custom_poi_image_title">Custom POI Image</string>
+    <string name="demo_custom_poi_image_description">Use custom image for POIs</string>
+
     <string name="demo_load_building_no_map_title">Load Building without map</string>
     <string name="demo_load_building_no_map_description">Loads and lists building data without a map</string>
 

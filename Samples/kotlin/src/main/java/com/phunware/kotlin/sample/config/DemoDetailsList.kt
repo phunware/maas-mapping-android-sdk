@@ -28,6 +28,7 @@ from Phunware, Inc. */
 
 import android.content.Context
 import com.phunware.kotlin.sample.R
+import com.phunware.kotlin.sample.building.CustomPoiImageActivity
 import com.phunware.kotlin.sample.building.LoadBuildingActivity
 import com.phunware.kotlin.sample.building.LoadBuildingWithoutMapActivity
 import com.phunware.kotlin.sample.location.BluedotLocationActivity
@@ -53,6 +54,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_load_building_title),
                 resources.getString(R.string.demo_load_building_description),
                 LoadBuildingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_custom_poi_image_title),
+            resources.getString(R.string.demo_custom_poi_image_description),
+            CustomPoiImageActivity::class.java))
 
         demos.add(Demo(resources.getString(R.string.demo_load_building_no_map_title),
                 resources.getString(R.string.demo_load_building_no_map_description),
