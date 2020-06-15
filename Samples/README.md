@@ -31,6 +31,25 @@ Loads the building that is set up in the MaaS portal. The camera should pan and 
 #### Usage:
 Configure building on the MaaS portal
 
+### Custom POI Image
+
+Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/building/CustomPoiImageActivity.kt)
+
+Loads the building ans uses a custom POI icon provided by the app to render the POIs . The camera should pan and zoom automatically to the location of the building.
+
+#### Usage:
+Configure building on the MaaS portal and then use PhunwareMapManager.setIconProvider to set the callback that returns the POI icon.
+
+```
+mapManager.setIconProvider(object: IconProvider {
+            override fun getImage(pointOptions: PointOptions): Bitmap? {
+                // Return the bitmap for this POI icon from here
+                ...
+                return bitmap
+            }
+        })
+```
+
 ### Bluedot Location
 
 Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/location/BluedotLocationActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/BluedotLocationActivity.kt)

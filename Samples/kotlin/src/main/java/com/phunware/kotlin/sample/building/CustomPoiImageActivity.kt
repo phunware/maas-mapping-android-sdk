@@ -15,6 +15,7 @@ class CustomPoiImageActivity: LoadBuildingActivity() {
         // Set the icon provider callback to provide custom images for POIs
         mapManager.setIconProvider(object: IconProvider {
             override fun getImage(pointOptions: PointOptions): Bitmap? {
+                //This sets the same icon for all POIs
                 val drawable =
                     ContextCompat.getDrawable(this@CustomPoiImageActivity, R.drawable.ic_poi_list)
                 return (drawable as BitmapDrawable).bitmap
