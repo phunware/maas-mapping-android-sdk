@@ -1,4 +1,9 @@
 # Mapping SDK Changelog
+## 3.9.12 (Mon, Jun 15th, 2020)
+#### Bug fixes / Performance enhancements
+* Added new callback to support POI image override
+* Fixed an issue that caused floor map to not load occasionally
+
 ## 3.9.11 (Thursday, Jan 23rd, 2020)
 #### Bug fixes / Performance enhancements
 * Added landmarks to last maneuver in a route
