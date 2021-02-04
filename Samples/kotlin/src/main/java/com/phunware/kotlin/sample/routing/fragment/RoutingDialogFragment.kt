@@ -38,7 +38,7 @@ import android.widget.ImageButton
 import android.widget.Spinner
 import com.google.android.gms.maps.model.LatLng
 import com.phunware.kotlin.sample.R
-import com.phunware.kotlin.sample.routing.adapter.BuildingAdapter
+import com.phunware.kotlin.sample.routing.adapter.PointAdapter
 import com.phunware.location_core.PwLocationProvider
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.PointOptions
@@ -169,12 +169,12 @@ class RoutingDialogFragment : DialogFragment() {
             }
         }
 
-        startPicker?.adapter = BuildingAdapter(
+        startPicker?.adapter = PointAdapter(
                 requireContext(),
                 points,
                 getString(R.string.start_prompt)
         )
-        endPicker?.adapter = BuildingAdapter(
+        endPicker?.adapter = PointAdapter(
                 requireContext(),
                 points,
                 getString(R.string.end_prompt)

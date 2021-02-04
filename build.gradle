@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.4.21'
     repositories {
         google()
         mavenLocal()
@@ -10,7 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:4.1.2'
         classpath 'com.noveogroup.android:check:1.2.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
@@ -34,14 +34,14 @@ configurations.all {
 }
 
 ext {
-    pwLocationSdkVersion = '3.7.7'
-    pwMappingSdkVersion = '3.9.12'
+    pwLocationSdkVersion = '4.0.0-beta-11'
+    pwMappingSdkVersion = '4.0.0-beta-08'
 
     versionCode = 1
     versionName = "1.0"
 
     compileSdkVersion = 28
-    minSdkVersion = 21
+    minSdkVersion = 23
     targetSdkVersion = 28
 
     supportLibVersion = '28.0.0'

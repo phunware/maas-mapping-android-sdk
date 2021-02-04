@@ -67,17 +67,17 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
 
     override fun onItemClicked(title: String) {
         clickedDemo = demoAdapter.getItem(title)
-        if (clickedDemo != null) {
-            if (canAccessLocation()) {
-                startDemo(clickedDemo!!)
-            } else {
-                checkPermissions(this)
-            }
+        if (canAccessLocation()) {
+            startDemo(clickedDemo)
+        } else {
+            checkPermissions(this)
         }
     }
 
-    private fun startDemo(demo: Demo) {
-        startActivity(Intent(this, demo.activityClass))
+    private fun startDemo(demo: Demo?) {
+        demo?.let {
+            startActivity(Intent(this, demo.activityClass))
+        }
     }
 
     /**
@@ -88,22 +88,19 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
                                             grantResults: IntArray) {
         if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
             if (canAccessLocation()) {
-                if (permissionsSnackbar != null) {
-                    permissionsSnackbar!!.dismiss()
-                }
-                if (clickedDemo != null) {
-                    startDemo(clickedDemo!!)
-                    clickedDemo = null
-                }
+                permissionsSnackbar?.dismiss()
+                startDemo(clickedDemo)
+                clickedDemo = null
             } else if (!canAccessLocation()) {
                 permissionsSnackbar = Snackbar.make(content, R.string.permission_snackbar_message,
                         Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.action_settings, {
+                        .setAction(R.string.action_settings) {
                             startActivityForResult(
-                                    Intent(android.provider.Settings.ACTION_SETTINGS),
-                                    REQUEST_PERMISSION_LOCATION_FINE)
-                        })
-                permissionsSnackbar!!.show()
+                                Intent(android.provider.Settings.ACTION_SETTINGS),
+                                REQUEST_PERMISSION_LOCATION_FINE
+                            )
+                        }
+                permissionsSnackbar?.show()
             }
         }
     }
@@ -129,6 +126,6 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
     }
 
     companion object {
-        private val REQUEST_PERMISSION_LOCATION_FINE = 1
+        private const val REQUEST_PERMISSION_LOCATION_FINE = 1
     }
 }

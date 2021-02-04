@@ -105,8 +105,8 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.clear()
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
-                val initialFloorOptions: FloorOptions = building.initialFloor()
-                building.selectFloor(initialFloorOptions.level)
+                val initialFloorOptions: FloorOptions = building.initialFloor
+                building.selectFloor(initialFloorOptions.id)
                 Log.d(TAG, "Selected floor : " + initialFloorOptions.level)
                 poiAdapter.setPois(initialFloorOptions.poiOptions)
             }

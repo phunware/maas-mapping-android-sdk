@@ -37,6 +37,7 @@ import com.phunware.kotlin.sample.location.LocationModesActivity
 import com.phunware.kotlin.sample.location.LocationSharingActivity
 import com.phunware.kotlin.sample.poi.CustomPOIActivity
 import com.phunware.kotlin.sample.poi.SearchPoiActivity
+import com.phunware.kotlin.sample.routing.CampusRoutingActivity
 import com.phunware.kotlin.sample.routing.OffRouteActivity
 import com.phunware.kotlin.sample.routing.OneWayRoutingActivity
 import com.phunware.kotlin.sample.routing.RoutingActivity
@@ -86,6 +87,10 @@ internal class DemoDetailsList(context: Context) {
         demos.add(Demo(resources.getString(R.string.demo_routing_title),
                 resources.getString(R.string.demo_routing_description),
                 RoutingActivity::class.java))
+
+        demos.add(Demo(resources.getString(R.string.demo_campus_routing_title),
+            resources.getString(R.string.demo_campus_routing_description),
+            CampusRoutingActivity::class.java))
 
         demos.add(Demo(resources.getString(R.string.demo_one_way_routing_title),
                 resources.getString(R.string.demo_one_way_routing_description),

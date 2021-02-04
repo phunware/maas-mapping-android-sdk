@@ -120,8 +120,8 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
-                        building.selectFloor(initialFloor.level)
+                        val initialFloor = building.initialFloor
+                        building.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
