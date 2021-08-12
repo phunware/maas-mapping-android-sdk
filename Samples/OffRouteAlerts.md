@@ -4,10 +4,6 @@
 ### Overview
 - This feature will monitor the users location updates alert the user if they deviated from the route using a predetermined distance and time threshold.
 
-### Usage
-
-- Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId`in strings.xml and integers.xml.
-
 ### Sample Code
 - [OffRouteActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/OffRouteActivity.kt)
 - [OffRouteDialogFragment.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/fragment/OffRouteDialogFragment.kt)
@@ -60,7 +56,7 @@ override fun onLocationUpdate(p0: Location?) {
     }
 ```
 
-Calculate the `minDistanceInMeters` to show a dialog alert when user is off the route using `showModal()`, which will show the [OffRouteDialogFragment.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/OffRouteDialogFragment.kt).
+Calculate the `minDistanceInMeters` to show a dialog alert when user is off the route using `showModal()`, which will show the [OffRouteDialogFragment.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/fragment/OffRouteDialogFragment.kt).
 If the `minDistanceInMeters` is greater than the hard-coded value `offRouteDistanceThreshold` then call `showModal()`
 
 ```

@@ -4,10 +4,6 @@
 ### Overview
 - This feature will read route instruction aloud to the user as they swipe through the route instructions or as they traverse them with indoor location.
 
-### Usage
-
-- Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId` in `strings.xml` and `integers.xml`.
-
 ### Sample Code
 - [VoicePromptActivity.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/VoicePromptActivity.kt)
 - [NavigationOverlayView.kt](kotlin/src/main/java/com/phunware/kotlin/sample/routing/view/NavigationOverlayView.kt)

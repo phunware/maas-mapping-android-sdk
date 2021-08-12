@@ -3,10 +3,6 @@
 ### Overview
 - Display walk time at the bottom of map.
 
-### Usage
-
-- Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingIdentifier` in `strings.xml` and `integers.xml`
-
 ### Sample Code
 - [WalkTimeActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/sample_code_updates/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/WalkTimeActivity.kt)
 

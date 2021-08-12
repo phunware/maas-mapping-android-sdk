@@ -79,14 +79,14 @@ Load the map on the fragment by calling `getPhunwareMapAsync()`. You'll need to 
 mapFragment.getPhunwareMapAsync(callback: OnPhunwareMapReadyCallback)
 ```
 
-Your `OnPhunwareMapReadyCallback` implementation will require you to override `onPhunwareMapReady()`. When this method is called, it means your map instance is read for use.
+Your `OnPhunwareMapReadyCallback` implementation will require you to override `onPhunwareMapReady()`. When this method is called, it means your map instance is ready for use.
 ```kotlin
 override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
 }
 ```
 
 #### Linking the Map with the Map Manager
-In order to perform operations on the map through the Map Manager, like adding a building, we need to link the Map Manager with the Map we just loaded. You should do so inside your `OnPhunwareMapReadyCallback`:
+In order to perform operations on the map through the Map Manager, like adding a building, we need to link the Map Manager with the Map we just loaded. You should do so inside your `onPhunwareMapReady()`:
 ```kotlin
 override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
     mapManager.setPhunwareMap(phunwareMap)
@@ -115,16 +115,16 @@ In order to see your location on the map, you need to integrate with [Phunware's
 To enable your location, simply create a `PwManagedLocationProvider` and pass it to the Map Manager along with the building you just added to the map. Then, enable location on the Map Manager by setting `mapManager.isMyLocationEnabled` to `true`:
 ```kotlin
 mapManager.addBuilding(buildingId.toLong(), object : Callback<Building> {
-        override fun onSuccess(building: Building) {
-            val provider = PwManagedLocationProvider(application, building.id, null)
-            mapManager.setLocationProvider(managedProvider, building)
-            mapManager.isMyLocationEnabled = true
-        }
+    override fun onSuccess(building: Building) {
+        val provider = PwManagedLocationProvider(application, building.id, null)
+        mapManager.setLocationProvider(managedProvider, building)
+        mapManager.isMyLocationEnabled = true
+    }
         
-        override fun onFailure(throwable: Throwable) {
-            // Handle failure.
-        }
-    })
+    override fun onFailure(throwable: Throwable) {
+        // Handle failure.
+    }
+})
 ```
 
 You're all set to see your building on the map with your real time location.
