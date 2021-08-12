@@ -91,10 +91,6 @@
             android:label="@string/demo_landmark_routing_title" />
 
         <activity
-            android:name="poi.CustomPOIActivity"
-            android:label="@string/demo_custom_poi_title" />
-
-        <activity
             android:name=".location.LocationSharingActivity"
             android:label="@string/demo_location_sharing_title"
             android:screenOrientation="portrait" />
@@ -110,29 +106,23 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name="routing.OneWayRoutingActivity"
-            android:label="@string/demo_one_way_routing_title" />
-
-        <activity
             android:name=".routing.OffRouteActivity"
             android:label="@string/demo_off_route_title"
             android:screenOrientation="portrait" />
 
-        <!-- Google Maps Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="" />
 
         <!-- Phunware Keys -->
         <meta-data
-            android:name="com.phunware.APPLICATION_ID"
-            android:value="@string/pw_app_id" />
+            android:name="com.phunware.maas.APPLICATION_ID"
+            android:value="" />
+
         <meta-data
-            android:name="com.phunware.ACCESS_KEY"
-            android:value="@string/pw_access_key" />
-        <meta-data
-            android:name="com.phunware.SIGNATURE_KEY"
-            android:value="@string/pw_signature_key" />
+            android:name="com.phunware.maas.ACCESS_KEY"
+            android:value="" />
+
     </application>
 
 </manifest>

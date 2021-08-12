@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.5.10'
     repositories {
         google()
         mavenLocal()
@@ -10,8 +10,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
-        classpath 'com.noveogroup.android:check:1.2.3'
+        classpath 'com.android.tools.build:gradle:4.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -28,25 +27,22 @@ allprojects {
     }
 }
 
-configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor 10, 'minutes'
-    resolutionStrategy.cacheChangingModulesFor 4, 'hours'
-}
-
 ext {
-    pwLocationSdkVersion = '3.7.7'
-    pwMappingSdkVersion = '3.9.12'
+    pwLocationSdkVersion = '4.0.0'
+    pwMappingSdkVersion = '4.0.0'
 
     versionCode = 1
     versionName = "1.0"
 
-    compileSdkVersion = 28
-    minSdkVersion = 21
-    targetSdkVersion = 28
+    compileSdkVersion = 30
+    minSdkVersion = 23
+    targetSdkVersion = 30
 
     supportLibVersion = '28.0.0'
     androidMapsUtilsVersion = "0.5"
 
     junitVersion = '4.12'
     okhttpVersion = '3.10.0'
+
+    coroutines_version = "1.3.9"
 }

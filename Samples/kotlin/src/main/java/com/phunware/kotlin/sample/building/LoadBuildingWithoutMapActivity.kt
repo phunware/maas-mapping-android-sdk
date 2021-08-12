@@ -37,7 +37,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.R
 import com.phunware.mapping.manager.Callback
@@ -82,9 +81,6 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         // Create the map manager used to load the building
         mapManager = PhunwareMapManager.create(this)
 
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
-
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
         loadBuilding(buildingId.toLong())
@@ -105,7 +101,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.clear()
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
-                val initialFloorOptions: FloorOptions = building.initialFloor()
+                val initialFloorOptions: FloorOptions = building.initialFloor
                 building.selectFloor(initialFloorOptions.level)
                 Log.d(TAG, "Selected floor : " + initialFloorOptions.level)
                 poiAdapter.setPois(initialFloorOptions.poiOptions)

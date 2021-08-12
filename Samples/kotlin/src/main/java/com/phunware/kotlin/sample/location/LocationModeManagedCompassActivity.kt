@@ -41,12 +41,9 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.phunware.core.PwCoreSession
-import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.util.extensions.accentColor
-import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -57,7 +54,6 @@ import com.phunware.mapping.manager.PhunwareMapManager.MODE_FOLLOW_ME
 import com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
-import java.lang.ref.WeakReference
 
 class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener {
@@ -105,7 +101,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
         trackingModeRunnable = Runnable {
             isTrackingModeTimerRunning = false
             if (mapManager.isBluedotVisibleOnMap && mapManager.isBluedotVisibleOnFloor) {
-                PwLog.d(TAG, "Bluedot is visible -- resetting tracking mode")
+                Log.d(TAG, "Bluedot is visible -- resetting tracking mode")
                 when (previousTrackingMode) {
                     PREF_LOCATION_LOCATE -> mapManager.myLocationMode = MODE_LOCATE_ME
                     PREF_LOCATION_FOLLOW -> mapManager.myLocationMode = MODE_FOLLOW_ME
@@ -114,12 +110,9 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
                 setSavedLocationMode(previousTrackingMode)
                 updateLocationModeFab()
             } else {
-                PwLog.d(TAG, "Bluedot is not visible -- breaking tracking mode")
+                Log.d(TAG, "Bluedot is not visible -- breaking tracking mode")
             }
         }
-
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
@@ -163,7 +156,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level
@@ -179,12 +172,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
     }
 
     private fun setManagedLocationProvider(building: Building) {
-        val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
-        builder.application(application)
-                .context(WeakReference<Context>(application))
-                .buildingId(building.id.toString())
-        val factory = builder.build()
-        val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
+        val managedProvider = PwManagedLocationProvider(application, building.id, null)
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
     }
@@ -242,7 +230,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
     fun updateLocationModeBehavior() {
         // Save current tracking mode and break tracking mode
         if (!isTrackingModeTimerRunning) {
-            PwLog.d(TAG, "Breaking tracking mode while timer is running")
+            Log.d(TAG, "Breaking tracking mode while timer is running")
             previousTrackingMode = getSavedLocationMode()
             mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
             setSavedLocationMode(PREF_LOCATION_NORMAL)
@@ -251,7 +239,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
 
         cancelTrackingModeTimer()
 
-        PwLog.d(TAG, "Starting tracking mode timer")
+        Log.d(TAG, "Starting tracking mode timer")
         isTrackingModeTimerRunning = true
         val trackingModeSwitchInterval = 10000 // 10 seconds by default
         trackingModeHandler.postDelayed(trackingModeRunnable, trackingModeSwitchInterval.toLong())
@@ -260,11 +248,11 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
     private fun cancelTrackingModeTimer() {
         // Cancel task if it is already running
         if (isTrackingModeTimerRunning) {
-            PwLog.d(TAG, "Cancelling existing tracking mode timer")
+            Log.d(TAG, "Cancelling existing tracking mode timer")
             trackingModeHandler.removeCallbacks(trackingModeRunnable)
             isTrackingModeTimerRunning = false
         } else {
-            PwLog.d(TAG, "Cannot cancel tracking mode timer because it is not running")
+            Log.d(TAG, "Cannot cancel tracking mode timer because it is not running")
         }
     }
 

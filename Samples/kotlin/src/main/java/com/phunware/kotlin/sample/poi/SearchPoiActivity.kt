@@ -47,7 +47,6 @@ import android.widget.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -97,9 +96,6 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Create the map manager used to load the building
         mapManager = PhunwareMapManager.create(this)
 
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
-
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
     }
@@ -125,7 +121,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level

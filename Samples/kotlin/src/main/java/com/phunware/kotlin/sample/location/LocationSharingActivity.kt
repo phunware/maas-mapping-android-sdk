@@ -44,14 +44,15 @@ import android.widget.EditText
 import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.android.gms.ads.identifier.AdvertisingIdClient
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.maps.android.ui.IconGenerator
-import com.phunware.core.PwCoreSession
-import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.location.util.BitmapUtils
@@ -59,7 +60,6 @@ import com.phunware.kotlin.sample.location.util.LatLngInterpolator
 import com.phunware.kotlin.sample.location.util.MarkerAnimation
 import com.phunware.kotlin.sample.location.util.PersonMarker
 import com.phunware.kotlin.sample.poi.CustomPOIActivity
-import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -70,7 +70,9 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.SharedLocation
-import java.lang.ref.WeakReference
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
@@ -92,8 +94,6 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location_sharing)
 
-        PwLog.setShowLog(true)
-
         friendLocationMap = HashMap()
         friendColorMap = HashMap()
 
@@ -104,9 +104,6 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Create the map manager used to load the building
         mapManager = PhunwareMapManager.create(this)
-
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
@@ -198,7 +195,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level
@@ -218,12 +215,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     private fun setManagedLocationProvider(building: Building) {
-        val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
-        builder.application(application)
-                .context(WeakReference(application))
-                .buildingId((building.id).toString())
-        val factory = builder.build()
-        val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
+        val managedProvider = PwManagedLocationProvider(application, building.id, null)
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
     }
@@ -273,34 +265,43 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      */
 
     override fun onSuccess(sharedLocationList: List<SharedLocation>) {
-        PwLog.d(TAG, "Successfully retrieved other user's locations")
+        Log.d(TAG, "Successfully retrieved other user's locations")
 
-        // Remove ourself from this list
-        val sharedLocationListWithoutSelf = ArrayList<SharedLocation>()
-        for (location in sharedLocationList) {
-            val deviceId = PwCoreSession.getInstance().sessionData.deviceId
-            if (deviceId != location.deviceId) {
-                sharedLocationListWithoutSelf.add(location)
+        lifecycleScope.launchWhenStarted {
+            val sharedLocationListWithoutSelf = ArrayList<SharedLocation>()
+            for (location in sharedLocationList) {
+                withContext(Dispatchers.IO) {
+                    val deviceId = try {
+                        val advertisingIdInfo = AdvertisingIdClient.getAdvertisingIdInfo(applicationContext)
+                        advertisingIdInfo.id
+                    } catch (e: Exception) {
+                        Log.w("ConfigFragment", "Failed to get Advertising ID. Using Firebase Installation ID instead.")
+                        val firebaseInstallationId = FirebaseInstallations.getInstance().id.await()
+                        firebaseInstallationId
+                    }
+                    if (deviceId != location.deviceId) {
+                        sharedLocationListWithoutSelf.add(location)
+                    }
+                }
             }
-        }
 
-        // Create a set of the new device id's
-        val updatedDeviceIds = HashSet<String>()
-        for (friend in sharedLocationListWithoutSelf) {
-            updatedDeviceIds.add(friend.deviceId)
-        }
-
-        val staleDeviceIds = ArrayList<String>()
-
-        // Use the set to diff against our current map
-        // And remove old markers on our map
-        for ((key) in friendLocationMap) {
-            if (!updatedDeviceIds.contains(key)) {
-                staleDeviceIds.add(key)
+            // Create a set of the new device id's
+            val updatedDeviceIds = HashSet<String>()
+            for (friend in sharedLocationListWithoutSelf) {
+                updatedDeviceIds.add(friend.deviceId)
             }
-        }
 
-        runOnUiThread {
+            val staleDeviceIds = ArrayList<String>()
+
+            // Use the set to diff against our current map
+            // And remove old markers on our map
+            for ((key) in friendLocationMap) {
+                if (!updatedDeviceIds.contains(key)) {
+                    staleDeviceIds.add(key)
+                }
+            }
+
+
             for (staleDevice in staleDeviceIds) {
                 removePersonDot(staleDevice)
             }
@@ -312,12 +313,12 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     override fun onFailure() {
-        PwLog.e(TAG, "Failed to get other user's locations")
+        Log.e(TAG, "Failed to get other user's locations")
     }
 
     private fun updatePersonDot(personLocation: SharedLocation?) {
         if (personLocation == null || TextUtils.isEmpty(personLocation.deviceName)) {
-            PwLog.e(TAG, "Received an empty PersonLocation update")
+            Log.e(TAG, "Received an empty PersonLocation update")
             return
         }
 
@@ -423,7 +424,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             // Get device type from shared preferences
             // Default to empty string if no type is set
             val preferences = context.getSharedPreferences(PREFERENCE_NAME, 0)
-            return preferences.getString(PREF_DEVICE_TYPE, "")
+            return preferences.getString(PREF_DEVICE_TYPE, "") ?: ""
         }
 
         fun setDeviceName(context: Context, deviceName: String) {
@@ -449,4 +450,5 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                 } else "$manufacturer $model"
             }
     }
+
 }

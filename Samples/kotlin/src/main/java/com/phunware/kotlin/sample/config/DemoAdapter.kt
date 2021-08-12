@@ -37,12 +37,12 @@ import com.phunware.kotlin.sample.R
 internal class DemoAdapter(private val demos: List<Demo>, private val listener: DemoOnClickListener) : RecyclerView.Adapter<DemoAdapter.ViewHolder>() {
 
     internal interface DemoOnClickListener {
-        fun onItemClicked(title: String)
+        fun onItemClicked(demo: Demo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.item_demo_row, parent, false)
-        return ViewHolder(v, listener)
+        return ViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
@@ -62,13 +62,12 @@ internal class DemoAdapter(private val demos: List<Demo>, private val listener: 
         return null
     }
 
-    internal class ViewHolder(itemView: View, private var listener: DemoOnClickListener)
-        : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById(R.id.title)
         var description: TextView = itemView.findViewById(R.id.description)
 
         init {
-            itemView.setOnClickListener { listener.onItemClicked(title.text.toString()) }
+            itemView.setOnClickListener { listener.onItemClicked(demos[adapterPosition]) }
         }
     }
 }
