@@ -5,10 +5,6 @@
 - This feature will use landmarks in navigation instructions when user routes between two POIs.
 Note that for this sample to work, you will need to setup landmarks in the MaaS portal as described here (https://pw-lbs.phunware.com/docs/landmark-based-routing)
 
-### Usage
-
-- Need to fill out `applicationId`, `accessKey`, `signatureKey`, and `buildingId`in strings.xml and integers.xml.
-
 ### Sample Code
 - [LandmarkRoutingActivity.kt](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/LandmarkRoutingActivity.kt)
 

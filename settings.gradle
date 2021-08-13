@@ -1,1 +1,1 @@
-include ':Samples:java', ':Samples:kotlin', ':Samples:kotlin-device-support'
+include ':Samples:kotlin'

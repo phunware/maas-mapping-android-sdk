@@ -28,5 +28,4 @@ from Phunware, Inc. */
 
 import androidx.appcompat.app.AppCompatActivity
 
-internal class Demo(val title: String, val description: String,
-                    val activityClass: Class<out AppCompatActivity>)
+class Demo(val title: String, val description: String, val activityClass: Class<out AppCompatActivity>)

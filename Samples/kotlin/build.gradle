@@ -42,6 +42,15 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "com.google.maps.android:android-maps-utils:$rootProject.ext.androidMapsUtilsVersion"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
+
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
+
+    implementation 'com.google.android.gms:play-services-ads-identifier:17.0.1'
+    implementation 'com.google.firebase:firebase-installations-ktx:17.0.0'
+
     // Phunware Dependencies
     implementation "com.phunware.location:provider-managed:$rootProject.ext.pwLocationSdkVersion"
     implementation "com.phunware.mapping:mapping:$rootProject.ext.pwMappingSdkVersion"

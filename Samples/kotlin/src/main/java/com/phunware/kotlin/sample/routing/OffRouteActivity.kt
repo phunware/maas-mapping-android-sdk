@@ -26,10 +26,10 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.location.Location
+import android.util.Log
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.PolyUtil
-import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.routing.fragment.OffRouteDialogFragment
 import com.phunware.mapping.model.RouteManeuverOptions
@@ -117,7 +117,7 @@ class OffRouteActivity : RoutingActivity(),
         if (router != null) {
             val route = router.shortestRoute()
             if (route == null) {
-                PwLog.e(TAG, "Couldn't find route.")
+                Log.e(TAG, "Couldn't find route.")
                 Snackbar.make(findViewById(R.id.map), R.string.no_route,
                         Snackbar.LENGTH_SHORT).show()
             } else {

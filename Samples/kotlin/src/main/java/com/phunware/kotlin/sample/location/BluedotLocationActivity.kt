@@ -36,11 +36,9 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.CustomMapFragment.Companion.newInstance
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
-import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -49,7 +47,6 @@ import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
-import java.lang.ref.WeakReference
 
 class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener {
@@ -79,9 +76,6 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
-
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
 
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
@@ -119,7 +113,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level
@@ -135,12 +129,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     private fun setManagedLocationProvider(building: Building) {
-        val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
-        builder.application(application)
-                .context(WeakReference(application))
-                .buildingId(building.id.toString())
-        val factory = builder.build()
-        val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
+        val managedProvider = PwManagedLocationProvider(application, building.id, null)
         mapManager.setLocationProvider(managedProvider, building)
         mapManager.isMyLocationEnabled = true
     }

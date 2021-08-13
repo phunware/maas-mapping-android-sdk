@@ -27,6 +27,7 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import android.location.Location
+import android.view.MenuItem
 import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.manager.PhunwareMapManager
 
@@ -40,4 +41,5 @@ class LandmarkRoutingActivity : RoutingActivity() {
     override fun onLocationUpdate(p0: Location?) {
         mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
     }
+
 }

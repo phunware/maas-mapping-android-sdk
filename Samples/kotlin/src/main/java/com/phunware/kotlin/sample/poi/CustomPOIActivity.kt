@@ -41,7 +41,6 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -80,9 +79,6 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         // Create the map manager used to load the building
         mapManager = PhunwareMapManager.create(this)
 
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
-
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
     }
@@ -110,7 +106,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level
@@ -155,15 +151,15 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                 .setTitle(R.string.custom_poi_dialog_title)
                 .setMessage(R.string.custom_poi_dialog_message)
                 .setView(dialogView)
-                .setPositiveButton(R.string.button_ok, { dialog, _ ->
+                .setPositiveButton(R.string.button_ok) { dialog, _ ->
                     val poiName = poiNameInput.text.toString()
                     if (!TextUtils.isEmpty(poiName)) {
                         val customPoint = PointOptions()
-                                .id(ITEM_ID_CUSTOM_POI.toLong())
-                                .name(poiName)
-                                .buildingId(currentBuilding.id)
-                                .floorId(floor!!.id)
-                                .location(location)
+                            .id(ITEM_ID_CUSTOM_POI.toLong())
+                            .name(poiName)
+                            .buildingId(currentBuilding.id)
+                            .floorId(floor!!.id)
+                            .location(location)
 
                         // Add a custom POI to this floor (flagged as custom with id)
                         floor.poiOptions.add(customPoint)
@@ -171,8 +167,8 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         currentBuilding.selectFloor(floor.level)
                     }
                     dialog.dismiss()
-                })
-                .setNegativeButton(R.string.button_cancel, { dialog, _ -> dialog.dismiss() }).show()
+                }
+            .setNegativeButton(R.string.button_cancel) { dialog, _ -> dialog.dismiss() }.show()
     }
 
     companion object {

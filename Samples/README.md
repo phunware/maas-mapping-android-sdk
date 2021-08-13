@@ -2,29 +2,14 @@
 
 ## Overview
 
-* Use cases that exhibit different applications of the Mapping SDK
-* Written in both Java and Kotlin
-* Each use case is contained within it's own Activity class
-
-## Setup
-
-In order to see these use cases in action, you will need to set up the sample to point at your Phunware org/building. You will also need to add a Google Maps API Key to use the Location/Mapping SDKs. Please note that all keys must be entered for both the Java and the Kotlin samples -- they are technically separate apps so they each have their own sets of keys.
-
-1. To obtain the Phunware credentials you will need to login to the MaaS portal and obtain your app's `appId`, `accessKey`, and `signatureKey`. Find instructions on how to obtain these keys [here](https://developer.phunware.com/display/DD/Phunware+SDK+On-boarding#PhunwareSDKOn-boarding-GeneralOn-boardingStepsforALLAndroidSDKs). Steps 3 and 4 detail how to add these keys to the `maas_strings.xml`
-
-2. There is also a string resource for `google_maps_key` in the `maas_strings.xml` folder. If you need help getting a Google Maps API Key,  please find instructions [here](https://developers.google.com/maps/documentation/android-sdk/start#step_4_get_a_google_maps_api_key).
-
-3. You will also need to retrieve your buildingId from the MaaS portal. to do this, you'll need to navigate to the Mapping section and open the settings for your building. This can be done by drilling down the menu to the building level (Venue-->Campus-->Building). Hover your mouse over the desired building and click the gear icon to see your building configuration. Once you have your buildingId, add it to maas_integers.xml to point the sample at your building.
-
-4. For better user experience, you may want to retrieve the corresponding Latitude and Longitude values for the buildingId. The Load Building and Bluedot Location samples are using these values to initialize the camera position before loading the maps. Failing to initialize the camera will zoom out on location(0, 0). Load Building is adding these values as xml attributes to the layout where the MapFragment is used. Bluedot Location is initializing the camera location and zoom programmatically by creating a customised MapFragment (extending the provided MapFragment from the SDK). Latitude and Longitude values are added to maas_integers.xml.
-
-After you have these keys you should be all set to run the use case samples!
+* Use cases that exhibit different applications of the Mapping SDK.
+* Each use case is contained within it's own Activity class.
 
 ## Samples
 
 ### Load Building
 
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/building/LoadBuildingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/building/LoadBuildingActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/building/LoadBuildingActivity.kt)
 
 Loads the building that is set up in the MaaS portal. The camera should pan and zoom automatically to the location of the building.
 
@@ -52,7 +37,7 @@ mapManager.setIconProvider(object: IconProvider {
 
 ### Bluedot Location
 
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/location/BluedotLocationActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/BluedotLocationActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/BluedotLocationActivity.kt)
 
 Display current location in your building as reported by the location provider configured on MaaS
 
@@ -61,7 +46,7 @@ Display current location in your building as reported by the location provider c
 Configure location provider on building's edit page in MaaS portal, then configure for each floor
 
 ### Location Modes
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/location/LocationModesActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/LocationModesActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/LocationModesActivity.kt)
 
 Illustrates the three location modes supported by the Mapping SDK (Normal, Locate Me and Follow Me). Locate Me mode centers the bluedot on the screen, while the Follow Me mode centers the bluedot and adjusts the camera based on the device's heading. Normal mode does not perform any automatic centering or panning.  
 
@@ -69,7 +54,7 @@ Illustrates the three location modes supported by the Mapping SDK (Normal, Locat
 Click the floating action button in the bottom right corner to toggle between modes.
 
 ### Create Custom POIs
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/poi/CustomPOIActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/poi/CustomPOIActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/poi/CustomPOIActivity.kt)
 
 Adds a POI to the building map that is not specified in the MaaS portal.
 
@@ -78,7 +63,7 @@ Long press the map anywhere within the building boundaries. A dialog will appear
 
 
 ### Search for POIs
-Code Samples: [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/poi/SearchPoiActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/poi/SearchPoiActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/poi/SearchPoiActivity.kt)
 
 Search through the list of POIs contained in your building. Note that at least one POI must be present in your building in order for this sample to work.
 
@@ -86,7 +71,7 @@ Search through the list of POIs contained in your building. Note that at least o
 Click the floating action button in the bottom right corner to open up a dialog that lists all the POIs in a scrollable list. Either scroll through the list or type in the search field to find specific POI matches in the list. Click the desired POI and the map will pan to that POI's location.
 
 ### Routing Between POIs
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/routing/RoutingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/RoutingActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/routing/RoutingActivity.kt)
 
 Route between two POIs or from your current location to a POI (if you have a bluedot). Note that for this sample to work you will need to connect your POIs with segments in the MaaS portal.
 
@@ -102,7 +87,7 @@ Route between two POIs or from your current location to a POI while using landma
 Click the floating action button in the bottom right corner to open up a routing dialog that allows you to select a start and end point for your route. If you have acquired a bluedot, the start field will be automatically populated with your current location. Click `ROUTE` to display the path between the selected points (if one exists)
 
 ### Location Sharing
-Code Samples:  [Java](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/java/src/main/java/com/phunware/java/sample/location/LocationSharingActivity.java) // [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/LocationSharingActivity.kt)
+Code Samples: [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blob/master/Samples/kotlin/src/main/java/com/phunware/kotlin/sample/location/LocationSharingActivity.kt)
 
 Show your current location in a building as well as others in the same building.
 
@@ -124,8 +109,8 @@ Code Samples:  [Kotlin](https://github.com/phunware/maas-mapping-android-sdk/blo
 
 Monitor the users location updates and alert the user if they deviated from the route using a predetermined distance and time threshold.
 
-## Privacy
+### Privacy
+You understand and consent to Phunware’s Privacy Policy located at www.phunware.com/privacy. If your use of Phunware’s software requires a Privacy Policy of your own, you also agree to include the terms of Phunware’s Privacy Policy in your Privacy Policy to your end users.
 
-### You understand and consent to Phunware’s Privacy Policy located at www.phunware.com/privacy. If your use of Phunware’s software requires a Privacy Policy of your own, you also agree to include the terms of Phunware’s Privacy Policy in your Privacy Policy to your end users.
-
+### Terms
 Use of this software requires review and acceptance of our terms and conditions for developer use located at http://www.phunware.com/terms/

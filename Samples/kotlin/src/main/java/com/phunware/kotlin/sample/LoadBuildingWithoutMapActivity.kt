@@ -37,7 +37,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.phunware.core.PwCoreSession
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
@@ -81,9 +80,6 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         // Create the map manager used to load the building
         mapManager = PhunwareMapManager.create(this)
 
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
-
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
         loadBuilding(buildingId.toLong())
@@ -104,7 +100,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.clear()
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
-                val initialFloorOptions: FloorOptions = building.initialFloor()
+                val initialFloorOptions: FloorOptions = building.initialFloor
                 building.selectFloor(initialFloorOptions.level)
                 Log.d(TAG, "Selected floor : " + initialFloorOptions.level)
                 poiAdapter.setPois(initialFloorOptions.poiOptions)

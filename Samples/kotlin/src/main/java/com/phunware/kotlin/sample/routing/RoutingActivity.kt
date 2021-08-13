@@ -47,15 +47,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import com.phunware.core.PwCoreSession
-import com.phunware.core.PwLog
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.routing.fragment.RouteSummaryFragment
 import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment
 import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment.Companion.CURRENT_LOCATION_ITEM_ID
 import com.phunware.kotlin.sample.routing.view.NavigationOverlayView
-import com.phunware.location.provider_managed.ManagedProviderFactory
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -151,9 +148,6 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         // Route Summary should be hidden initially.
         supportFragmentManager.beginTransaction().hide(routeSummaryFragment).commit()
 
-        // Register the Phunware API keys
-        PwCoreSession.getInstance().registerKeys(this)
-
         // Create the map manager and fragment used to load the building
         mapManager = PhunwareMapManager.create(this)
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
@@ -178,8 +172,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == android.R.id.home) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
             routeSummaryFragment.hide()
         }
         return super.onOptionsItemSelected(item)
@@ -217,7 +211,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor()
+                        val initialFloor = building.initialFloor
                         building.selectFloor(initialFloor.level)
 
                         // Animate the camera to the building at an appropriate zoom level
@@ -305,12 +299,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     private fun setManagedLocationProvider(building: Building) {
         if (BluetoothAdapter.getDefaultAdapter() != null) {
-            val builder = ManagedProviderFactory.ManagedProviderFactoryBuilder()
-            builder.application(application)
-                    .context(WeakReference(this))
-                    .buildingId(building.id.toString())
-            val factory = builder.build()
-            val managedProvider = factory.createLocationProvider() as PwManagedLocationProvider
+            val managedProvider = PwManagedLocationProvider(application, building.id, null)
             mapManager.setLocationProvider(managedProvider, building)
             mapManager.isMyLocationEnabled = true
         }
@@ -393,7 +382,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         val route: RouteOptions? = router?.shortestRoute()
 
         if (route == null) {
-            PwLog.e(TAG, "Couldn't find route.")
+            Log.e(TAG, "Couldn't find route.")
             Snackbar.make(
                     content, R.string.no_route,
                     Snackbar.LENGTH_SHORT
