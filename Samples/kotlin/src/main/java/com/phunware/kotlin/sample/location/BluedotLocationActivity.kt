@@ -114,7 +114,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
                         // Set building to initial floor value
                         val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.level)
+                        building.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
@@ -148,9 +148,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.let {
-            it.onDestroy()
-        }
+        mapManager.onDestroy()
     }
 
     companion object {

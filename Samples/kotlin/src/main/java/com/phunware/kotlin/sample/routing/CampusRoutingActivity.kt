@@ -36,9 +36,9 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.LinearLayout
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
@@ -49,10 +49,12 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
+import com.phunware.kotlin.sample.routing.adapter.BuildingSpinnerAdapter
 import com.phunware.kotlin.sample.routing.fragment.RouteSummaryFragment
 import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment
 import com.phunware.kotlin.sample.routing.fragment.RoutingDialogFragment.Companion.CURRENT_LOCATION_ITEM_ID
 import com.phunware.kotlin.sample.routing.view.NavigationOverlayView
+import com.phunware.kotlin.sample.widget.CustomSpinner
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -63,23 +65,25 @@ import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.manager.Router
 import com.phunware.mapping.model.Building
+import com.phunware.mapping.model.Campus
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.RouteOptions
-import java.lang.ref.WeakReference
 import java.util.ArrayList
 
-open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
         LocationManager.LocationListener, RoutingDialogFragment.RoutingDialogListener {
     companion object {
-        private val TAG = RoutingActivity::class.java.simpleName
+        private val TAG = CampusRoutingActivity::class.java.simpleName
     }
 
     lateinit var mapManager: PhunwareMapManager
     private lateinit var mapFragment: SupportMapFragment
     private lateinit var currentBuilding: Building
-    private lateinit var floorSpinner: Spinner
+    private lateinit var floorSpinner: CustomSpinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
+    private lateinit var buildingSpinner: CustomSpinner
+    private lateinit var buildingSpinnerAdapter: ArrayAdapter<Building>
     private lateinit var content: ConstraintLayout
     private lateinit var floorSpinnerView: LinearLayout
 
@@ -96,7 +100,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_routing)
+        setContentView(R.layout.activity_campus_routing)
         content = findViewById(R.id.content)
         floorSpinnerView = findViewById(R.id.floor_switcher_layout)
 
@@ -106,8 +110,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         fab.hide()
         fab.setOnClickListener {
             RoutingDialogFragment.newInstance(
-                    locationEnabled = mapManager.isMyLocationEnabled,
-                    currentLocation = mapManager.currentLocation
+                locationEnabled = mapManager.isMyLocationEnabled,
+                currentLocation = mapManager.currentLocation
             ).show(supportFragmentManager, "frag_routing_dialog")
         }
         navOverlay = findViewById(R.id.nav_overlay)
@@ -126,22 +130,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         floorSpinner = findViewById(R.id.floorSpinner)
         floorSpinnerAdapter = FloorAdapter(this)
         floorSpinner.adapter = floorSpinnerAdapter
-        floorSpinner.onItemSelectedListener =
-                object : AdapterView.OnItemSelectedListener {
-                    override fun onItemSelected(
-                            parent: AdapterView<*>,
-                            view: View,
-                            position: Int,
-                            id: Long
-                    ) {
-                        val floor = floorSpinnerAdapter.getItem(id.toInt())
-                        if (floor != null) {
-                            currentBuilding.selectFloor(floor.level)
-                        }
-                    }
-
-                    override fun onNothingSelected(parent: AdapterView<*>) {}
-                }
+        buildingSpinner = findViewById(R.id.buildingSpinner)
+        buildingSpinnerAdapter = BuildingSpinnerAdapter(this)
+        buildingSpinner.adapter = buildingSpinnerAdapter
 
         routeSummaryFragment = supportFragmentManager.findFragmentById(R.id.routeSummaryFragment) as RouteSummaryFragment
 
@@ -184,50 +175,105 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      */
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
-        val buildingId = resources.getInteger(R.integer.buildingId)
+        val campusId = resources.getInteger(R.integer.campusId)
 
         phunwareMap.googleMap.uiSettings.isMapToolbarEnabled = false
         phunwareMap.googleMap.setMapStyle(
-                MapStyleOptions.loadRawResourceStyle(
-                        this, R.raw.map_style
-                )
+            MapStyleOptions.loadRawResourceStyle(
+                this, R.raw.map_style
+            )
         )
 
         mapManager.setPhunwareMap(phunwareMap)
-        mapManager.addBuilding(buildingId.toLong(),
-                object : Callback<Building> {
-                    override fun onSuccess(building: Building) {
-                        Log.d(TAG, "Building loaded successfully")
-                        currentBuilding = building
+        mapManager.loadCampus(campusId.toLong(),
+            object : Callback<Campus> {
+                override fun onSuccess(campus: Campus) {
+                    Log.d(TAG, "Building loaded successfully")
+                    currentBuilding = campus.campusBuilding
 
-                        // Populate floor spinner
-                        floorSpinnerAdapter.clear()
-                        floorSpinnerAdapter.addAll(building.buildingOptions.floors)
+                    // Add a listener to monitor floor switches
+                    mapManager.addFloorChangedListener(this@CampusRoutingActivity)
 
-                        // Add a listener to monitor floor switches
-                        mapManager.addFloorChangedListener(this@RoutingActivity)
+                    // Initialize a location provider
+                    setManagedLocationProvider(currentBuilding)
 
-                        // Initialize a location provider
-                        setManagedLocationProvider(building)
+                    phunwareMap.googleMap.setOnMapLoadedCallback {
+                        buildingSpinnerAdapter.addAll(campus.buildings)
+                        buildingSpinner.setSelection(0, false)
+                        floorSpinner.setSelection(0, false)
+                        buildingSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+                            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, position: Int, l: Long) {
+                                val selectedBuilding = buildingSpinnerAdapter.getItem(position)
+                                floorSpinnerAdapter.clear()
+                                if (selectedBuilding != null) {
+                                    val sortedFloors = selectedBuilding.floorOptions.sortedBy { it.level }
+                                    floorSpinnerAdapter.addAll(sortedFloors)
+                                    floorSpinnerAdapter.notifyDataSetChanged()
+                                    var selectedFloorIndex = 0
+                                    val selectedFloor = currentBuilding.selectedFloor
+                                    if (selectedFloor != null) {
+                                        val selectedFloorOptions = getFloorOptionsFromSpinner(selectedFloor.id)
+                                        if (selectedFloorOptions != null) {
+                                            selectedFloorIndex = floorSpinnerAdapter.getPosition(selectedFloorOptions)
+                                            if (selectedFloorIndex == -1) {
+                                                selectedFloorIndex = 0
+                                            }
+                                        }
+                                    }
+                                    floorSpinner.setSelection(selectedFloorIndex)
+                                }
+                            }
+
+                            override fun onNothingSelected(adapterView: AdapterView<*>?) {
+                                floorSpinnerAdapter.clear()
+                            }
+                        }
+
+                        floorSpinner.onItemSelectedListener = object : OnItemSelectedListener {
+                            override fun onItemSelected(adapterView: AdapterView<*>?, view: View, position: Int, l: Long) {
+                                val selectedFloor = floorSpinnerAdapter.getItem(position)
+                                if (selectedFloor != null) {
+                                    val currentFloorId = selectedFloor.id
+                                    if (currentFloorId != currentBuilding.selectedFloor.id) {
+                                        currentBuilding.selectFloor(currentFloorId)
+                                    }
+                                    val cameraUpdate = CameraUpdateFactory.newLatLngBounds(selectedFloor.bounds, 4)
+                                    phunwareMap.googleMap.animateCamera(cameraUpdate)
+                                }
+                            }
+
+                            override fun onNothingSelected(adapterView: AdapterView<*>?) {}
+                        }
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloor = currentBuilding.initialFloor
+                        currentBuilding.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                            .newLatLngBounds(initialFloor.bounds, 4)
                         phunwareMap.googleMap.animateCamera(cameraUpdate)
 
                         // Enabled fab for routing
                         showFab(true)
                     }
+                }
 
-                    override fun onFailure(throwable: Throwable) {
-                        Log.d(TAG, "Error when loading building -- " + throwable.message)
-                        showFab(false)
-                    }
-                })
+                override fun onFailure(throwable: Throwable) {
+                    Log.d(TAG, "Error when loading building -- " + throwable.message)
+                    showFab(false)
+                }
+            })
+    }
+
+    private fun getFloorOptionsFromSpinner(floorId: Long): FloorOptions? {
+        for (index in 0 until floorSpinnerAdapter.count) {
+            val floor: FloorOptions? = floorSpinnerAdapter.getItem(index)
+            if (floor?.id == floorId) {
+                return floor
+            }
+        }
+        return null
     }
 
     /**
@@ -275,11 +321,22 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      * Building.OnFloorChangedListener
      */
     override fun onFloorChanged(building: Building?, floorId: Long) {
-        for (index in 0 until floorSpinnerAdapter.count) {
-            val floor = floorSpinnerAdapter.getItem(index)
-            if (floor != null && floor.id == floorId) {
-                if (floorSpinner.selectedItemPosition != index) {
-                    runOnUiThread { floorSpinner.setSelection(index) }
+        for (index in 0 until buildingSpinner.count) {
+            val buildingInCurrentIndex = buildingSpinnerAdapter.getItem(index)
+            val newFloor = building?.getFloorOptionsById(floorId)
+            if (buildingInCurrentIndex != null && buildingInCurrentIndex.id == newFloor?.buildingId) {
+                if (buildingSpinner.selectedItemPosition == index) {
+                    for (floorIndex in 0 until floorSpinnerAdapter.count) {
+                        val floor = floorSpinnerAdapter.getItem(floorIndex)
+                        if (floor != null && floor.id == floorId) {
+                            if (floorSpinner.selectedItemPosition != floorIndex) {
+                                floorSpinner.setSelection(floorIndex)
+                                break
+                            }
+                        }
+                    }
+                } else {
+                    buildingSpinner.setSelection(index)
                     break
                 }
             }
@@ -369,10 +426,10 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             val currentLocation =
                     LatLng(mapManager.currentLocation.latitude, mapManager.currentLocation.longitude)
             router = mapManager.findRoutes(
-                    currentLocation,
-                    endId,
-                    mapManager.currentBuilding.selectedFloor.id,
-                    isAccessible
+                currentLocation,
+                endId,
+                mapManager.currentBuilding.selectedFloor.id,
+                isAccessible
             )
             routingFromCurrentLocation = true
         } else {
@@ -384,8 +441,8 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         if (route == null) {
             Log.e(TAG, "Couldn't find route.")
             Snackbar.make(
-                    content, R.string.no_route,
-                    Snackbar.LENGTH_SHORT
+                content, R.string.no_route,
+                Snackbar.LENGTH_SHORT
             ).show()
         } else {
             startNavigating(route)

@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.phunware.mapping.SupportMapFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.phunware.kotlin.sample.routing.view.NavigationOverlayView
+            android:id="@+id/nav_overlay"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_gravity="top"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageButton
+            android:id="@+id/voice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/rounded_button"
+            android:contentDescription="@null"
+            android:elevation="6dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nav_overlay"
+            app:srcCompat="@drawable/ic_unmuted" />
+
+        <TextView
+            android:id="@+id/voice_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/voice"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="@string/demo_voice_prompt_unmuted"
+            android:textColor="#000000"
+            android:textSize="12sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/voice"
+            app:layout_constraintStart_toStartOf="@id/voice"
+            app:layout_constraintTop_toBottomOf="@+id/voice" />
+
+        <LinearLayout
+            android:id="@+id/floor_switcher_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/fab"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="17dp"
+            android:background="@color/semi_transparent"
+            android:orientation="vertical"
+            android:padding="6dp"
+            app:layout_constraintBottom_toTopOf="@+id/fab"
+            app:layout_constraintEnd_toEndOf="@+id/fab">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_buildings" />
+
+            <com.phunware.kotlin.sample.widget.CustomSpinner
+                android:id="@+id/buildingSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/switch_floors" />
+
+            <com.phunware.kotlin.sample.widget.CustomSpinner
+                android:id="@+id/floorSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom|end"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_navigation" />
+
+        <fragment
+            android:id="@+id/routeSummaryFragment"
+            android:name="com.phunware.kotlin.sample.routing.fragment.RouteSummaryFragment"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/walk_time_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/walk_time_view"
+            android:layout_width="match_parent"
+            android:layout_height="110dp"
+            android:background="@color/white"
+            android:elevation="12dp"
+            android:visibility="gone"
+            app:behavior_hideable="false"
+            app:behavior_peekHeight="110dp"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingPrefix">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/walk_time_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.5" />
+
+            <ImageView
+                android:id="@+id/walk_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="26dp"
+                android:contentDescription="@null"
+                android:paddingBottom="4dp"
+                android:src="@drawable/directions_walk"
+                app:layout_constraintBottom_toTopOf="@id/walk_time_guideline"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/walk_time_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-regular"
+                android:paddingStart="6dp"
+                android:paddingEnd="6dp"
+                android:textColor="@color/azure"
+                android:textSize="21sp"
+                app:layout_constraintBottom_toTopOf="@id/walk_time_guideline"
+                app:layout_constraintLeft_toRightOf="@id/walk_image"
+                tools:text="10 min" />
+
+            <TextView
+                android:id="@+id/arrival_time_textview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/walk_image"
+                android:layout_marginStart="26dp"
+                android:fontFamily="sans-serif-regular"
+                android:paddingStart="5dp"
+                android:paddingTop="5dp"
+                android:paddingEnd="5dp"
+                android:textColor="@color/outer_space"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/walk_time_guideline"
+                tools:text="Arrival Time 9:52 PM" />
+
+            <Button
+                android:id="@+id/button_exit_route"
+                android:layout_width="144dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="26dp"
+                android:background="@color/exit_red"
+                android:fontFamily="sans-serif-medium"
+                android:text="@string/demo_walk_time_exit"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

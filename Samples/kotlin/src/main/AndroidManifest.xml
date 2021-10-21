@@ -83,6 +83,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".routing.CampusRoutingActivity"
+            android:label="@string/demo_campus_routing_title"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".routing.OneWayRoutingActivity"
             android:label="@string/demo_one_way_routing_title" />
 
@@ -112,16 +117,16 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value="@string/google_maps_key" />
 
         <!-- Phunware Keys -->
         <meta-data
             android:name="com.phunware.maas.APPLICATION_ID"
-            android:value="" />
+            android:value="@string/pw_app_id" />
 
         <meta-data
             android:name="com.phunware.maas.ACCESS_KEY"
-            android:value="" />
+            android:value="@string/pw_access_key" />
 
     </application>
 

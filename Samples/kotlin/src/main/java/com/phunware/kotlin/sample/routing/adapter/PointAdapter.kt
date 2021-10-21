@@ -37,7 +37,7 @@ import com.phunware.mapping.model.PointOptions
 
 import java.util.ArrayList
 
-internal class BuildingAdapter(context: Context, pointList: List<PointOptions>,
+internal class PointAdapter(context: Context, pointList: List<PointOptions>,
                                private val prompt: String)
     : ArrayAdapter<PointOptions>(context, 0, ArrayList()) {
 
