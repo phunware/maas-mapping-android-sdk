@@ -117,16 +117,16 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="" />
 
         <!-- Phunware Keys -->
         <meta-data
             android:name="com.phunware.maas.APPLICATION_ID"
-            android:value="@string/pw_app_id" />
+            android:value="" />
 
         <meta-data
             android:name="com.phunware.maas.ACCESS_KEY"
-            android:value="@string/pw_access_key" />
+            android:value="" />
 
     </application>
 
