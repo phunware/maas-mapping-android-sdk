@@ -76,7 +76,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         setContentView(R.layout.activity_search_poi)
 
         fab = findViewById(R.id.fab)
-        fab.visibility = View.GONE
+        fab.hide()
         fab.setOnClickListener(searchPoiListener)
 
         floorSpinner = findViewById(R.id.floorSpinner)
@@ -122,7 +122,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
                         // Set building to initial floor value
                         val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.level)
+                        building.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
@@ -150,11 +150,11 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
             s.playTogether(anims)
             s.addListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationStart(animation: Animator) {
-                    if (show) fab.visibility = View.VISIBLE
+                    if (show) fab.show()
                 }
 
                 override fun onAnimationEnd(animation: Animator) {
-                    if (!show) fab.visibility = View.GONE
+                    if (!show) fab.hide()
                 }
             })
             s.start()

@@ -53,14 +53,7 @@ internal class DemoAdapter(private val demos: List<Demo>, private val listener: 
 
     override fun getItemCount(): Int = demos.size
 
-    fun getItem(title: String): Demo? {
-        if (!TextUtils.isEmpty(title)) {
-            demos
-                    .filter { it.title == title }
-                    .forEach { return it }
-        }
-        return null
-    }
+    fun getItem(title: String) = demos.find { it.title == title }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var title: TextView = itemView.findViewById(R.id.title)

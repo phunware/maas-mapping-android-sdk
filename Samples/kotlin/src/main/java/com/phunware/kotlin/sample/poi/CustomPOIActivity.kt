@@ -107,7 +107,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
                         // Set building to initial floor value
                         val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.level)
+                        building.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory

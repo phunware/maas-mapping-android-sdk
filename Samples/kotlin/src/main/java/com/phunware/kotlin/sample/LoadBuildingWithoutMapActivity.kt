@@ -101,8 +101,8 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
                 val initialFloorOptions: FloorOptions = building.initialFloor
-                building.selectFloor(initialFloorOptions.level)
-                Log.d(TAG, "Selected floor : " + initialFloorOptions.level)
+                building.selectFloor(initialFloorOptions.id)
+                Log.d(TAG, "Selected floor : " + initialFloorOptions.id)
                 poiAdapter.setPois(initialFloorOptions.poiOptions)
             }
 
@@ -156,9 +156,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.let {
-            it.onDestroy()
-        }
+        mapManager.onDestroy()
     }
 
     companion object {

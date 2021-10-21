@@ -51,6 +51,9 @@
     <string name="demo_routing_title">Route to Point of Interest</string>
     <string name="demo_routing_description">Route to point of interest when current location is acquired</string>
 
+    <string name="demo_campus_routing_title">Campus Routing</string>
+    <string name="demo_campus_routing_description">Route to point of interest across buildings</string>
+
     <string name="demo_one_way_routing_title">One Way Routing</string>
     <string name="demo_one_way_routing_description">Demonstrates how to enable one way routing</string>
 
@@ -132,4 +135,5 @@
     <string name="permission_snackbar_message">Location permission is required to use the app</string>
     <string name="action_settings">Settings</string>
     <string name="content_desc_off_route_image">Off Route Image</string>
+    <string name="switch_buildings">Switch Buildings</string>
 </resources>

@@ -97,7 +97,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
 
                         // Set building to initial floor value
                         val initialFloor = building.initialFloor
-                        building.selectFloor(building.initialFloor.level)
+                        building.selectFloor(initialFloor.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
@@ -113,9 +113,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.let {
-            it.onDestroy()
-        }
+        mapManager.onDestroy()
     }
 
     companion object {

@@ -83,6 +83,11 @@
             android:screenOrientation="portrait" />
 
         <activity
+            android:name=".routing.CampusRoutingActivity"
+            android:label="@string/demo_campus_routing_title"
+            android:screenOrientation="portrait" />
+
+        <activity
             android:name=".routing.OneWayRoutingActivity"
             android:label="@string/demo_one_way_routing_title" />
 
