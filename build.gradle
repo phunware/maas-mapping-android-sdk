@@ -28,8 +28,8 @@ allprojects {
 }
 
 ext {
-    pwLocationSdkVersion = '4.1.0-beta-01'
-    pwMappingSdkVersion = '4.1.0-beta-03'
+    pwLocationSdkVersion = '4.1.0-beta-02'
+    pwMappingSdkVersion = '4.1.0-beta-04'
 
     versionCode = 1
     versionName = "1.0"
