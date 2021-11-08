@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Improved caching when loading the same campus subsequent times.
+- Optimized campus loading and caching.
 - Improved memory management when loading multiple floor maps across multiple buildings.
 - Updated Phunware Location dependency to 4.1.0.
 

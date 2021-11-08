@@ -68,6 +68,7 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.Campus
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.RouteOptions
+import com.phunware.kotlin.sample.App
 import java.util.ArrayList
 
 open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -140,9 +141,16 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
         supportFragmentManager.beginTransaction().hide(routeSummaryFragment).commit()
 
         // Create the map manager and fragment used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeLocationUpdateListener(this)
+        mapManager.removeFloorChangedListener(this)
     }
 
     override fun onAttachFragment(fragment: Fragment) {

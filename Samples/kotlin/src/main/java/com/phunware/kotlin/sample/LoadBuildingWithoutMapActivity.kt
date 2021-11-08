@@ -78,7 +78,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         }
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
@@ -156,7 +156,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager.onDestroy()
+        mapManager.isMyLocationEnabled = false
     }
 
     companion object {

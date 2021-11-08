@@ -47,6 +47,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.routing.fragment.RouteSummaryFragment
@@ -149,9 +150,18 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         supportFragmentManager.beginTransaction().hide(routeSummaryFragment).commit()
 
         // Create the map manager and fragment used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.enableLandmarks(false)
+        mapManager.enableOnewayRouting(false)
+        mapManager.removeFloorChangedListener(this)
+        mapManager.removeLocationUpdateListener(this)
     }
 
     override fun onAttachFragment(fragment: Fragment) {

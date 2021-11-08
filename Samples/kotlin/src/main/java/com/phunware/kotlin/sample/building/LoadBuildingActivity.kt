@@ -35,6 +35,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -70,7 +71,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
         }
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
@@ -113,7 +114,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager.onDestroy()
+        mapManager.isMyLocationEnabled = false
     }
 
     companion object {

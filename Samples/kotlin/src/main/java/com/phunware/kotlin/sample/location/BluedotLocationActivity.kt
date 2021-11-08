@@ -148,7 +148,8 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeFloorChangedListener(this)
     }
 
     companion object {

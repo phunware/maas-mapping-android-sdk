@@ -53,6 +53,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.maps.android.ui.IconGenerator
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.location.util.BitmapUtils
@@ -103,11 +104,17 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         initFloorSpinner()
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeFloorChangedListener(this)
     }
 
     private fun initFloorSpinner() {
