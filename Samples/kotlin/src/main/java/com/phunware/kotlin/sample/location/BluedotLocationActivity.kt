@@ -36,6 +36,7 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.CustomMapFragment.Companion.newInstance
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
@@ -78,7 +79,7 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
 
         // Create the map manager and fragment used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
