@@ -157,6 +157,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         mapManager.isMyLocationEnabled = false
+        mapManager.onDestroy()
     }
 
     companion object {

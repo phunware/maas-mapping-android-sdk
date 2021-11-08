@@ -135,6 +135,7 @@ class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunwareMapRea
         super.onDestroy()
         mapManager.isMyLocationEnabled = false
         mapManager.removeFloorChangedListener(this)
+        mapManager.onDestroy()
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {

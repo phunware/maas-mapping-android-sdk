@@ -60,7 +60,6 @@ import com.phunware.kotlin.sample.location.util.BitmapUtils
 import com.phunware.kotlin.sample.location.util.LatLngInterpolator
 import com.phunware.kotlin.sample.location.util.MarkerAnimation
 import com.phunware.kotlin.sample.location.util.PersonMarker
-import com.phunware.kotlin.sample.poi.CustomPOIActivity
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -115,6 +114,9 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         super.onDestroy()
         mapManager.isMyLocationEnabled = false
         mapManager.removeFloorChangedListener(this)
+        mapManager.stopRetrievingSharedLocations()
+        mapManager.stopSharingUserLocation()
+        mapManager.onDestroy()
     }
 
     private fun initFloorSpinner() {
@@ -415,7 +417,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     companion object {
-        private val TAG = CustomPOIActivity::class.java.simpleName
+        private val TAG = LocationSharingActivity::class.java.simpleName
         private const val PREFERENCE_NAME = "location sharing sample"
         private const val PREF_DEVICE_NAME = "device name"
         private const val PREF_DEVICE_TYPE = "device type"

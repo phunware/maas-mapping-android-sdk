@@ -115,6 +115,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
     override fun onDestroy() {
         super.onDestroy()
         mapManager.isMyLocationEnabled = false
+        mapManager.onDestroy()
     }
 
     companion object {

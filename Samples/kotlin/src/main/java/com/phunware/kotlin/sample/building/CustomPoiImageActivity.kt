@@ -26,7 +26,7 @@ class CustomPoiImageActivity: LoadBuildingActivity() {
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         mapManager.setIconProvider(null)
+        super.onDestroy()
     }
 }

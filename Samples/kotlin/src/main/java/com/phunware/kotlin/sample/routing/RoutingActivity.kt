@@ -158,10 +158,9 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     override fun onDestroy() {
         super.onDestroy()
         mapManager.isMyLocationEnabled = false
-        mapManager.enableLandmarks(false)
-        mapManager.enableOnewayRouting(false)
         mapManager.removeFloorChangedListener(this)
         mapManager.removeLocationUpdateListener(this)
+        mapManager.onDestroy()
     }
 
     override fun onAttachFragment(fragment: Fragment) {

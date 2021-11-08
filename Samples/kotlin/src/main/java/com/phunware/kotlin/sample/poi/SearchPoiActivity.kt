@@ -288,9 +288,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.let {
-            it.onDestroy()
-        }
+        mapManager.onDestroy()
     }
 
     companion object {

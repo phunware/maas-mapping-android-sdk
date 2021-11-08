@@ -84,6 +84,11 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         mapFragment.getPhunwareMapAsync(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.onDestroy()
+    }
+
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)

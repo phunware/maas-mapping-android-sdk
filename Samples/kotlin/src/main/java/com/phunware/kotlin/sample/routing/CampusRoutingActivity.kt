@@ -151,6 +151,7 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
         mapManager.isMyLocationEnabled = false
         mapManager.removeLocationUpdateListener(this)
         mapManager.removeFloorChangedListener(this)
+        mapManager.onDestroy()
     }
 
     override fun onAttachFragment(fragment: Fragment) {

@@ -36,4 +36,9 @@ class OneWayRoutingActivity : RoutingActivity() {
         super.onPhunwareMapReady(phunwareMap)
 
     }
+
+    override fun onDestroy() {
+        mapManager.enableOnewayRouting(false)
+        super.onDestroy()
+    }
 }
