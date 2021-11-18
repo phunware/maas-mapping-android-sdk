@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added support for manual camera updates via `PhunwareMapManager.animateCamera(CameraPosition cameraPosition)` and `PhunwareMapManager.animateCamera(CameraUpdate cameraUpdate)`.
 - Added support for displaying connected building floor maps while routing.
 
 ### Changed

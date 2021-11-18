@@ -70,7 +70,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
+                    currentBuilding.selectFloor(floor.id)
                 }
             }
 
@@ -118,7 +118,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
                     }
 
                     override fun onFailure(throwable: Throwable) {
@@ -170,7 +170,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         // Add a custom POI to this floor (flagged as custom with id)
                         floor.poiOptions.add(customPoint)
                         // Reload current floor
-                        currentBuilding.selectFloor(floor.level)
+                        currentBuilding.selectFloor(floor.id)
                     }
                     dialog.dismiss()
                 }

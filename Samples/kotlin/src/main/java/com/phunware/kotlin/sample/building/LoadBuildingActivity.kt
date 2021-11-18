@@ -103,7 +103,7 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
                     }
 
                     override fun onFailure(throwable: Throwable) {

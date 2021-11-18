@@ -88,7 +88,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = floorSpinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
+                    currentBuilding.selectFloor(floor.id)
                 }
             }
 
@@ -163,7 +163,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
                     }
 
                     override fun onFailure(throwable: Throwable) {

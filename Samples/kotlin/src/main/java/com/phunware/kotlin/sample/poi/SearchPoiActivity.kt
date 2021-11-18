@@ -87,7 +87,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
+                    currentBuilding.selectFloor(floor.id)
                 }
             }
 
@@ -128,7 +128,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
 
                         showFab(true)
                     }
@@ -263,11 +263,11 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                 val bounds = LatLngBounds(poiLocation, poiLocation)
                 val cameraUpdate = CameraUpdateFactory
                         .newLatLngBounds(bounds, 4)
-                phunwareMap.googleMap.animateCamera(cameraUpdate)
+                mapManager.animateCamera(cameraUpdate)
 
                 // Switch floors if necessary
-                if (selectedPoi.level != currentBuilding.selectedFloor.level) {
-                    currentBuilding.selectFloor(selectedPoi.level)
+                if (selectedPoi.floorId != currentBuilding.selectedFloor.id) {
+                    currentBuilding.selectFloor(selectedPoi.floorId)
 
                     // Update floor spinner
                     val selectedPosition = floorSpinner.selectedItemPosition

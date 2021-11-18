@@ -137,7 +137,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                     ) {
                         val floor = floorSpinnerAdapter.getItem(id.toInt())
                         if (floor != null) {
-                            currentBuilding.selectFloor(floor.level)
+                            currentBuilding.selectFloor(floor.id)
                         }
                     }
 
@@ -226,7 +226,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
 
                         // Enabled fab for routing
                         showFab(true)

@@ -68,8 +68,8 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
-                    val floorOptions: FloorOptions = currentBuilding.floorOptions.first { it.level == floor.level }
+                    currentBuilding.selectFloor(floor.id)
+                    val floorOptions: FloorOptions = currentBuilding.floorOptions.first { it.id == floor.id }
                     poiAdapter.setPois(floorOptions.poiOptions)
                 }
             }
