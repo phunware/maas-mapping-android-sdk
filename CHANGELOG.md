@@ -25,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed an issue where `PhunwareMapManager.isMyLocationEnabled` would incorrectly return true in some scenarios.
+- Fixed an issue where failing to load a campus would not call back to the listener.
 
 ## [4.0.0][] - 2021-08-11
 
