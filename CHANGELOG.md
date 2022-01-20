@@ -11,11 +11,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Added support for manual camera updates via `PhunwareMapManager.animateCamera(CameraPosition cameraPosition)` and `PhunwareMapManager.animateCamera(CameraUpdate cameraUpdate)`.
 - Added support for displaying connected building floor maps while routing.
+- Added support for always displaying the starting and ending POI of the current floor while routing.
 
 ### Changed
 
 - Optimized campus loading and caching.
 - Improved memory management when loading multiple floor maps across multiple buildings.
+- Improved tile rendering performance.
 - Updated Phunware Location dependency to 4.1.0.
 
 ### Removed
@@ -26,6 +28,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an issue where `PhunwareMapManager.isMyLocationEnabled` would incorrectly return true in some scenarios.
 - Fixed an issue where failing to load a campus would not call back to the listener.
+- Fixed an issue while routing where automatic maneuver changes would occur based on location when the Location Mode is set to "Normal"
 
 ## [4.0.0][] - 2021-08-11
 
