@@ -31,6 +31,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue while routing where automatic maneuver changes would occur based on location when the Location Mode is set to "Normal"
 - Fixed an issue that made it impossible to exclude points of interest when creating a route
 - Fixed an issue where an accessible-only enabled route could be generated with an inaccessible starting point of interest
+- Fixed an issue that caused a rendered floor map to flash when routing through multiple floors
+- Fixed an issue that allowed a user to jump between portal POIs on the same floor while routing
 
 ## [4.0.0][] - 2021-08-11
 
