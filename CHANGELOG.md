@@ -12,12 +12,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added support for manual camera updates via `PhunwareMapManager.animateCamera(CameraPosition cameraPosition)` and `PhunwareMapManager.animateCamera(CameraUpdate cameraUpdate)`
 - Added support for displaying connected building floor maps while routing
 - Added support for always displaying the starting and ending POI of the current floor while routing
+- Added caching and offline support for campuses and corresponding resources
 
 ### Changed
 
 - Optimized campus loading and caching
 - Improved memory management when loading multiple floor maps across multiple buildings
 - Improved tile rendering performance
+- Improved the way in which building bundle files are read
+- Improved the way in which campus data is written to disk
 - Updated Phunware Location dependency to 4.1.0
 
 ### Removed
@@ -33,6 +36,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue where an accessible-only enabled route could be generated with an inaccessible starting point of interest
 - Fixed an issue that caused a rendered floor map to flash when routing through multiple floors
 - Fixed an issue that allowed a user to jump between portal POIs on the same floor while routing
+- Fixed potential security exploits around logging
+- Fixed an issue where an unexpected path line may be shown when routing
 
 ## [4.0.0][] - 2021-08-11
 
