@@ -39,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed potential security exploits around logging
 - Fixed an issue where an unexpected path line may be shown when routing
 - Fixed a crash that could occur after starting a route from a portal POI
+- Fixed an issue where landmarks were missing in multi-building routes
 
 ## [4.0.0][] - 2021-08-11
 
@@ -500,7 +501,7 @@ Added landmarks to last maneuver in a route
 
 - `PwMapView` now has better interaction (e.g. panning and zooming)
 
-[4.1.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.0.0...4.1.0-beta-06
+[4.1.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.0.0...4.1.0-rc11
 [4.0.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/v3.9.12...4.0.0
 [3.9.12]: https://github.com/phunware/maas-mapping-android-sdk/compare/v3.9.11...v3.9.12
 [3.9.11]: https://github.com/phunware/maas-mapping-android-sdk/compare/v3.9.10...v3.9.11
