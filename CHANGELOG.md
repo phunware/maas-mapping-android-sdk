@@ -38,6 +38,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed an issue that allowed a user to jump between portal POIs on the same floor while routing
 - Fixed potential security exploits around logging
 - Fixed an issue where an unexpected path line may be shown when routing
+- Fixed a crash that could occur after starting a route from a portal POI
 
 ## [4.0.0][] - 2021-08-11
 
