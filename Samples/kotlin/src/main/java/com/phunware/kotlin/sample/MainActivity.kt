@@ -55,10 +55,16 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
         demoRecyclerView.layoutManager = layoutManager
         demoAdapter = DemoAdapter(demoList.getDemos(), this)
         demoRecyclerView.adapter = demoAdapter
+        (application as App).initMapManager()
 
         if (!canAccessLocation()) {
             requestLocationPermission()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as App).stopObservingApplication()
     }
 
     override fun onItemClicked(demo: Demo) {

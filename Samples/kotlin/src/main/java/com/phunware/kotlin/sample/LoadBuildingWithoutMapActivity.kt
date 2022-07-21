@@ -68,8 +68,8 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
-                    val floorOptions: FloorOptions = currentBuilding.floorOptions.first { it.level == floor.level }
+                    currentBuilding.selectFloor(floor.id)
+                    val floorOptions: FloorOptions = currentBuilding.floorOptions.first { it.id == floor.id }
                     poiAdapter.setPois(floorOptions.poiOptions)
                 }
             }
@@ -78,7 +78,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         }
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         // Retrieve buildingId from integers.xml
         val buildingId = resources.getInteger(R.integer.buildingId)
@@ -156,6 +156,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        mapManager.isMyLocationEnabled = false
         mapManager.onDestroy()
     }
 

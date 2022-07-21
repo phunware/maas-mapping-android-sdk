@@ -42,4 +42,8 @@ class LandmarkRoutingActivity : RoutingActivity() {
         mapManager.myLocationMode = PhunwareMapManager.MODE_NORMAL
     }
 
+    override fun onDestroy() {
+        mapManager.enableLandmarks(false)
+        super.onDestroy()
+    }
 }

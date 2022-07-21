@@ -70,8 +70,11 @@
             android:background="@color/semi_transparent"
             android:orientation="vertical"
             android:padding="6dp"
+            app:layout_constraintHorizontal_bias="1"
+            app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@+id/fab"
-            app:layout_constraintEnd_toEndOf="@+id/fab">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@id/fab">
 
             <TextView
                 android:layout_width="wrap_content"

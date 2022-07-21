@@ -68,6 +68,7 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.Campus
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.RouteOptions
+import com.phunware.kotlin.sample.App
 import java.util.ArrayList
 
 open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
@@ -140,9 +141,17 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
         supportFragmentManager.beginTransaction().hide(routeSummaryFragment).commit()
 
         // Create the map manager and fragment used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeLocationUpdateListener(this)
+        mapManager.removeFloorChangedListener(this)
+        mapManager.onDestroy()
     }
 
     override fun onAttachFragment(fragment: Fragment) {
@@ -210,16 +219,16 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
                                     floorSpinnerAdapter.addAll(sortedFloors)
                                     floorSpinnerAdapter.notifyDataSetChanged()
                                     var selectedFloorIndex = 0
-                                    val selectedFloor = currentBuilding.selectedFloor
-                                    if (selectedFloor != null) {
-                                        val selectedFloorOptions = getFloorOptionsFromSpinner(selectedFloor.id)
-                                        if (selectedFloorOptions != null) {
-                                            selectedFloorIndex = floorSpinnerAdapter.getPosition(selectedFloorOptions)
-                                            if (selectedFloorIndex == -1) {
-                                                selectedFloorIndex = 0
-                                            }
+                                    val selectedFloorOptions = selectedBuilding.selectedFloor?.id?.let {
+                                        getFloorOptionsFromSpinner(it)
+                                    }
+                                    if (selectedFloorOptions != null) {
+                                        selectedFloorIndex = floorSpinnerAdapter.getPosition(selectedFloorOptions)
+                                        if (selectedFloorIndex == -1) {
+                                            selectedFloorIndex = 0
                                         }
                                     }
+
                                     floorSpinner.setSelection(selectedFloorIndex)
                                 }
                             }
@@ -238,7 +247,7 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
                                         currentBuilding.selectFloor(currentFloorId)
                                     }
                                     val cameraUpdate = CameraUpdateFactory.newLatLngBounds(selectedFloor.bounds, 4)
-                                    phunwareMap.googleMap.animateCamera(cameraUpdate)
+                                    mapManager.animateCamera(cameraUpdate)
                                 }
                             }
 
@@ -246,13 +255,20 @@ open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallba
                         }
 
                         // Set building to initial floor value
-                        val initialFloor = currentBuilding.initialFloor
-                        currentBuilding.selectFloor(initialFloor.id)
+                        var buildingIndex = campus.buildings.indexOfFirst { building ->
+                            building.id == currentBuilding.id
+                        }
+
+                        if (buildingIndex == -1) {
+                            buildingIndex = 0
+                        }
+
+                        buildingSpinner.setSelection(buildingIndex, false)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                            .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                            .newLatLngBounds(currentBuilding.initialFloor.bounds, 4)
+                        mapManager.animateCamera(cameraUpdate)
 
                         // Enabled fab for routing
                         showFab(true)

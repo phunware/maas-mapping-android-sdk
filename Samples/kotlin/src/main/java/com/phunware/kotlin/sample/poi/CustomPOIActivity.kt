@@ -41,6 +41,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.OnPhunwareMapReadyCallback
@@ -69,7 +70,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
+                    currentBuilding.selectFloor(floor.id)
                 }
             }
 
@@ -77,10 +78,15 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         }
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.onDestroy()
     }
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
@@ -112,7 +118,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
                     }
 
                     override fun onFailure(throwable: Throwable) {
@@ -164,7 +170,7 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         // Add a custom POI to this floor (flagged as custom with id)
                         floor.poiOptions.add(customPoint)
                         // Reload current floor
-                        currentBuilding.selectFloor(floor.level)
+                        currentBuilding.selectFloor(floor.id)
                     }
                     dialog.dismiss()
                 }

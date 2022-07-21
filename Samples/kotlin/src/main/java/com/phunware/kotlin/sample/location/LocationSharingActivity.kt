@@ -53,13 +53,13 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.installations.FirebaseInstallations
 import com.google.maps.android.ui.IconGenerator
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.location.util.BitmapUtils
 import com.phunware.kotlin.sample.location.util.LatLngInterpolator
 import com.phunware.kotlin.sample.location.util.MarkerAnimation
 import com.phunware.kotlin.sample.location.util.PersonMarker
-import com.phunware.kotlin.sample.poi.CustomPOIActivity
 import com.phunware.location.provider_managed.PwManagedLocationProvider
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
@@ -103,11 +103,20 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         initFloorSpinner()
 
         // Create the map manager used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
 
         mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getPhunwareMapAsync(this)
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeFloorChangedListener(this)
+        mapManager.stopRetrievingSharedLocations()
+        mapManager.stopSharingUserLocation()
+        mapManager.onDestroy()
     }
 
     private fun initFloorSpinner() {
@@ -118,7 +127,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = spinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding?.selectFloor(floor.level)
+                    currentBuilding?.selectFloor(floor.id)
                 }
             }
 
@@ -201,8 +210,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
-
+                        mapManager.animateCamera(cameraUpdate)
 
                         // Start sharing location with other users
                         startLocationSharing()
@@ -408,7 +416,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     companion object {
-        private val TAG = CustomPOIActivity::class.java.simpleName
+        private val TAG = LocationSharingActivity::class.java.simpleName
         private const val PREFERENCE_NAME = "location sharing sample"
         private const val PREF_DEVICE_NAME = "device name"
         private const val PREF_DEVICE_TYPE = "device type"

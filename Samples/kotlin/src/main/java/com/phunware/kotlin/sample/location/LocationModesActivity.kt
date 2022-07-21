@@ -41,6 +41,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.phunware.kotlin.sample.App
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.kotlin.sample.util.extensions.accentColor
@@ -87,7 +88,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val floor = floorSpinnerAdapter.getItem(id.toInt())
                 if (floor != null) {
-                    currentBuilding.selectFloor(floor.level)
+                    currentBuilding.selectFloor(floor.id)
                 }
             }
 
@@ -115,7 +116,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         }
 
         // Create the map manager and fragment used to load the building
-        mapManager = PhunwareMapManager.create(this)
+        mapManager = (application as App).mapManager
         mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
         mapFragment.addOnTouchListener {
             if (mapManager.isBluedotVisibleOnFloor) {
@@ -162,7 +163,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
                                 .newLatLngBounds(initialFloor.bounds, 4)
-                        phunwareMap.googleMap.animateCamera(cameraUpdate)
+                        mapManager.animateCamera(cameraUpdate)
                     }
 
                     override fun onFailure(throwable: Throwable) {
@@ -283,9 +284,9 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
     override fun onDestroy() {
         super.onDestroy()
-        mapManager?.let {
-            it.onDestroy()
-        }
+        mapManager.isMyLocationEnabled = false
+        mapManager.removeFloorChangedListener(this)
+        mapManager.onDestroy()
     }
 
     companion object {
