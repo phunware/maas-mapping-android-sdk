@@ -46,7 +46,8 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 
-open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+internal open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+
     lateinit var mapManager: PhunwareMapManager
         private set
     private lateinit var currentBuilding: Building
@@ -97,12 +98,15 @@ open class LoadBuildingActivity : AppCompatActivity(), OnPhunwareMapReadyCallbac
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = building.initialFloor
+                        val cameraUpdate = if (initialFloorOptions != null) {
+                            building.selectFloor(initialFloorOptions.id)
+                            CameraUpdateFactory.newLatLngBounds(initialFloorOptions.bounds, 4)
+                        } else {
+                            CameraUpdateFactory.newLatLngZoom(building.location, 17f)
+                        }
 
                         // Animate the camera to the building at an appropriate zoom level
-                        val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
                     }
 

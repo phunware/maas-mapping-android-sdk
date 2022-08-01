@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0][] - TBD
+
+### Added
+
+- Added new public API to query the distance between POIs: `PhunwareMapManager.getShortestDistancesToAllPois(...)`
+
+### Changed
+
+- Bumped compileSdkVersion to API 32
+- Bumped targetSdkVersion to API 31
+- Updated placeholder POI icon image
+
 ## [4.1.0][] - 2022-07-21
 
 ### Added
@@ -501,6 +513,7 @@ Added landmarks to last maneuver in a route
 
 - `PwMapView` now has better interaction (e.g. panning and zooming)
 
+[4.2.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.1.0...4.2.0-alpha04
 [4.1.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.0.0...4.1.0
 [4.0.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/v3.9.12...4.0.0
 [3.9.12]: https://github.com/phunware/maas-mapping-android-sdk/compare/v3.9.11...v3.9.12

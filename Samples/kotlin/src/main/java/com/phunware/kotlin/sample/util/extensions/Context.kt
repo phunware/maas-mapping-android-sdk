@@ -7,7 +7,7 @@ import com.phunware.kotlin.sample.R
 /**
  * Returns the accent color as a ColorInt for the theme on the current context.
  */
-fun Context.accentColor(): Int {
+internal fun Context.accentColor(): Int {
     val typedValue = TypedValue()
 
     val a = obtainStyledAttributes(typedValue.data, intArrayOf(R.attr.colorAccent))

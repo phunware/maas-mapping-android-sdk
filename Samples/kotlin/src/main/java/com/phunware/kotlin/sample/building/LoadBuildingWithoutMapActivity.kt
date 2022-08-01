@@ -28,6 +28,7 @@ from Phunware, Inc. */
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -46,12 +47,12 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 
-class LoadBuildingWithoutMapActivity : AppCompatActivity() {
+internal class LoadBuildingWithoutMapActivity : AppCompatActivity() {
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
     private lateinit var spinnerAdapter: ArrayAdapter<FloorOptions>
     private val poiAdapter = PoiAdapter()
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,7 +109,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.clear()
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
-                val initialFloorOptions: FloorOptions = building.initialFloor
+                val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
                 building.selectFloor(initialFloorOptions.id)
                 Log.d(TAG, "Selected floor : " + initialFloorOptions.level)
                 poiAdapter.setPois(initialFloorOptions.poiOptions)
@@ -137,8 +138,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_info, parent, false)
-            val viewHolder = ViewHolder(view)
-            return viewHolder
+            return ViewHolder(view)
         }
 
         override fun getItemCount(): Int {
@@ -146,22 +146,19 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val poi = pois.get(position)
-            holder.name.setText(poi.name)
+            val poi = pois[position]
+            holder.name.text = poi.name
         }
 
-        internal class ViewHolder : RecyclerView.ViewHolder {
-            var name: TextView
-            var direction: ImageView
+        internal class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-            constructor(itemView: View) : super(itemView) {
-                name = itemView.findViewById(R.id.name)
-                direction = itemView.findViewById(R.id.direction)
-                direction.visibility = View.GONE
+            val name: TextView = itemView.findViewById(R.id.name)
+
+            init {
+                (itemView.findViewById(R.id.direction) as? View)?.visibility = View.GONE
             }
         }
     }
-
 
     companion object {
         private val TAG = LoadBuildingWithoutMapActivity::class.java.simpleName

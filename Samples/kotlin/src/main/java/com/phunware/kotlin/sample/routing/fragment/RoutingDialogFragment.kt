@@ -47,7 +47,7 @@ import java.util.ArrayList
 /**
  * A DialogFragment that implements POI selection based on the current building.
  */
-class RoutingDialogFragment : DialogFragment() {
+internal class RoutingDialogFragment : DialogFragment() {
     interface RoutingDialogListener {
         fun onGetBuildingForRouting(): Building
         fun onGetRoutes(startId: Long, endId: Long, isAccessible: Boolean)
@@ -76,7 +76,7 @@ class RoutingDialogFragment : DialogFragment() {
         arguments?.getBoolean(ARG_LOCATION_ENABLED) ?: false
     }
     private val currentLocation: Location? by lazy {
-        arguments?.getParcelable<Location>(ARG_CURRENT_LOCATION)
+        arguments?.getParcelable(ARG_CURRENT_LOCATION)
     }
 
     @SuppressLint("InflateParams")

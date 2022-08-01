@@ -29,36 +29,84 @@ from Phunware, Inc. */
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.RelativeLayout
-import com.phunware.kotlin.sample.config.Demo
+import androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult
+import androidx.activity.result.contract.ActivityResultContracts.RequestMultiplePermissions
 import com.phunware.kotlin.sample.config.DemoAdapter
 import com.phunware.kotlin.sample.config.DemoDetailsList
 
-class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
-    private lateinit var demoAdapter: DemoAdapter
-    private lateinit var content: RelativeLayout
+internal class MainActivity : AppCompatActivity() {
 
-    private var permissionSnackbar: Snackbar? = null
+    private lateinit var contentView: RelativeLayout
+
+    private var onActivityResultSuccess = {}
+
+    private val isAndroidSDKVersion31OrHigher: Boolean
+        get() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
+    private val permissions = mutableSetOf<String>().apply {
+        if (isAndroidSDKVersion31OrHigher) {
+            add(Manifest.permission.BLUETOOTH_SCAN)
+        }
+
+        add(Manifest.permission.ACCESS_COARSE_LOCATION)
+        add(Manifest.permission.ACCESS_FINE_LOCATION)
+    }.toTypedArray()
+
+    private val requestMultiplePermissionsLauncher = registerForActivityResult(
+        RequestMultiplePermissions()
+    ) { permissions ->
+        permissions.filter {
+            !it.value
+        }.keys.filter {
+            shouldShowRequestPermissionRationale(it)
+        }.run {
+            if (isNotEmpty() || isMissingRequiredPermissions()) {
+                showMissingPermissionsSnackbar()
+            } else {
+                onActivityResultSuccess()
+            }
+        }
+    }
+
+    private val startActivityForResultLauncher = registerForActivityResult(
+        StartActivityForResult()
+    ) {
+        onActivityResultSuccess()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        content = findViewById(R.id.content)
+        contentView = findViewById(R.id.content)
         val demoList = DemoDetailsList(this)
+        val demoItemOnClickListener = DemoAdapter.DemoOnClickListener {
+            requestPermissions {
+                startActivity(Intent(this, it.activityClass))
+            }
+        }
         val demoRecyclerView = findViewById<RecyclerView>(R.id.demo_list)
         val layoutManager = LinearLayoutManager(this)
         demoRecyclerView.layoutManager = layoutManager
-        demoAdapter = DemoAdapter(demoList.getDemos(), this)
-        demoRecyclerView.adapter = demoAdapter
+        demoRecyclerView.adapter = DemoAdapter(demoList.getDemos(), demoItemOnClickListener)
         (application as App).initMapManager()
 
-        if (!canAccessLocation()) {
-            requestLocationPermission()
+        permissions.filter {
+            !hasPermission(it)
+        }.filter {
+            shouldShowRequestPermissionRationale(it)
+        }.run {
+            if (isNotEmpty() || isMissingRequiredPermissions()) {
+                showMissingPermissionsSnackbar()
+            } else {
+                requestPermissions()
+            }
         }
     }
 
@@ -67,48 +115,63 @@ class MainActivity : AppCompatActivity(), DemoAdapter.DemoOnClickListener {
         (application as App).stopObservingApplication()
     }
 
-    override fun onItemClicked(demo: Demo) {
-        if (canAccessLocation()) {
-            startActivity(Intent(this, demo.activityClass))
-        } else {
-            requestLocationPermission()
-        }
+    private fun requestPermissions(onSuccess: () -> (Unit) = {}) {
+        onActivityResultSuccess = onSuccess
+        requestMultiplePermissionsLauncher.launch(permissions)
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        if (requestCode == REQUEST_PERMISSION_LOCATION_FINE) {
-            if (grantResults.isNotEmpty() && grantResults[0] != PackageManager.PERMISSION_GRANTED) {
-                showPermissionSnackbar()
+    private fun startAndroidSettingsActivity() {
+        onActivityResultSuccess = {
+            requestPermissions()
+        }
+        startActivityForResultLauncher.launch(Intent(android.provider.Settings.ACTION_SETTINGS))
+    }
+
+    private fun showMissingPermissionsSnackbar() {
+        if (isAndroidSDKVersion31OrHigher) {
+            if (!canAccessPreciseLocation() && !canLookForBluetoothDevices()) {
+                R.string.permission_location_and_bluetooth_scan_snackbar_message
+            } else if (!canAccessPreciseLocation()) {
+                R.string.permission_location_snackbar_message
+            } else if (!canLookForBluetoothDevices()) {
+                R.string.permission_bluetooth_scan_snackbar_message
+            } else {
+                null
             }
-        }
-    }
-
-    private fun showPermissionSnackbar() {
-        permissionSnackbar = Snackbar.make(content, R.string.permission_snackbar_message, Snackbar.LENGTH_LONG)
-            .setAction(R.string.action_settings) {
-                startActivityForResult(
-                    Intent(android.provider.Settings.ACTION_SETTINGS),
-                    REQUEST_PERMISSION_LOCATION_FINE
-                )
-            }
-        permissionSnackbar?.show()
-    }
-
-    private fun requestLocationPermission() {
-        if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-            showPermissionSnackbar()
         } else {
-            requestPermissions(
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE),
-                REQUEST_PERMISSION_LOCATION_FINE
-            )
+            if (!canAccessPreciseLocation()) {
+                R.string.permission_snackbar_message
+            } else {
+                null
+            }
+        }?.let { messageResourceId ->
+            Snackbar.make(
+                contentView,
+                messageResourceId,
+                Snackbar.LENGTH_LONG
+            ).setAction(
+                R.string.action_settings
+            ) {
+                startAndroidSettingsActivity()
+            }.show()
         }
     }
 
-    private fun canAccessLocation(): Boolean = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+    private fun canAccessPreciseLocation() =
+        hasPermission(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    companion object {
-        private const val REQUEST_PERMISSION_LOCATION_FINE = 1
+    private fun canLookForBluetoothDevices() = if (isAndroidSDKVersion31OrHigher) {
+        hasPermission(Manifest.permission.BLUETOOTH_SCAN)
+    } else {
+        true
     }
 
+    private fun hasPermission(perm: String) =
+        PackageManager.PERMISSION_GRANTED == checkSelfPermission(perm)
+
+    private fun isMissingRequiredPermissions() = if (isAndroidSDKVersion31OrHigher) {
+        !canAccessPreciseLocation() || !canLookForBluetoothDevices()
+    } else {
+        !canAccessPreciseLocation()
+    }
 }

@@ -27,16 +27,18 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import com.google.android.gms.maps.model.LatLng
-import java.lang.Math.asin
-import java.lang.Math.atan2
-import java.lang.Math.cos
-import java.lang.Math.pow
-import java.lang.Math.sin
-import java.lang.Math.sqrt
+import kotlin.math.abs
+import kotlin.math.asin
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sign
+import kotlin.math.sin
+import kotlin.math.sqrt
 import java.lang.Math.toDegrees
 import java.lang.Math.toRadians
 
-interface LatLngInterpolator {
+internal interface LatLngInterpolator {
     fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng
 
     /**
@@ -59,8 +61,8 @@ interface LatLngInterpolator {
             var lngDelta = b.longitude - a.longitude
 
             // Take the shortest path across the 180th meridian.
-            if (Math.abs(lngDelta) > 180) {
-                lngDelta -= Math.signum(lngDelta) * 360
+            if (abs(lngDelta) > 180) {
+                lngDelta -= sign(lngDelta) * 360
             }
             val lng = lngDelta * fraction + a.longitude
             return LatLng(lat, lng)
@@ -74,12 +76,12 @@ interface LatLngInterpolator {
     class Spherical : LatLngInterpolator {
 
         /* From github.com/googlemaps/android-maps-utils */
-        override fun interpolate(fraction: Float, from: LatLng, to: LatLng): LatLng {
+        override fun interpolate(fraction: Float, a: LatLng, b: LatLng): LatLng {
             // http://en.wikipedia.org/wiki/Slerp
-            val fromLat = toRadians(from.latitude)
-            val fromLng = toRadians(from.longitude)
-            val toLat = toRadians(to.latitude)
-            val toLng = toRadians(to.longitude)
+            val fromLat = toRadians(a.latitude)
+            val fromLng = toRadians(a.longitude)
+            val toLat = toRadians(b.latitude)
+            val toLng = toRadians(b.longitude)
             val cosFromLat = cos(fromLat)
             val cosToLat = cos(toLat)
 
@@ -87,15 +89,15 @@ interface LatLngInterpolator {
             val angle = computeAngleBetween(fromLat, fromLng, toLat, toLng)
             val sinAngle = sin(angle)
             if (sinAngle < 1E-6) {
-                return from
+                return a
             }
-            val a = sin((1 - fraction) * angle) / sinAngle
-            val b = sin(fraction * angle) / sinAngle
+            val a2 = sin((1 - fraction) * angle) / sinAngle
+            val b2 = sin(fraction * angle) / sinAngle
 
             // Converts from polar to vector and interpolate.
-            val x = a * cosFromLat * cos(fromLng) + b * cosToLat * cos(toLng)
-            val y = a * cosFromLat * sin(fromLng) + b * cosToLat * sin(toLng)
-            val z = a * sin(fromLat) + b * sin(toLat)
+            val x = a2 * cosFromLat * cos(fromLng) + b2 * cosToLat * cos(toLng)
+            val y = a2 * cosFromLat * sin(fromLng) + b2 * cosToLat * sin(toLng)
+            val z = a2 * sin(fromLat) + b2 * sin(toLat)
 
             // Converts interpolated vector back to polar.
             val lat = atan2(z, sqrt(x * x + y * y))
@@ -110,7 +112,7 @@ interface LatLngInterpolator {
             // Haversine's formula
             val dLat = fromLat - toLat
             val dLng = fromLng - toLng
-            return 2 * asin(sqrt(pow(sin(dLat / 2), 2.0) + cos(fromLat) * cos(toLat) * pow(sin(dLng / 2), 2.0)))
+            return 2 * asin(sqrt(sin(dLat / 2).pow(2.0) + cos(fromLat) * cos(toLat) * sin(dLng / 2).pow(2.0)))
         }
     }
 }

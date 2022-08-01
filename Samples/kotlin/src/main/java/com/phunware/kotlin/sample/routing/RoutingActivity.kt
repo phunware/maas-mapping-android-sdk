@@ -29,7 +29,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -42,6 +42,8 @@ import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentOnAttachListener
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -66,12 +68,11 @@ import com.phunware.mapping.manager.Router
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.RouteOptions
-import java.lang.ref.WeakReference
 import java.util.ArrayList
 
-open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+internal open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener, Navigator.OnManeuverChangedListener,
-        LocationManager.LocationListener, RoutingDialogFragment.RoutingDialogListener {
+        LocationManager.LocationListener, RoutingDialogFragment.RoutingDialogListener, FragmentOnAttachListener {
     companion object {
         private val TAG = RoutingActivity::class.java.simpleName
     }
@@ -163,7 +164,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         mapManager.onDestroy()
     }
 
-    override fun onAttachFragment(fragment: Fragment) {
+    override fun onAttachFragment(fragmentManager: FragmentManager, fragment: Fragment) {
         // Attach a callback for the [RoutingDialogFragment] so we don't have to manage
         // multiple [PhunwareMapManager]s
         if (fragment is RoutingDialogFragment) {
@@ -220,12 +221,12 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                                .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
 
                         // Enabled fab for routing
@@ -248,7 +249,6 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      */
     override fun onManeuverChanged(navigator: Navigator, position: Int) {
         if (maneuverPosition != position) {
-
             if (!maneuverFromSwiping) navOverlay.dispatchManeuverChanged(position)
             handleManeuverChange(position, navigator)
             maneuverPosition = position
@@ -307,7 +307,7 @@ open class RoutingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
      */
 
     private fun setManagedLocationProvider(building: Building) {
-        if (BluetoothAdapter.getDefaultAdapter() != null) {
+        if ((getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter != null) {
             val managedProvider = PwManagedLocationProvider(application, building.id, null)
             mapManager.setLocationProvider(managedProvider, building)
             mapManager.isMyLocationEnabled = true

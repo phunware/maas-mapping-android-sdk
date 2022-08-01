@@ -60,7 +60,7 @@ import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 import java.util.*
 
-class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+internal class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var phunwareMap: PhunwareMap
     private lateinit var floorSpinner: Spinner
@@ -122,12 +122,12 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                                .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
 
                         showFab(true)
@@ -174,10 +174,10 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                 .setTitle("Search POIs")
                 .setMessage("Type to search for POIs and click to center the map to that POIs" +
                         " location")
-                .setNegativeButton("Close", { _, _ ->
+                .setNegativeButton("Close") { _, _ ->
                     // Do Nothing -- Close Dialog
-                })
-                .setCancelable(true)
+                }
+            .setCancelable(true)
         searchPoiDialog = builder.create()
         searchPoiDialog!!.show()
     }
@@ -213,7 +213,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
         poiListAdapter!!.notifyDataSetChanged()
     }
 
-    private inner class PoiListAdapter internal constructor(pois: List<PointOptions>) : RecyclerView.Adapter<PoiListAdapter.ViewHolder>() {
+    private inner class PoiListAdapter constructor(pois: List<PointOptions>) : RecyclerView.Adapter<PoiListAdapter.ViewHolder>() {
 
         private val arrAllPointOptions = ArrayList<PointOptions>()
         private val arrPointOptions = ArrayList<PointOptions>()
@@ -238,16 +238,16 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
         override fun getItemCount(): Int = arrPointOptions.size
 
-        internal fun setFilter(filter: String?) {
+        fun setFilter(filter: String?) {
             if (filter != null) {
                 arrPointOptions.clear()
                 arrAllPointOptions.filterTo(arrPointOptions) {
-                    it.name.toUpperCase().startsWith(filter.toUpperCase())
+                    it.name.uppercase().startsWith(filter.uppercase())
                 }
             }
         }
 
-        internal inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+        private inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
             var poiNameTextView: TextView = itemView.findViewById(android.R.id.text1)
 
             init {
@@ -255,7 +255,7 @@ class SearchPoiActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
             }
 
             override fun onClick(view: View) {
-                val position = adapterPosition
+                val position = bindingAdapterPosition
                 val selectedPoi = arrPointOptions[position]
                 val poiLocation = selectedPoi.location
 

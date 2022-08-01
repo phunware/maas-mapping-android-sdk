@@ -14,7 +14,7 @@ import com.phunware.mapping.SupportMapFragment
  * Example of extending [MapFragment] to customise
  * the initial camera location and the zooming level of the map.
  */
-class CustomMapFragment : SupportMapFragment() {
+internal class CustomMapFragment : SupportMapFragment() {
 
     companion object {
         fun newInstance(activity: AppCompatActivity, callback: OnPhunwareMapReadyCallback) : CustomMapFragment {

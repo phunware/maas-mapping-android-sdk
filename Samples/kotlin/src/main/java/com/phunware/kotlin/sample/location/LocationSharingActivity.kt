@@ -77,7 +77,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.HashSet
 
-class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Building.OnFloorChangedListener, SharedLocationCallback {
+internal class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback, Building.OnFloorChangedListener, SharedLocationCallback {
 
     private lateinit var phunwareMap: PhunwareMap
     private lateinit var mapFragment: SupportMapFragment
@@ -204,12 +204,12 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                                .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
 
                         // Start sharing location with other users
@@ -390,8 +390,7 @@ class LocationSharingActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         factory.setTextAppearance(R.style.markerIconText)
 
-        val color: Int
-        color = if (friendColorMap.containsKey(deviceId)) {
+        val color = if (friendColorMap.containsKey(deviceId)) {
             val colorTmp = friendColorMap[deviceId]
             colorTmp!!
         } else {

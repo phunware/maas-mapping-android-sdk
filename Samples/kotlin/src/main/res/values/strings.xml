@@ -67,20 +67,20 @@
     <string name="bear_left">Bear Left</string>
     <string name="bear_right">Bear Right</string>
     <string name="continue_straight">Continue Straight</string>
-    <string name="continue_straight_distance" formatted="false">
+    <string name="continue_straight_distance">
         Continue Straight for %s feet</string>
     <string name="walk_straight_distance_past_poi">Continue straight, past %s </string>
     <string name="unknown">Unknown</string>
-    <string name="floor_change_message_format" formatted="false">Take the %s %s %d</string>
+    <string name="floor_change_message_format">Take the %1$s %2$s %3$d</string>
     <string name="up_to_level">up to level</string>
     <string name="down_to_level">down to level</string>
     <string name="to">to</string>
-    <string name="walk_straight_distance">Walk %s feet towards %s </string>
+    <string name="walk_straight_distance">Walk %1$s feet towards %2$s </string>
     <string name="after">after</string>
     <string name="at">at</string>
     <string name="near">near</string>
     <string name="next_maneuver">Next: </string>
-    <string name="to_arrive"> to arrive at %1$s</string>
+    <string name="to_arrive"> to arrive at %s</string>
     <string name="you_have_arrived">You have arrived </string>
     <string name="current_location">Current Location</string>
     <string name="custom_location_title">Custom Location</string>
@@ -95,7 +95,7 @@
     <string name="direction">direction</string>
     <string name="next_direction">next direction</string>
     <string name="building_not_loaded">Building not loaded.</string>
-    <string name="section_distance">"%s %s feet"</string>
+    <string name="section_distance">"%1$s %2$s feet"</string>
 
     <string name="demo_voice_prompt_title">Voiced Route Instructions</string>
     <string name="demo_voice_prompt_description">Read route instructions aloud to the user</string>
@@ -107,12 +107,12 @@
     <string name="demo_voice_prompt_prep_for">for</string>
 
     <string name="demo_walk_time_title">Walk Time Calculations</string>
-    <string name="demo_arrival_time_title">Arrival Time %1$s</string>
+    <string name="demo_arrival_time_title">Arrival Time %s</string>
     <string name="demo_walk_time_description">Show actual walk time</string>
     <string name="demo_walk_time_exit">Exit</string>
     <plurals name="demo_walk_time_minutes">
-        <item quantity="one">%1$d minute.</item>
-        <item quantity="other">%1$d minutes.</item>
+        <item quantity="one">%d minute.</item>
+        <item quantity="other">%d minutes.</item>
     </plurals>
 
     <string name="demo_off_route_title">Off Route Scenario</string>
@@ -133,6 +133,10 @@
 
     <!-- App permissions -->
     <string name="permission_snackbar_message">Location permission is required to use the app</string>
+    <string name="permission_location_snackbar_message">Precise location permission is required for GPS wayfinding.</string>
+    <string name="permission_bluetooth_scan_snackbar_message">Bluetooth permission is required for beacon wayfinding.</string>
+    <string name="permission_location_and_bluetooth_scan_snackbar_message">Location and Bluetooth permissions are required to use the app.</string>
+
     <string name="action_settings">Settings</string>
     <string name="content_desc_off_route_image">Off Route Image</string>
     <string name="switch_buildings">Switch Buildings</string>

@@ -41,7 +41,6 @@ import com.phunware.kotlin.sample.CustomMapFragment.Companion.newInstance
 import com.phunware.kotlin.sample.R
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.location.provider_managed.PwManagedLocationProvider
-import com.phunware.mapping.MapFragment
 import com.phunware.mapping.OnPhunwareMapReadyCallback
 import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.manager.Callback
@@ -49,11 +48,10 @@ import com.phunware.mapping.manager.PhunwareMapManager
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 
-class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+internal class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
-    private lateinit var mapFragment: MapFragment
     private lateinit var currentBuilding: Building
     private lateinit var floorSpinner: Spinner
     private lateinit var floorSpinnerAdapter: ArrayAdapter<FloorOptions>
@@ -114,12 +112,12 @@ class BluedotLocationActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = building.initialFloor ?: building.buildingOptions.floors.firstOrNull() ?: return
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                            .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
                     }
 

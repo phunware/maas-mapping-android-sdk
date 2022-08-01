@@ -10,7 +10,7 @@ import com.phunware.kotlin.sample.R
 import com.phunware.mapping.model.Building
 import java.util.ArrayList
 
-class BuildingSpinnerAdapter(context: Context) : ArrayAdapter<Building>(context, 0, ArrayList()) {
+internal class BuildingSpinnerAdapter(context: Context) : ArrayAdapter<Building>(context, 0, ArrayList()) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val v: View

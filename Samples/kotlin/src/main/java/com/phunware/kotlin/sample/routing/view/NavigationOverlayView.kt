@@ -44,7 +44,7 @@ import com.phunware.kotlin.sample.util.extensions.toPx
 import com.phunware.mapping.model.RouteManeuverOptions
 import java.util.ArrayList
 
-class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
+internal class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null) : ViewPager(context, attrs) {
 
     companion object {
         /**
@@ -176,19 +176,19 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
         internal var turnManeuver: RouteManeuverOptions? = null
     }
 
-    private class ManeuverPagerAdapter internal constructor(private val clickListener: OnClickListener?) : PagerAdapter() {
+    private class ManeuverPagerAdapter constructor(private val clickListener: OnClickListener?) : PagerAdapter() {
         private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
         private val maneuvers = ArrayList<ManeuverPair>()
 
-        override fun getCount(): Int = maneuvers.size
+        override fun getCount() = maneuvers.size
 
-        internal fun setManeuvers(maneuvers: Collection<ManeuverPair>) {
+        fun setManeuvers(maneuvers: Collection<ManeuverPair>) {
             this.maneuvers.clear()
             this.maneuvers.addAll(maneuvers)
             notifyDataSetChanged()
         }
 
-        internal fun getItem(position: Int): ManeuverPair = maneuvers[position]
+        fun getItem(position: Int): ManeuverPair = maneuvers[position]
 
         override fun instantiateItem(container: ViewGroup, position: Int): Any {
             val context = container.context
@@ -225,7 +225,7 @@ class NavigationOverlayView @JvmOverloads constructor(context: Context, attrs: A
     }
 }
 
-fun String.toSpannableText(context: Context, styleResourceId: Int): SpannableString {
+internal fun String.toSpannableText(context: Context, styleResourceId: Int): SpannableString {
     return SpannableString(this).apply {
         setSpan(TextAppearanceSpan(context, styleResourceId), 0, this.length, 0)
     }

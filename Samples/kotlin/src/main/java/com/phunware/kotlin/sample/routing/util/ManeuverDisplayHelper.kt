@@ -33,8 +33,9 @@ import com.phunware.mapping.model.LandmarkManeuverOptions
 import com.phunware.mapping.model.RouteManeuverOptions
 
 import java.util.Locale
+import kotlin.math.ceil
 
-class ManeuverDisplayHelper {
+internal class ManeuverDisplayHelper {
 
     fun stringForDirection(context: Context?, maneuver: RouteManeuverOptions?): String {
         if (context == null || maneuver == null || maneuver.direction == null) {
@@ -48,10 +49,10 @@ class ManeuverDisplayHelper {
             if (landmark.position === LandmarkManeuverOptions.POSITION.AFTER) {
                 landmarkStringTurn = SPACE + context.getString(R.string.after) + SPACE
             } else if (landmark.position === LandmarkManeuverOptions.POSITION.AT) {
-                if(landmark.type == LandmarkManeuverOptions.TYPE.ASSOCIATED_LANDMARK){
-                    landmarkStringTurn = SPACE + context.getString(R.string.near) + SPACE
+                landmarkStringTurn = if(landmark.type == LandmarkManeuverOptions.TYPE.ASSOCIATED_LANDMARK){
+                    SPACE + context.getString(R.string.near) + SPACE
                 } else {
-                    landmarkStringTurn = SPACE + context.getString(R.string.at) + SPACE
+                    SPACE + context.getString(R.string.at) + SPACE
                 }
             }
             landmarkStringTurn += landmark.name
@@ -86,7 +87,7 @@ class ManeuverDisplayHelper {
                 } else {
                     directionString.append(String.format(Locale.US,
                         context.getString(R.string.walk_straight_distance_past_poi),
-                        landmarkStringMain));
+                        landmarkStringMain))
                 }
             }
             else -> directionString.append(context.getString(R.string.unknown))
@@ -109,7 +110,7 @@ class ManeuverDisplayHelper {
             return -1.0
         }
         val distInFeet = distance * NUM_FEET_PER_METER
-        return Math.ceil(distInFeet)
+        return ceil(distInFeet)
     }
 
     /**
@@ -118,10 +119,10 @@ class ManeuverDisplayHelper {
      * @return String object containing the converted number of feet (rounded up)
      */
     private fun getStringDistanceInFeet(distance: Double): String {
-        if (distance < 0) {
-            return "";
+        return if (distance < 0) {
+            ""
         } else {
-            return getDistanceInFeet(distance).toInt().toString();
+            getDistanceInFeet(distance).toInt().toString()
         }
     }
 
@@ -136,16 +137,16 @@ class ManeuverDisplayHelper {
             RouteManeuverOptions.Direction.BEAR_RIGHT -> resource = R.drawable.ic_route_bear_right
             RouteManeuverOptions.Direction.FLOOR_CHANGE -> {
                 val changeDescription = floorChangeDescriptionForManeuver(context, maneuver)
-                if (changeDescription.toLowerCase()
+                if (changeDescription.lowercase()
                         .contains(context.getString(R.string.elevator))) {
-                    resource = if (changeDescription.toLowerCase()
+                    resource = if (changeDescription.lowercase()
                             .contains(context.getString(R.string.down))) {
                         R.drawable.ic_route_elevatordown
                     } else {
                         R.drawable.ic_route_elevatorup
                     }
                 } else {
-                    resource = if (changeDescription.toLowerCase()
+                    resource = if (changeDescription.lowercase()
                             .contains(context.getString(R.string.down))) {
                         R.drawable.ic_route_stairsdown
                     } else {
@@ -166,17 +167,15 @@ class ManeuverDisplayHelper {
         val endPoint = maneuver.points[maneuver.points.size - 1]
         val endPointName = endPoint.name
         var methodOfChange = ""
-        if (endPointName != null && endPointName.toLowerCase()
+        if (endPointName != null && endPointName.lowercase()
                 .contains(context.getString(R.string.elevator))) {
             methodOfChange = context.getString(R.string.elevator)
-        } else if (endPointName != null && endPointName.toLowerCase()
+        } else if (endPointName != null && endPointName.lowercase()
                 .contains(context.getString(R.string.stairs))) {
             methodOfChange = context.getString(R.string.stairs)
         }
 
-        val direction = directionForManeuver(maneuver)
-        val directionMessage: String
-        directionMessage = when (direction) {
+        val directionMessage = when (directionForManeuver(maneuver)) {
             FloorChangeDirection.PWManeuverDisplayHelperFloorChangeDirectionUp ->
                 context.getString(R.string.up_to_level)
             FloorChangeDirection.PWManeuverDisplayHelperFloorChangeDirectionDown ->

@@ -8,7 +8,7 @@ import com.phunware.mapping.PhunwareMap
 import com.phunware.mapping.model.IconProvider
 import com.phunware.mapping.model.PointOptions
 
-class CustomPoiImageActivity: LoadBuildingActivity() {
+internal class CustomPoiImageActivity: LoadBuildingActivity() {
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
 

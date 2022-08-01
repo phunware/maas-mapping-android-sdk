@@ -46,7 +46,7 @@ import java.util.ArrayList
 /**
  * Fragment that given a [RouteOptions] object can display a list of maneuvers.
  */
-class RouteSummaryFragment : Fragment() {
+internal class RouteSummaryFragment : Fragment() {
 
     private lateinit var routeSummaryRecyclerView: RecyclerView
 

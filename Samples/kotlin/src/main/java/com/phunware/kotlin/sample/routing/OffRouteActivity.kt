@@ -37,7 +37,7 @@ import java.util.Timer
 import java.util.TimerTask
 import kotlin.math.min
 
-class OffRouteActivity : RoutingActivity(),
+internal class OffRouteActivity : RoutingActivity(),
         OffRouteDialogFragment.OffRouteDialogListener {
 
     private var dontShowOffRouteAgain: Boolean = false

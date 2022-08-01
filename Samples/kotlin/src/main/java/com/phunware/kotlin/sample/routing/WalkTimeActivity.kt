@@ -28,6 +28,7 @@ from Phunware, Inc. */
 import android.location.Location
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -41,7 +42,7 @@ import java.util.Calendar
 import java.util.Locale
 import kotlin.math.ceil
 
-open class WalkTimeActivity : RoutingActivity() {
+internal open class WalkTimeActivity : RoutingActivity() {
     companion object {
         private const val UPDATE_DELAY = 5000L
         private const val AVERAGE_WALK_SPEED = 0.7 //units in meters per second
@@ -61,7 +62,7 @@ open class WalkTimeActivity : RoutingActivity() {
     private var calculatedWalkSpeed = 0.0
     private val dateFormatter = SimpleDateFormat("h:mm a", Locale.getDefault())
     private var currentManeuverIndex = -1
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
     private val timeUpdater = Runnable { updateWalkTime() }
     private var userLastReportedLocation: Location? = null
 

@@ -26,7 +26,7 @@ not be used in advertising or otherwise to promote the sale, use or
 other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
-import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
@@ -56,7 +56,7 @@ import com.phunware.mapping.manager.PhunwareMapManager.MODE_LOCATE_ME
 import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 
-class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
+internal class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
         Building.OnFloorChangedListener {
 
     private lateinit var mapManager: PhunwareMapManager
@@ -117,7 +117,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
 
         // Create the map manager and fragment used to load the building
         mapManager = (application as App).mapManager
-        mapFragment = fragmentManager.findFragmentById(R.id.map) as MapFragment
+        mapFragment = supportFragmentManager.findFragmentById(R.id.map) as MapFragment
         mapFragment.addOnTouchListener {
             if (mapManager.isBluedotVisibleOnFloor) {
                 val trackingMode = mapManager.myLocationMode
@@ -157,12 +157,12 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
                         setManagedLocationProvider(building)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                                .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
                     }
 
@@ -173,7 +173,7 @@ class LocationModesActivity : AppCompatActivity(), OnPhunwareMapReadyCallback,
     }
 
     private fun setManagedLocationProvider(building: Building) {
-        if (BluetoothAdapter.getDefaultAdapter() != null) {
+        if ((getSystemService(BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter != null) {
             val managedProvider = PwManagedLocationProvider(application, building.id, null)
             mapManager.setLocationProvider(managedProvider, building)
             mapManager.isMyLocationEnabled = true

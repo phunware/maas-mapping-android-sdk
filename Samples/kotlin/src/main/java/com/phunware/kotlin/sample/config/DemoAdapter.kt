@@ -27,7 +27,6 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 
 import androidx.recyclerview.widget.RecyclerView
-import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,7 +35,7 @@ import com.phunware.kotlin.sample.R
 
 internal class DemoAdapter(private val demos: List<Demo>, private val listener: DemoOnClickListener) : RecyclerView.Adapter<DemoAdapter.ViewHolder>() {
 
-    internal interface DemoOnClickListener {
+    fun interface DemoOnClickListener {
         fun onItemClicked(demo: Demo)
     }
 
@@ -60,7 +59,7 @@ internal class DemoAdapter(private val demos: List<Demo>, private val listener: 
         var description: TextView = itemView.findViewById(R.id.description)
 
         init {
-            itemView.setOnClickListener { listener.onItemClicked(demos[adapterPosition]) }
+            itemView.setOnClickListener { listener.onItemClicked(demos[bindingAdapterPosition]) }
         }
     }
 }

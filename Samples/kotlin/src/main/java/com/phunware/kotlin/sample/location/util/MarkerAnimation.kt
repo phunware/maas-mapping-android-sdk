@@ -28,15 +28,12 @@ from Phunware, Inc. */
 
 import android.animation.ObjectAnimator
 import android.animation.TypeEvaluator
-import android.annotation.TargetApi
-import android.os.Build
 import android.util.Property
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 
 internal object MarkerAnimation {
 
-    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     fun animateMarkerTo(marker: Marker,
                         finalPosition: LatLng,
                         latLngInterpolator: LatLngInterpolator) {

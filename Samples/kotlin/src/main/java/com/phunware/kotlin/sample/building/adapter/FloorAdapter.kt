@@ -33,9 +33,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.phunware.kotlin.sample.R
-
 import com.phunware.mapping.model.FloorOptions
-
 import java.util.ArrayList
 
 internal class FloorAdapter(context: Context) : ArrayAdapter<FloorOptions>(context, 0, ArrayList()) {
@@ -65,6 +63,7 @@ internal class FloorAdapter(context: Context) : ArrayAdapter<FloorOptions>(conte
     }
 
     private class ViewHolder {
-        internal var text: TextView? = null
+
+        var text: TextView? = null
     }
 }

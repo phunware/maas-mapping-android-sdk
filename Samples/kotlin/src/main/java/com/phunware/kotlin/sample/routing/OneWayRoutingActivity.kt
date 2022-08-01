@@ -28,7 +28,7 @@ from Phunware, Inc. */
 
 import com.phunware.mapping.PhunwareMap
 
-class OneWayRoutingActivity : RoutingActivity() {
+internal class OneWayRoutingActivity : RoutingActivity() {
 
     override fun onPhunwareMapReady(phunwareMap: PhunwareMap) {
         mapManager.enableOnewayRouting(true)

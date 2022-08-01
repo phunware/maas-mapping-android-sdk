@@ -27,4 +27,4 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.content.res.Resources
 
-fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()
+internal fun Int.toPx(): Int = (this * Resources.getSystem().displayMetrics.density).toInt()

@@ -28,6 +28,7 @@ from Phunware, Inc. */
 
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -37,6 +38,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.phunware.kotlin.sample.building.adapter.FloorAdapter
 import com.phunware.mapping.manager.Callback
 import com.phunware.mapping.manager.PhunwareMapManager
@@ -44,12 +46,12 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 
-class LoadBuildingWithoutMapActivity : AppCompatActivity() {
+internal class LoadBuildingWithoutMapActivity : AppCompatActivity() {
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
     private lateinit var spinnerAdapter: ArrayAdapter<FloorOptions>
     private val poiAdapter = PoiAdapter()
-    private val handler = Handler()
+    private val handler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,10 +102,16 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
                 spinnerAdapter.clear()
                 spinnerAdapter.addAll(building.buildingOptions.floors)
 
-                val initialFloorOptions: FloorOptions = building.initialFloor
-                building.selectFloor(initialFloorOptions.id)
-                Log.d(TAG, "Selected floor : " + initialFloorOptions.id)
-                poiAdapter.setPois(initialFloorOptions.poiOptions)
+                val initialFloorOptions = building.initialFloor
+                val cameraUpdate = if (initialFloorOptions != null) {
+                    building.selectFloor(initialFloorOptions.id)
+                    Log.d(TAG, "Selected floor : " + initialFloorOptions.id)
+                    poiAdapter.setPois(initialFloorOptions.poiOptions)
+                    CameraUpdateFactory.newLatLngBounds(initialFloorOptions.bounds, 4)
+                } else {
+                    CameraUpdateFactory.newLatLngZoom(building.location, 17f)
+                }
+                mapManager.animateCamera(cameraUpdate)
             }
 
             override fun onFailure(throwable: Throwable?) {
@@ -129,8 +137,7 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
             val view = LayoutInflater.from(parent.context).inflate(R.layout.item_info, parent, false)
-            val viewHolder = ViewHolder(view)
-            return viewHolder
+            return ViewHolder(view)
         }
 
         override fun getItemCount(): Int {
@@ -138,15 +145,15 @@ class LoadBuildingWithoutMapActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val poi = pois.get(position)
-            holder.name.setText(poi.name)
+            val poi = pois[position]
+            holder.name.text = poi.name
         }
 
-        internal class ViewHolder : RecyclerView.ViewHolder {
+        internal class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             var name: TextView
             var direction: ImageView
 
-            constructor(itemView: View) : super(itemView) {
+            init {
                 name = itemView.findViewById(R.id.name)
                 direction = itemView.findViewById(R.id.direction)
                 direction.visibility = View.GONE

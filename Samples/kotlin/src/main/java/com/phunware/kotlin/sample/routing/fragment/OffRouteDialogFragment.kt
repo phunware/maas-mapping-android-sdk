@@ -11,7 +11,7 @@ import android.view.Window
 import android.widget.Button
 import com.phunware.kotlin.sample.R
 
-class OffRouteDialogFragment : DialogFragment() {
+internal class OffRouteDialogFragment : DialogFragment() {
 
     interface OffRouteDialogListener {
         fun onDismiss(dontShowAgain: Boolean)

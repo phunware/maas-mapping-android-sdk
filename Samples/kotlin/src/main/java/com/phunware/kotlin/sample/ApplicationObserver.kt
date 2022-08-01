@@ -1,16 +1,17 @@
 package com.phunware.kotlin.sample
 
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.DefaultLifecycleObserver
+import androidx.lifecycle.LifecycleOwner
 import com.phunware.mapping.manager.PhunwareMapManager
 
-class ApplicationObserver(private val phunwareMapManager: PhunwareMapManager) : LifecycleObserver {
+internal class ApplicationObserver(private val phunwareMapManager: PhunwareMapManager) :
+    DefaultLifecycleObserver {
 
     private var didDisableLocationUpdatesOnBackground = false
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun onBackground() {
+    override fun onPause(owner: LifecycleOwner) {
+        super.onPause(owner)
+
         val shouldStopLocationUpdates = phunwareMapManager.isMyLocationEnabled
 
         if (shouldStopLocationUpdates) {
@@ -21,8 +22,9 @@ class ApplicationObserver(private val phunwareMapManager: PhunwareMapManager) : 
         }
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun onForeground() {
+    override fun onResume(owner: LifecycleOwner) {
+        super.onResume(owner)
+
         val shouldStartLocationUpdates = !phunwareMapManager.isMyLocationEnabled && didDisableLocationUpdatesOnBackground
 
         if (shouldStartLocationUpdates) {

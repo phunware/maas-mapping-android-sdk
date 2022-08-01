@@ -35,7 +35,7 @@ import androidx.core.content.ContextCompat
 import com.phunware.kotlin.sample.R
 import java.util.Random
 
-object BitmapUtils {
+internal object BitmapUtils {
 
     val randomColor: Int
         get() {

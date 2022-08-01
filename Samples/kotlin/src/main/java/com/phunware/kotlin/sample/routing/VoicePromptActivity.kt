@@ -27,7 +27,6 @@ other dealings in this Software without prior written authorization
 from Phunware, Inc. */
 import android.content.Context
 import android.os.Bundle
-import android.os.Handler
 import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
@@ -39,7 +38,7 @@ import com.phunware.mapping.manager.Navigator
 import com.phunware.mapping.model.RouteOptions
 import java.util.Locale
 
-class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
+internal class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     // Voice Views
     private lateinit var voice: ImageButton
@@ -51,8 +50,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
 
     private var tts: TextToSpeech? = null
     private val displayHelper: ManeuverDisplayHelper = ManeuverDisplayHelper()
-
-    private lateinit var handler: Handler
 
     private val sharedPref by lazy {
         getSharedPreferences("lbs_sample_voice", Context.MODE_PRIVATE)
@@ -76,16 +73,6 @@ class VoicePromptActivity : RoutingActivity(), TextToSpeech.OnInitListener {
         voice = findViewById(R.id.voice)
         voice.setOnClickListener(voiceListener)
         voiceStatusTextView = findViewById(R.id.voice_status)
-    }
-
-    public override fun onStart() {
-        super.onStart()
-        handler = Handler()
-    }
-
-    public override fun onStop() {
-        super.onStop()
-        handler.removeCallbacksAndMessages(null)
     }
 
     public override fun onDestroy() {

@@ -53,7 +53,9 @@ import com.phunware.mapping.model.Building
 import com.phunware.mapping.model.FloorOptions
 import com.phunware.mapping.model.PointOptions
 
-class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
+private const val ITEM_ID_CUSTOM_POI = -3 // This ID is required for custom POIs
+
+internal class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     private lateinit var mapManager: PhunwareMapManager
     private lateinit var currentBuilding: Building
@@ -112,12 +114,12 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
                         spinnerAdapter.addAll(building.buildingOptions.floors)
 
                         // Set building to initial floor value
-                        val initialFloor = building.initialFloor
-                        building.selectFloor(initialFloor.id)
+                        val initialFloorOptions = requireNotNull(building.initialFloor ?: building.buildingOptions.floors.firstOrNull())
+                        building.selectFloor(initialFloorOptions.id)
 
                         // Animate the camera to the building at an appropriate zoom level
                         val cameraUpdate = CameraUpdateFactory
-                                .newLatLngBounds(initialFloor.bounds, 4)
+                                .newLatLngBounds(initialFloorOptions.bounds, 4)
                         mapManager.animateCamera(cameraUpdate)
                     }
 
@@ -179,6 +181,5 @@ class CustomPOIActivity : AppCompatActivity(), OnPhunwareMapReadyCallback {
 
     companion object {
         private val TAG = CustomPOIActivity::class.java.simpleName
-        private val ITEM_ID_CUSTOM_POI = -3 // This ID is required for custom POIs
     }
 }
