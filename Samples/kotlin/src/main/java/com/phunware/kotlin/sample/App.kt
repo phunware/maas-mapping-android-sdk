@@ -19,11 +19,4 @@ internal class App : Application() {
             .lifecycle
             .addObserver(applicationObserver)
     }
-
-    fun stopObservingApplication() {
-        ProcessLifecycleOwner
-                .get()
-                .lifecycle
-                .removeObserver(applicationObserver)
-    }
 }

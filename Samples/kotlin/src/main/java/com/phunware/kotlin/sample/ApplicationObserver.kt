@@ -12,9 +12,7 @@ internal class ApplicationObserver(private val phunwareMapManager: PhunwareMapMa
     override fun onPause(owner: LifecycleOwner) {
         super.onPause(owner)
 
-        val shouldStopLocationUpdates = phunwareMapManager.isMyLocationEnabled
-
-        if (shouldStopLocationUpdates) {
+        if (phunwareMapManager.isMyLocationEnabled) {
             phunwareMapManager.isMyLocationEnabled = false
             didDisableLocationUpdatesOnBackground = true
         } else {
@@ -25,9 +23,7 @@ internal class ApplicationObserver(private val phunwareMapManager: PhunwareMapMa
     override fun onResume(owner: LifecycleOwner) {
         super.onResume(owner)
 
-        val shouldStartLocationUpdates = !phunwareMapManager.isMyLocationEnabled && didDisableLocationUpdatesOnBackground
-
-        if (shouldStartLocationUpdates) {
+        if (!phunwareMapManager.isMyLocationEnabled && didDisableLocationUpdatesOnBackground) {
             phunwareMapManager.isMyLocationEnabled = true
         }
     }

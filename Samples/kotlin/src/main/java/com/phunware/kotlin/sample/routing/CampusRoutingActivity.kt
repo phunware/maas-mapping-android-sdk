@@ -101,12 +101,13 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
 
     private var maneuverFromSwiping: Boolean = false
 
+    private var requestedFloorId: Long? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_campus_routing)
         content = findViewById(R.id.content)
         floorSpinnerView = findViewById(R.id.floor_switcher_layout)
-
 
         // Initialize views for routing
         fab = findViewById(R.id.fab)
@@ -210,8 +211,6 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
 
                     phunwareMap.googleMap.setOnMapLoadedCallback {
                         buildingSpinnerAdapter.addAll(campus.buildings)
-                        buildingSpinner.setSelection(0, false)
-                        floorSpinner.setSelection(0, false)
                         buildingSpinner.onItemSelectedListener = object : OnItemSelectedListener {
                             override fun onItemSelected(adapterView: AdapterView<*>?, view: View, position: Int, l: Long) {
                                 val selectedBuilding = buildingSpinnerAdapter.getItem(position)
@@ -221,7 +220,8 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
                                     floorSpinnerAdapter.addAll(sortedFloors)
                                     floorSpinnerAdapter.notifyDataSetChanged()
                                     var selectedFloorIndex = 0
-                                    val selectedFloorOptions = selectedBuilding.selectedFloor?.id?.let {
+                                    val selectedFloorId = requestedFloorId?.also { requestedFloorId = null } ?: selectedBuilding.selectedFloor?.id
+                                    val selectedFloorOptions = selectedFloorId?.let {
                                         getFloorOptionsFromSpinner(it)
                                     }
                                     if (selectedFloorOptions != null) {
@@ -245,7 +245,7 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
                                 val selectedFloor = floorSpinnerAdapter.getItem(position)
                                 if (selectedFloor != null) {
                                     val currentFloorId = selectedFloor.id
-                                    if (currentFloorId != currentBuilding.selectedFloor.id) {
+                                    if (currentFloorId != currentBuilding.selectedFloor?.id) {
                                         currentBuilding.selectFloor(currentFloorId)
                                     }
                                     val cameraUpdate = CameraUpdateFactory.newLatLngBounds(selectedFloor.bounds, 4)
@@ -346,16 +346,22 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
             val newFloor = building?.getFloorOptionsById(floorId)
             if (buildingInCurrentIndex != null && buildingInCurrentIndex.id == newFloor?.buildingId) {
                 if (buildingSpinner.selectedItemPosition == index) {
+                    var isNewFloorSelected = false
                     for (floorIndex in 0 until floorSpinnerAdapter.count) {
                         val floor = floorSpinnerAdapter.getItem(floorIndex)
                         if (floor != null && floor.id == floorId) {
                             if (floorSpinner.selectedItemPosition != floorIndex) {
                                 floorSpinner.setSelection(floorIndex)
+                                isNewFloorSelected = true
                                 break
                             }
                         }
                     }
+                    if (isNewFloorSelected) {
+                        break
+                    }
                 } else {
+                    requestedFloorId = floorId
                     buildingSpinner.setSelection(index)
                     break
                 }

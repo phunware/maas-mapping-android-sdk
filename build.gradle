@@ -34,8 +34,8 @@ ext {
     targetSdkVersion = 31
     ndkVersion = '24.0.8215888'
 
-    phunware_location_sdk_version = '4.2.0-alpha02'
-    phunware_mapping_sdk_version = '4.2.0-alpha04'
+    phunware_location_sdk_version = '4.2.0-beta01'
+    phunware_mapping_sdk_version = '4.2.0-beta01'
 
     android_maps_utils_version = '2.3.0'
     okhttp_version = '4.9.3'

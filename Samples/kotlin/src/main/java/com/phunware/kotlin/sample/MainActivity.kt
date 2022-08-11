@@ -110,11 +110,6 @@ internal class MainActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        (application as App).stopObservingApplication()
-    }
-
     private fun requestPermissions(onSuccess: () -> (Unit) = {}) {
         onActivityResultSuccess = onSuccess
         requestMultiplePermissionsLauncher.launch(permissions)
