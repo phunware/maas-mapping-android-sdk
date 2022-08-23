@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Fixed an isse while routing where multiple maps could overlap if a floor is changed to one that is not on the route
+- Fixed an issue while routing where multiple maps could overlap if a floor is changed to one that is not on the route
 
 ## [4.1.0][] - 2022-07-21
 
