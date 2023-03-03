@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.0][] - 2023-02-21
+
+### Changed
+
+- Bumped compileSdkVersion to API 33 (Android 13)
+- Bumped targetSdkVersion to API 33 (Android 13)
+- Updated Play Services Location to 20.0.0
+
+### Removed
+
+- Removed `BLUETOOTH` permission and related analytics
+- Removed `ACCESS_WIFI_STATE` permission and related analytics
+
 ## [4.3.0][] - 2022-12-19
 
 ### Added
@@ -529,6 +542,7 @@ Added landmarks to last maneuver in a route
 
 - `PwMapView` now has better interaction (e.g. panning and zooming)
 
+[4.4.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.3.0...4.4.0
 [4.3.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.2.0...4.3.0
 [4.2.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.1.0...4.2.0
 [4.1.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.0.0...4.1.0

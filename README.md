@@ -10,13 +10,13 @@ Phunware's Mapping SDK for Android. Visit https://www.phunware.com/ for more inf
 
 ### Download
 Add the following repository to your top level `build.gradle` file.
- ```groovy
+```groovy
 repositories {
     maven {
-            url "https://nexus.phunware.com/content/groups/public/"
-        }
+        url "https://nexus.phunware.com/content/groups/public/"
+    }
 }
- ```
+```
 
  Add the following dependency to your app level `build.gradle` file.
 ```groovy
@@ -28,8 +28,7 @@ dependencies {
 ### Android project setup
 ##### Keys
 To use any of the Phunware MaaS SDKs you'll need to add the following entries to your AndroidManifest.xml, making sure to replace the `value` properties with your actual App ID and Access Key:
-
-``` xml
+```xml
 <meta-data
     android:name="com.phunware.maas.APPLICATION_ID"
     android:value="YOUR_APP_ID"/>
@@ -42,21 +41,11 @@ To use any of the Phunware MaaS SDKs you'll need to add the following entries to
 ##### Permissions
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
-<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
-<uses-permission
-        android:name="android.permission.BLUETOOTH"
-        android:maxSdkVersion="30" />
-<uses-permission
-        android:name="android.permission.BLUETOOTH_ADMIN"
-        android:maxSdkVersion="30" />
-<!-- Optional: Derive physical location updates when app is not visible -->
-<uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <!-- Optional: Cache floor map tiles to external cache if internal cache is unavailable -->
 <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="28" />
+    android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    android:maxSdkVersion="28" />
 ```
 
 ### Usage
@@ -137,8 +126,7 @@ mapManager.addBuilding(buildingId.toLong(), object : Callback<Building> {
 })
 ```
 
-You're all set to see your building on the map with your real time location.
-You can do much more with the Mapping SDK. For more information, check the Samples in this repository.
+You're all set to see your building on the map with your real time location!
 
 ### Privacy
 You understand and consent to Phunware’s Privacy Policy located at www.phunware.com/privacy. If your use of Phunware’s software requires a Privacy Policy of your own, you also agree to include the terms of Phunware’s Privacy Policy in your Privacy Policy to your end users.

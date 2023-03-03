@@ -104,7 +104,7 @@ internal class NavigationOverlayView @JvmOverloads constructor(context: Context,
         fun maneuverSelected(position: Int)
     }
 
-    private val pageChangeListener = object : ViewPager.SimpleOnPageChangeListener() {
+    private val pageChangeListener = object : SimpleOnPageChangeListener() {
         override fun onPageSelected(position: Int) {
             // nextPageSelectedIsFromBlueDot: Only notify listeners (RoutingActivity) when a page
             // selection came from actually page swiping.

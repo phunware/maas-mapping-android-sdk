@@ -148,12 +148,10 @@ internal class RoutingDialogFragment : DialogFragment() {
 
                     // if our location object contains a floor (such as when the device as acquired
                     // a BLE bluedot) use any floor information it provides as our current floor.
-                    if (location.extras != null
-                            && location.extras.containsKey(
-                                    PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID
-                            )) {
-                        currentFloorId = location.extras
-                                .getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
+                    location.extras?.run {
+                        if (containsKey(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)) {
+                            currentFloorId = getLong(PwLocationProvider.LOCATION_EXTRAS_KEY_FLOOR_ID)
+                        }
                     }
 
                     // Add a new POI to the list that represents the device's "Current Location"

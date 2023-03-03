@@ -234,7 +234,7 @@ internal class LocationModeManagedCompassActivity : AppCompatActivity(), OnPhunw
         }
     }
 
-    fun updateLocationModeBehavior() {
+    private fun updateLocationModeBehavior() {
         // Save current tracking mode and break tracking mode
         if (!isTrackingModeTimerRunning) {
             Log.d(TAG, "Breaking tracking mode while timer is running")

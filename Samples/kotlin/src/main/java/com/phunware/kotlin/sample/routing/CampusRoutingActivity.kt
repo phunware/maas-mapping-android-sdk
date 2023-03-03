@@ -330,7 +330,7 @@ internal open class CampusRoutingActivity : AppCompatActivity(), OnPhunwareMapRe
      * Open function to be overridden by child Activities to handle valid maneuver changes.
      */
     open fun dispatchManeuverChanged(navigator: Navigator, position: Int) {
-
+        // Do Nothing
     }
 
     override fun onRouteSnapFailed() {
