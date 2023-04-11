@@ -100,11 +100,6 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".routing.OneWayRoutingActivity"
-            android:label="@string/demo_one_way_routing_title"
-            android:screenOrientation="portrait" />
-
-        <activity
             android:name=".routing.LandmarkRoutingActivity"
             android:label="@string/demo_landmark_routing_title"
             android:screenOrientation="portrait" />
