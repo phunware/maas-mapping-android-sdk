@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.4.2][] - 2023-04-24
+
+### Added
+
+- Added access to the campus id in `Building` and `BuildingOptions`
+
+### Fixed
+
+- Fixed an issue where one way routing was not working correctly
+
 ## [4.4.1][] - 2023-03-30
 
 ### Removed
@@ -548,6 +558,7 @@ Added landmarks to last maneuver in a route
 
 - `PwMapView` now has better interaction (e.g. panning and zooming)
 
+[4.4.2]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.4.1...4.4.2
 [4.4.1]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.4.0...4.4.1
 [4.4.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.3.0...4.4.0
 [4.3.0]: https://github.com/phunware/maas-mapping-android-sdk/compare/4.2.0...4.3.0

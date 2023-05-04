@@ -11,7 +11,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 33
         versionCode 1
-        versionName "4.4.1"
+        versionName "4.4.2"
     }
 
     buildTypes {
@@ -35,7 +35,7 @@ android {
 dependencies {
     // Phunware
     implementation 'com.phunware.location:provider-managed:4.4.0'
-    implementation 'com.phunware.mapping:mapping:4.4.1'
+    implementation 'com.phunware.mapping:mapping:4.4.2'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
